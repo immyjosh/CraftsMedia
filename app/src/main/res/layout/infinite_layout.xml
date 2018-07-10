@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    >
+
+    <RelativeLayout
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:background="#333639"
+            android:layout_width="match_parent"
+            android:layout_height="250dp">
+
+            <it.moondroid.coverflow.components.ui.containers.FeatureCoverFlow
+                android:id="@+id/cover_flow"
+                app:coverHeight="200dp"
+                app:coverWidth="150dp"
+                app:maxScaleFactor="1.5"
+                app:reflectionGap="0px"
+                app:rotationThreshold="0.5"
+                app:scalingThreshold="0.5"
+                app:spacing="0.6"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </it.moondroid.coverflow.components.ui.containers.FeatureCoverFlow>
+            <TextSwitcher
+                android:id="@+id/m_title"
+                android:paddingBottom="16dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerVertical="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></TextSwitcher>
+
+        </RelativeLayout>
+
+
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/colorPrimary"
+            app:itemIconTint="@android:color/background_dark"
+            app:itemTextColor="@color/bottom_nav_title"
+            app:menu="@menu/bottom_navigation_menu"></android.support.design.widget.BottomNavigationView>
+    </RelativeLayout>
+
+
+</RelativeLayout>
