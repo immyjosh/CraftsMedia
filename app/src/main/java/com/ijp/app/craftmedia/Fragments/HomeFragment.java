@@ -14,9 +14,11 @@ import android.widget.ViewSwitcher;
 
 import com.ijp.app.craftmedia.Adapter.InfiniteListItemAdapter;
 import com.ijp.app.craftmedia.Adapter.TopPicsAdapter;
+import com.ijp.app.craftmedia.Adapter.TopVideosAdapter;
 import com.ijp.app.craftmedia.HomeActivity;
 import com.ijp.app.craftmedia.Model.InfiniteListItem;
 import com.ijp.app.craftmedia.Model.TopPicsItem;
+import com.ijp.app.craftmedia.Model.TopVideosItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
@@ -122,13 +124,13 @@ public class HomeFragment extends Fragment {
 
     //HAVE TO CHANGE THE API TO VIDEO
     private void getVideosItem() {
-        compositeDisposable.add(mService.getPicsItem()
+        compositeDisposable.add(mService.getVideoImageItem()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<TopPicsItem>>() {
+                .subscribe(new Consumer<List<TopVideosItem>>() {
                     @Override
-                    public void accept(List<TopPicsItem> topPicsItems) throws Exception {
-                        displayVideos(topPicsItems);
+                    public void accept(List<TopVideosItem> topVideosItems) throws Exception {
+                        displayVideos(topVideosItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -137,8 +139,8 @@ public class HomeFragment extends Fragment {
                     }
                 }));
     }
-    private void displayVideos(List<TopPicsItem> topPicsItems) {
-        TopPicsAdapter adapter=new TopPicsAdapter(getActivity(),topPicsItems);
+    private void displayVideos(List<TopVideosItem> topVideosItems) {
+        TopVideosAdapter adapter=new TopVideosAdapter(getActivity(),topVideosItems);
         topVideosRV.setAdapter(adapter);
     }
 
@@ -164,6 +166,7 @@ public class HomeFragment extends Fragment {
         topPicsRV.setAdapter(adapter);
     }
 
+    //Cover Flow Data
     private void initData() {
         InfiniteListItem infiniteListItem=new InfiniteListItem("Batman vs Superman","super heroes",
                 "https://cdn.europosters.eu/image/1300/calendar/batman-vs-superman-i32098.jpg");

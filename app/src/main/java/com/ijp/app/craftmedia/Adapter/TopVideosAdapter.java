@@ -10,63 +10,56 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.ijp.app.craftmedia.Interface.IitemClickListner;
-import com.ijp.app.craftmedia.Model.TopPicsItem;
+import com.ijp.app.craftmedia.Model.TopVideosItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.ijp.app.craftmedia.VideoDetailsPage;
-import com.ijp.app.craftmedia.WallpaperDetailActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class TopPicsAdapter extends RecyclerView.Adapter<TopPicsAdapter.TopPicsViewHolder> {
+public class TopVideosAdapter extends RecyclerView.Adapter<TopVideosAdapter.TopVideosViewHolder> {
 
     private Context mContext;
-    private List<TopPicsItem> topPicsItemList;
+    private List<TopVideosItem> topVideosItemList;
 
-
-
-    public TopPicsAdapter(Context mContext, List<TopPicsItem> topPicsItemList) {
+    public TopVideosAdapter(Context mContext, List<TopVideosItem> topVideosItemList) {
         this.mContext = mContext;
-        this.topPicsItemList = topPicsItemList;
+        this.topVideosItemList = topVideosItemList;
     }
 
     @NonNull
     @Override
-    public TopPicsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
+    public TopVideosViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         LayoutInflater inflater=LayoutInflater.from(mContext);
-        view=inflater.inflate(R.layout.top_pics_item_cv,parent,false);
+        view=inflater.inflate(R.layout.top_videos_item_cv,parent,false);
 
-        return new TopPicsViewHolder(view);
+        return new TopVideosAdapter.TopVideosViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TopPicsViewHolder holder, final int position) {
-        Picasso.with(mContext).load(topPicsItemList.get(position).Link)
+    public void onBindViewHolder(@NonNull TopVideosViewHolder holder, final int position) {
+        Picasso.with(mContext).load(topVideosItemList.get(position).Link)
                 .into(holder.imgPics);
 
         holder.setItemClickListner(new IitemClickListner() {
             @Override
             public void onClick(View v) {
-                Common.currentPicsItem=topPicsItemList.get(position);
-                mContext.startActivity(new Intent(mContext, WallpaperDetailActivity.class));
+                Common.currentVideosItem=topVideosItemList.get(position);
 
+                mContext.startActivity(new Intent(mContext, VideoDetailsPage.class));
             }
         });
-
     }
 
     @Override
     public int getItemCount() {
-        return topPicsItemList.size();
+        return topVideosItemList.size();
     }
 
-
-
     // Implementing ViewHolder for RecyclerView
-    public  class TopPicsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class TopVideosViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView imgPics;
         IitemClickListner iitemClickListner;
@@ -75,12 +68,11 @@ public class TopPicsAdapter extends RecyclerView.Adapter<TopPicsAdapter.TopPicsV
             this.iitemClickListner = itemClickListner;
         }
 
-        public TopPicsViewHolder(View itemView) {
+        public TopVideosViewHolder(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);
-
-            imgPics=itemView.findViewById(R.id.top_image_pics_cv);
+            imgPics=itemView.findViewById(R.id.top_video_pics_cv);
         }
 
         @Override
@@ -88,6 +80,4 @@ public class TopPicsAdapter extends RecyclerView.Adapter<TopPicsAdapter.TopPicsV
             iitemClickListner.onClick(v);
         }
     }
-
-
 }

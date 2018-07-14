@@ -1,15 +1,17 @@
 package com.ijp.app.craftmedia.Model;
 
-public class TopPicsItem {
-    public String ID;
-    public String Name;
-    public String Link;
+import com.google.gson.annotations.SerializedName;
+
+public class TopVideosItem {
+    public String ID ;
+    public String Name ;
+    public String Link ;
     public String Category ;
 
-    public TopPicsItem() {
+    public TopVideosItem() {
     }
 
-    public TopPicsItem(String ID, String name, String link, String category) {
+    public TopVideosItem(String ID, String name, String link, String category) {
         this.ID = ID;
         Name = name;
         Link = link;

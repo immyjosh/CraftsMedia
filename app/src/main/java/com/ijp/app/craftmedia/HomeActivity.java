@@ -44,6 +44,7 @@ public class HomeActivity extends AppCompatActivity
     private VideosFragment videosFragment;
 
 
+    //username-qforteco_craftsmedia passwd-craftsmediaapp
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
