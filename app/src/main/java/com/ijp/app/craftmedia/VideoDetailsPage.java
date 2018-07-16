@@ -51,9 +51,9 @@ public class VideoDetailsPage extends AppCompatActivity {
         loadVideo(Common.currentVideosItem.ID);
     }
 
-    private void loadVideo(String menuId) {
+    private void loadVideo(String topVideosId) {
 
-        compositeDisposable.add(mService.getVideoLink(menuId)
+        compositeDisposable.add(mService.getVideoLink(topVideosId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<VideoDetailItem>>() {

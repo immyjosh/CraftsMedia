@@ -16,17 +16,17 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface ICraftsMediaApi {
-    @GET("getmenu.php")
+    @GET("gettoppics.php")
     Observable<List<TopPicsItem>> getPicsItem();
 
-    @GET("getmenu.php")
+    @GET("gettopvideos.php")
     Observable<List<TopVideosItem>> getVideoImageItem();
 
     @FormUrlEncoded
-    @POST("getdrink.php")
-    Observable<List<VideoDetailItem>> getVideoLink(@Field("menuid") String menuID);
+    @POST("topvideosdetail.php")
+    Observable<List<VideoDetailItem>> getVideoLink(@Field("top_videos_id") String topVideosId);
 
     @FormUrlEncoded
-    @POST("getdrink.php")
-    Observable<List<WallpeperDetailItem>> getWallpaperLink(@Field("menuid") String menuID);
+    @POST("toppicsdetail.php")
+    Observable<List<WallpeperDetailItem>> getWallpaperLink(@Field("top_pics_id") String topPicsId);
 }

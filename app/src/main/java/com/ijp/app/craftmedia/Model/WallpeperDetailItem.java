@@ -1,20 +1,20 @@
 package com.ijp.app.craftmedia.Model;
 
 public class WallpeperDetailItem {
-    public String Link ;
+    public String image_link ;
 
     public WallpeperDetailItem() {
     }
 
     public WallpeperDetailItem(String link) {
-        Link = link;
+        image_link = link;
     }
 
     public String getLink() {
-        return Link;
+        return image_link;
     }
 
     public void setLink(String link) {
-        Link = link;
+        image_link = link;
     }
 }

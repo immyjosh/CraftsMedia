@@ -35,7 +35,7 @@ public class SaveImageHelper implements Target {
         if(r!=null)
             MediaStore.Images.Media.insertImage(r,bitmap,name,desc);
         alertDialog.dismiss();
-        Toast.makeText(context, "Download Succeeded", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Downloaded-Check Your Gallery", Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -1,20 +1,18 @@
 package com.ijp.app.craftmedia.Adapter;
 
-import android.Manifest;
-import android.app.AlertDialog;
+
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
+
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
+
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+
 
 import com.github.chrisbanes.photoview.PhotoView;
-import com.ijp.app.craftmedia.Helper.SaveImageHelper;
+
 import com.ijp.app.craftmedia.Interface.IitemClickListner;
 import com.ijp.app.craftmedia.Model.WallpeperDetailItem;
 import com.ijp.app.craftmedia.R;
@@ -22,9 +20,7 @@ import com.ijp.app.craftmedia.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-import java.util.UUID;
 
-import dmax.dialog.SpotsDialog;
 
 public class WallpaperDetailAdapter extends RecyclerView.Adapter<WallpaperDetailAdapter.WallpaperDetailViewHolder> {
 
@@ -49,7 +45,7 @@ public class WallpaperDetailAdapter extends RecyclerView.Adapter<WallpaperDetail
     @Override
     public void onBindViewHolder(@NonNull WallpaperDetailViewHolder holder, int position) {
         Picasso.with(mContext)
-                .load(wallpeperDetailItemList.get(position).Link)
+                .load(wallpeperDetailItemList.get(position).image_link)
                 .into(holder.photoView);
 
 

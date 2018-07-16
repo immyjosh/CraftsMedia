@@ -15,8 +15,7 @@ public class Common {
 
     //10.0.2.2 - Emulator localhost
     //http://www.thingspeakapi.tk/DrinkShop/
-    public static final String BASE_URL = "http://www.thingspeakapi.tk/DrinkShop/";
-    public static final String URL = "http://www.thingspeakapi.tk/DrinkShop/getdrink.php?menuid=";
+    public static final String BASE_URL = "http://www.thingspeakapi.tk/CraftsMedia/";
     public static TopPicsItem currentPicsItem = null;
     public static TopVideosItem currentVideosItem = null;
 

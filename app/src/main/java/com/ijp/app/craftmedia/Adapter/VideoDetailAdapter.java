@@ -44,11 +44,12 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
     @Override
     public void onBindViewHolder(@NonNull VideoDetailViewholder holder, int position) {
 
-        holder.videoPlayer.setUp(videoDetailItems.get(position).Link,
+        holder.videoPlayer.setUp(videoDetailItems.get(position).video_link,
                 JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL,
-                "The Video");
+                videoDetailItems.get(position).Name);
 
-
+        Picasso.with(mContext).load(videoDetailItems.get(position).thumb_image_link)
+                .into(holder.videoPlayer.thumbImageView);
     }
 
     @Override

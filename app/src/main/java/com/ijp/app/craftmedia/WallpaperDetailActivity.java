@@ -3,6 +3,7 @@ package com.ijp.app.craftmedia;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.WallpaperManager;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -13,15 +14,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.ijp.app.craftmedia.Adapter.VideoDetailAdapter;
 import com.ijp.app.craftmedia.Adapter.WallpaperDetailAdapter;
 import com.ijp.app.craftmedia.Helper.SaveImageHelper;
-import com.ijp.app.craftmedia.Model.VideoDetailItem;
 import com.ijp.app.craftmedia.Model.WallpeperDetailItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
@@ -119,20 +119,39 @@ public class WallpaperDetailActivity extends AppCompatActivity {
         wallpaperDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if(ActivityCompat.checkSelfPermission(WallpaperDetailActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
                 {
                     requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1000);
                 }
                 else
                 {
-                    AlertDialog dialog=new SpotsDialog(WallpaperDetailActivity.this);
-                    dialog.show();
-                    dialog.setMessage("Please Wait...");
+                    final AlertDialog alertDialog=new SpotsDialog(WallpaperDetailActivity.this);
 
-                    String fileName= UUID.randomUUID().toString()+".png";
-                    Picasso.with(getBaseContext())
-                            .load(Common.currentPicsItem.getLink())
-                            .into(new SaveImageHelper(getBaseContext(),dialog,getApplicationContext().getContentResolver(),fileName,"Picsta LiveWalpaper Image"));
+
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(WallpaperDetailActivity.this);
+                    builder.setTitle("Download This Wallpaper?");
+
+                    builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).setPositiveButton("DOWNLOAD", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            alertDialog.show();
+                            alertDialog.setMessage("Please Wait...");
+
+                            String fileName= UUID.randomUUID().toString()+".png";
+                            Picasso.with(getBaseContext())
+                                    .load(Common.currentPicsItem.getLink())
+                                    .into(new SaveImageHelper(getBaseContext(), alertDialog,getApplicationContext().getContentResolver(),fileName,"Picsta_Images"));
+                        }
+                    });
+                    builder.show();
+
+
                 }
             }
         });
@@ -141,21 +160,38 @@ public class WallpaperDetailActivity extends AppCompatActivity {
         wallpaperSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Picasso.with(getBaseContext())
-                        .load(Common.currentPicsItem.getLink())
-                        .into(target);
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(WallpaperDetailActivity.this);
+                builder.setTitle("Set This Wallpaper?");
+
+                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).setPositiveButton("SET", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Picasso.with(getBaseContext())
+                                .load(Common.currentPicsItem.getLink())
+                                .into(target);
+                    }
+                });
+                builder.show();
+
             }
         });
+
+
 
         loadPics(Common.currentPicsItem.ID);
     }
 
-    private void loadPics(String menuid) {
+    private void loadPics(String topPicsId) {
 
-        compositeDisposable.add(mService.getWallpaperLink(menuid)
+        compositeDisposable.add(mService.getWallpaperLink(topPicsId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<WallpeperDetailItem>>() {
+                .subscribe( new Consumer<List<WallpeperDetailItem>>() {
                     @Override
                     public void accept(List<WallpeperDetailItem> wallpeperDetailItems) throws Exception {
                         displayVideo(wallpeperDetailItems);
