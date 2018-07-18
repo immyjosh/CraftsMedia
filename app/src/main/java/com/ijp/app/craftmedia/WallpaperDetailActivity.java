@@ -183,7 +183,36 @@ public class WallpaperDetailActivity extends AppCompatActivity {
 
 
 
-        loadPics(Common.currentPicsItem.ID);
+        if (Common.currentPicsItem!=null){
+
+            loadPics(Common.currentPicsItem.ID);
+
+
+        }else{
+            loadNewPics(Common.currentNewPicsItem.ID);
+        }
+    }
+
+    private void loadNewPics(String topPicsId) {
+        compositeDisposable.add(mService.getWallpaperLink(topPicsId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe( new Consumer<List<WallpeperDetailItem>>() {
+                    @Override
+                    public void accept(List<WallpeperDetailItem> wallpeperDetailItems) throws Exception {
+                        displayNewPics(wallpeperDetailItems);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                }));
+    }
+
+    private void displayNewPics(List<WallpeperDetailItem> wallpeperDetailItems) {
+        WallpaperDetailAdapter adapter=new WallpaperDetailAdapter(this,wallpeperDetailItems);
+        wallpaperDetailRV.setAdapter(adapter);
     }
 
     private void loadPics(String topPicsId) {
@@ -194,7 +223,7 @@ public class WallpaperDetailActivity extends AppCompatActivity {
                 .subscribe( new Consumer<List<WallpeperDetailItem>>() {
                     @Override
                     public void accept(List<WallpeperDetailItem> wallpeperDetailItems) throws Exception {
-                        displayVideo(wallpeperDetailItems);
+                        displayPics(wallpeperDetailItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -205,8 +234,10 @@ public class WallpaperDetailActivity extends AppCompatActivity {
 
     }
 
-    private void displayVideo(List<WallpeperDetailItem> wallpeperDetailItems) {
+    private void displayPics(List<WallpeperDetailItem> wallpeperDetailItems) {
         WallpaperDetailAdapter adapter=new WallpaperDetailAdapter(this,wallpeperDetailItems);
         wallpaperDetailRV.setAdapter(adapter);
     }
+
+
 }

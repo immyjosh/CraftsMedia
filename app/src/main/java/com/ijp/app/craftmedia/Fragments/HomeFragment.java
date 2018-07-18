@@ -13,10 +13,14 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.ijp.app.craftmedia.Adapter.InfiniteListItemAdapter;
+import com.ijp.app.craftmedia.Adapter.NewPicsAdapter;
+import com.ijp.app.craftmedia.Adapter.NewVideosAdapter;
 import com.ijp.app.craftmedia.Adapter.TopPicsAdapter;
 import com.ijp.app.craftmedia.Adapter.TopVideosAdapter;
 import com.ijp.app.craftmedia.HomeActivity;
 import com.ijp.app.craftmedia.Model.InfiniteListItem;
+import com.ijp.app.craftmedia.Model.NewPicsItem;
+import com.ijp.app.craftmedia.Model.NewVideosItem;
 import com.ijp.app.craftmedia.Model.TopPicsItem;
 import com.ijp.app.craftmedia.Model.TopVideosItem;
 import com.ijp.app.craftmedia.R;
@@ -41,7 +45,7 @@ public class HomeFragment extends Fragment {
     TextSwitcher mTitle;
 
     ICraftsMediaApi mService;
-    RecyclerView topPicsRV,topVideosRV;
+    RecyclerView topPicsRV,topVideosRV,newPicsRV,newVideosRV;
 
     CompositeDisposable compositeDisposable=new CompositeDisposable();
 
@@ -63,8 +67,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        // Setup any handles to view objects here
-        // EditText etFoo = (EditText) view.findViewById(R.id.etFoo);
+
 
         mService=Common.getAPI();
 
@@ -114,15 +117,71 @@ public class HomeFragment extends Fragment {
         topVideosRV.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
         topVideosRV.setHasFixedSize(true);
 
+        newPicsRV=view.findViewById(R.id.top_new_pics_rv);
+        newPicsRV.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
+        newPicsRV.setHasFixedSize(true);
+
+        newVideosRV=view.findViewById(R.id.top_new_videos_rv);
+        newVideosRV.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
+        newVideosRV.setHasFixedSize(true);
 
 
-        //get TopPics Data
+
+
         getPicsItem();
         getVideosItem();
+        getNewPicsItem();
+        getNewVideosItem();
 
     }
 
-    //HAVE TO CHANGE THE API TO VIDEO
+    private void getNewVideosItem() {
+        compositeDisposable.add(mService.getNewVideoImageItem()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<NewVideosItem>>() {
+                    @Override
+                    public void accept(List<NewVideosItem> newVideosItems) throws Exception {
+                        displayNewVideoPics(newVideosItems);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                }));
+    }
+
+    private void displayNewVideoPics(List<NewVideosItem> newVideosItems) {
+        NewVideosAdapter adapter=new NewVideosAdapter(getActivity(),newVideosItems);
+        newVideosRV.setAdapter(adapter);
+    }
+
+    private void getNewPicsItem() {
+        compositeDisposable.add(mService.getNewPicsItem()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<NewPicsItem>>() {
+                    @Override
+                    public void accept(List<NewPicsItem> newPicsItems) throws Exception {
+                        displayNewPics(newPicsItems);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                }));
+    }
+
+    private void displayNewPics(List<NewPicsItem> newPicsItems) {
+
+        NewPicsAdapter adapter=new NewPicsAdapter(getActivity(),newPicsItems);
+        newPicsRV.setAdapter(adapter);
+
+    }
+
+
     private void getVideosItem() {
         compositeDisposable.add(mService.getVideoImageItem()
                 .subscribeOn(Schedulers.io())

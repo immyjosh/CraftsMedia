@@ -1,5 +1,8 @@
 package com.ijp.app.craftmedia.Retrofit;
 
+import com.ijp.app.craftmedia.Model.NewPicsItem;
+import com.ijp.app.craftmedia.Model.NewVideosItem;
+import com.ijp.app.craftmedia.Model.PicstaModel.CategoryFragmentItem;
 import com.ijp.app.craftmedia.Model.TopPicsItem;
 import com.ijp.app.craftmedia.Model.TopVideosItem;
 import com.ijp.app.craftmedia.Model.VideoDetailItem;
@@ -29,4 +32,13 @@ public interface ICraftsMediaApi {
     @FormUrlEncoded
     @POST("toppicsdetail.php")
     Observable<List<WallpeperDetailItem>> getWallpaperLink(@Field("top_pics_id") String topPicsId);
+
+    @GET("gettoppics.php")
+    Observable<List<NewPicsItem>> getNewPicsItem();
+
+    @GET("gettopvideos.php")
+    Observable<List<NewVideosItem>> getNewVideoImageItem();
+
+    @GET("getcategories.php")
+    Observable<List<CategoryFragmentItem>> getCategoryItem();
 }

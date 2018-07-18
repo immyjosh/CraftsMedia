@@ -89,6 +89,50 @@
                 android:layout_marginRight="8dp"
                 android:scrollbars="none" />
 
+            <TextView
+                android:id="@+id/txt3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/top_videos_rv"
+                android:layout_marginTop="10dp"
+                android:fontFamily="monospace"
+                android:paddingLeft="10dp"
+                android:text="New Pictures"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/top_new_pics_rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/txt3"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:scrollbars="none" />
+
+            <TextView
+                android:id="@+id/txt4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/top_new_pics_rv"
+                android:layout_marginTop="10dp"
+                android:fontFamily="monospace"
+                android:paddingLeft="10dp"
+                android:text="New Videos"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/top_new_videos_rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/txt4"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:scrollbars="none" />
+
 
         </RelativeLayout>
     </ScrollView>
