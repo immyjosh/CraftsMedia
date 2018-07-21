@@ -31,8 +31,12 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/App_no_action_bar" />
-        <activity android:name=".WallpaperDetailActivity"
-            android:theme="@style/App_no_action_bar"></activity>
+        <activity
+            android:name=".WallpaperDetailActivity"
+            android:theme="@style/App_no_action_bar" />
+        <activity android:name=".CategoryListWallpaper"
+                  android:label="@string/title_activity_home"
+                  android:theme="@style/App_no_action_bar"/>
     </application>
 
 </manifest>

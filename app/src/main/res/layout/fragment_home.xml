@@ -16,6 +16,8 @@
             android:layout_height="wrap_content"
             android:background="@android:color/white">
 
+
+
             <RelativeLayout
                 android:id="@+id/rel"
                 android:layout_width="match_parent"
@@ -45,6 +47,8 @@
                     android:paddingBottom="16dp"></TextSwitcher>
 
             </RelativeLayout>
+
+
 
             <TextView
                 android:id="@+id/txt1"

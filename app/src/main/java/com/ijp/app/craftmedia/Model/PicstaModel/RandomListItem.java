@@ -1,16 +1,25 @@
 package com.ijp.app.craftmedia.Model.PicstaModel;
 
-public class CategoryFragmentItem {
+public class RandomListItem {
     public String ID;
     public String image_url;
     public String category;
 
-    public CategoryFragmentItem() {
+    public RandomListItem() {
     }
 
-    public CategoryFragmentItem(String image_url, String category) {
+    public RandomListItem(String ID, String image_url, String category) {
+        this.ID = ID;
         this.image_url = image_url;
         this.category = category;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
     public String getImage_url() {

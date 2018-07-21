@@ -2,6 +2,7 @@ package com.ijp.app.craftmedia.Adapter.PicstaFragmentViewHolders;
 
 import android.content.Context;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,9 +11,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ijp.app.craftmedia.CategoryListWallpaper;
 import com.ijp.app.craftmedia.Interface.IitemClickListner;
 import com.ijp.app.craftmedia.Model.PicstaModel.CategoryFragmentItem;
 import com.ijp.app.craftmedia.R;
+import com.ijp.app.craftmedia.Utils.Common;
+import com.ijp.app.craftmedia.WallpaperDetailActivity;
 import com.squareup.picasso.Picasso;
 
 import java.net.MalformedURLException;
@@ -40,11 +44,7 @@ public class CategoryFragmentAdapter extends RecyclerView.Adapter<CategoryFragme
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CatrgoryFragmentViewHolder holder, int position) {
-
-
-
-
+    public void onBindViewHolder(@NonNull CatrgoryFragmentViewHolder holder, final int position) {
 
         Picasso.with(mContext).load(categoryFragmentItemList.get(position).image_url)
                 .into(holder.categoryImage);
@@ -55,7 +55,8 @@ public class CategoryFragmentAdapter extends RecyclerView.Adapter<CategoryFragme
         holder.setItemClickListner(new IitemClickListner() {
             @Override
             public void onClick(View v) {
-
+                Common.currentCategoryFragmentsItem=categoryFragmentItemList.get(position);
+                mContext.startActivity(new Intent(mContext, CategoryListWallpaper.class));
             }
         });
     }

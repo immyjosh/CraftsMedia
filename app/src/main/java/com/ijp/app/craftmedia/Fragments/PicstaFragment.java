@@ -1,18 +1,18 @@
 package com.ijp.app.craftmedia.Fragments;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
-import com.ijp.app.craftmedia.Adapter.ViewPagerAdapter;
+import com.ijp.app.craftmedia.Fragments.PicstaPageFragment.CategoryFragment;
+import com.ijp.app.craftmedia.Fragments.PicstaPageFragment.RandomFragment;
 import com.ijp.app.craftmedia.R;
 
 /**
@@ -20,9 +20,10 @@ import com.ijp.app.craftmedia.R;
  */
 public class PicstaFragment extends Fragment {
 
-    ViewPager viewPager;
-    TabLayout tabLayout;
 
+    String hexColorTransparent="#99000000";
+    String hexColorBlack="#000000";
+    SwipeRefreshLayout refreshLayout;
 
 
     public PicstaFragment() {
@@ -38,14 +39,44 @@ public class PicstaFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated( View view, Bundle savedInstanceState) {
+    public void onViewCreated(final View view, Bundle savedInstanceState) {
 
-        viewPager=view.findViewById(R.id.view_pager);
+        Fragment categoryFragment = new CategoryFragment();
+        FragmentTransaction categoryTransaction = getChildFragmentManager().beginTransaction();
+        categoryTransaction.replace(R.id.child_fragment_container, categoryFragment).commit();
 
-        ViewPagerAdapter adapter=new ViewPagerAdapter(getFragmentManager(),getContext());
-        viewPager.setAdapter(adapter);
 
-        tabLayout=view.findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
+
+        final Button btn1=view.findViewById(R.id.btn1);
+        final Button btn2=view.findViewById(R.id.btn2);
+
+        btn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn1.setBackgroundColor(Color.parseColor(hexColorBlack));
+                btn2.setBackgroundColor(Color.parseColor(hexColorTransparent));
+
+                Fragment categoryFragment = new CategoryFragment();
+                FragmentTransaction categoryTransaction = getChildFragmentManager().beginTransaction();
+                categoryTransaction.replace(R.id.child_fragment_container, categoryFragment).commit();
+            }
+        });
+
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn2.setBackgroundColor(Color.parseColor(hexColorBlack));
+                btn1.setBackgroundColor(Color.parseColor(hexColorTransparent));
+
+                Fragment randomFragment = new RandomFragment();
+                FragmentTransaction recentsTransaction = getChildFragmentManager().beginTransaction();
+                recentsTransaction.replace(R.id.child_fragment_container, randomFragment).commit();
+
+            }
+        });
+
+
     }
+
+
 }

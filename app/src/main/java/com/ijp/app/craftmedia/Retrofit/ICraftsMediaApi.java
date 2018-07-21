@@ -3,6 +3,8 @@ package com.ijp.app.craftmedia.Retrofit;
 import com.ijp.app.craftmedia.Model.NewPicsItem;
 import com.ijp.app.craftmedia.Model.NewVideosItem;
 import com.ijp.app.craftmedia.Model.PicstaModel.CategoryFragmentItem;
+import com.ijp.app.craftmedia.Model.PicstaModel.CategoryListItem;
+import com.ijp.app.craftmedia.Model.PicstaModel.RandomListItem;
 import com.ijp.app.craftmedia.Model.TopPicsItem;
 import com.ijp.app.craftmedia.Model.TopVideosItem;
 import com.ijp.app.craftmedia.Model.VideoDetailItem;
@@ -41,4 +43,19 @@ public interface ICraftsMediaApi {
 
     @GET("getcategories.php")
     Observable<List<CategoryFragmentItem>> getCategoryItem();
+
+    @FormUrlEncoded
+    @POST("categoryitemlist.php")
+    Observable<List<CategoryListItem>> getCategoryId(@Field("category_item_id") String categoryItemId);
+
+    @FormUrlEncoded
+    @POST("categorypicsdetail.php")
+    Observable<List<WallpeperDetailItem>> getCategoryLink(@Field("picsta_category_list_id") String CategoryPicsId);
+
+    @GET("getrandompics.php")
+    Observable<List<RandomListItem>> getRandomPics();
+
+    @FormUrlEncoded
+    @POST("randompicsdetail.php")
+    Observable<List<WallpeperDetailItem>> getRandomLink(@Field("random_pics_id") String randomPicsId);
 }

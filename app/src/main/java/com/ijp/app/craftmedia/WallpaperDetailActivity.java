@@ -14,13 +14,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.ijp.app.craftmedia.Adapter.WallpaperDetailAdapter;
+
 import com.ijp.app.craftmedia.Helper.SaveImageHelper;
 import com.ijp.app.craftmedia.Model.WallpeperDetailItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
@@ -47,6 +47,7 @@ public class WallpaperDetailActivity extends AppCompatActivity {
     RecyclerView wallpaperDetailRV;
 
     CompositeDisposable compositeDisposable=new CompositeDisposable();
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -106,6 +107,9 @@ public class WallpaperDetailActivity extends AppCompatActivity {
 
         mService= Common.getAPI();
 
+
+
+
         rootLayout=findViewById(R.id.root_layout);
 
         wallpaperDetailRV=findViewById(R.id.wallpaper_detail_rv);
@@ -144,9 +148,20 @@ public class WallpaperDetailActivity extends AppCompatActivity {
                             alertDialog.setMessage("Please Wait...");
 
                             String fileName= UUID.randomUUID().toString()+".png";
-                            Picasso.with(getBaseContext())
-                                    .load(Common.currentPicsItem.getLink())
-                                    .into(new SaveImageHelper(getBaseContext(), alertDialog,getApplicationContext().getContentResolver(),fileName,"Picsta_Images"));
+
+                            if (Common.currentPicsItem!=null) {
+                                Picasso.with(getBaseContext())
+                                        .load(Common.currentPicsItem.getLink())
+                                        .into(new SaveImageHelper(getBaseContext(), alertDialog, getApplicationContext().getContentResolver(), fileName, "PicstaImages"));
+                            }else if(Common.currentCategoryListItem!=null) {
+                                Picasso.with(getBaseContext())
+                                        .load(Common.currentCategoryListItem.getImage_url())
+                                        .into(new SaveImageHelper(getBaseContext(), alertDialog, getApplicationContext().getContentResolver(), fileName, "PicstaImages"));
+                            }else if (Common.currentRandomListItem!=null){
+                                Picasso.with(getBaseContext())
+                                        .load(Common.currentRandomListItem.getImage_url())
+                                        .into(new SaveImageHelper(getBaseContext(), alertDialog, getApplicationContext().getContentResolver(), fileName, "PicstaImages"));
+                            }
                         }
                     });
                     builder.show();
@@ -171,9 +186,20 @@ public class WallpaperDetailActivity extends AppCompatActivity {
                 }).setPositiveButton("SET", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Picasso.with(getBaseContext())
-                                .load(Common.currentPicsItem.getLink())
-                                .into(target);
+                        if (Common.currentPicsItem!=null){
+                            Picasso.with(getBaseContext())
+                                    .load(Common.currentPicsItem.getLink())
+                                    .into(target);
+                        }else if (Common.currentCategoryListItem!=null) {
+                            Picasso.with(getBaseContext())
+                                    .load(Common.currentCategoryListItem.getImage_url())
+                                    .into(target);
+                        }else if (Common.currentRandomListItem!=null){
+                            Picasso.with(getBaseContext())
+                                    .load(Common.currentRandomListItem.getImage_url())
+                                    .into(target);
+                        }
+
                     }
                 });
                 builder.show();
@@ -183,14 +209,68 @@ public class WallpaperDetailActivity extends AppCompatActivity {
 
 
 
-        if (Common.currentPicsItem!=null){
-
+        if (Common.currentPicsItem!=null ){
             loadPics(Common.currentPicsItem.ID);
-
-
-        }else{
-            loadNewPics(Common.currentNewPicsItem.ID);
+            Common.currentPicsItem=null;
         }
+        else if (Common.currentNewPicsItem!=null){
+            loadNewPics(Common.currentNewPicsItem.ID);
+            Common.currentNewPicsItem=null;
+        }else if (Common.currentCategoryListItem!=null){
+            loadCategoryItemsPage(Common.currentCategoryListItem.ID);
+            Common.currentCategoryListItem=null;
+        }else if (Common.currentRandomListItem!=null){
+            loadRandomItemsPage(Common.currentRandomListItem.ID);
+            Common.currentRandomListItem=null;
+        }
+    }
+
+    private void loadRandomItemsPage(String randomId) {
+        compositeDisposable.add(mService.getRandomLink(randomId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<WallpeperDetailItem>>() {
+                    @Override
+                    public void accept(List<WallpeperDetailItem> wallpeperDetailItems) throws Exception {
+                        displayRandomItemPics(wallpeperDetailItems);
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                }));
+    }
+
+    private void displayRandomItemPics(List<WallpeperDetailItem> wallpeperDetailItems) {
+        WallpaperDetailAdapter adapter=new WallpaperDetailAdapter(this,wallpeperDetailItems);
+        wallpaperDetailRV.setAdapter(adapter);
+    }
+
+
+    private void loadCategoryItemsPage(String categoryId) {
+
+        compositeDisposable.add(mService.getCategoryLink(categoryId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<WallpeperDetailItem>>() {
+                    @Override
+                    public void accept(List<WallpeperDetailItem> wallpeperDetailItems) throws Exception {
+                        displayCategoryItemPics(wallpeperDetailItems);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                }));
+
+    }
+
+    private void displayCategoryItemPics(List<WallpeperDetailItem> wallpeperDetailItems) {
+        WallpaperDetailAdapter adapter=new WallpaperDetailAdapter(this,wallpeperDetailItems);
+        wallpaperDetailRV.setAdapter(adapter);
     }
 
     private void loadNewPics(String topPicsId) {
@@ -237,6 +317,13 @@ public class WallpaperDetailActivity extends AppCompatActivity {
     private void displayPics(List<WallpeperDetailItem> wallpeperDetailItems) {
         WallpaperDetailAdapter adapter=new WallpaperDetailAdapter(this,wallpeperDetailItems);
         wallpaperDetailRV.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Picasso.with(this).cancelRequest(target);
+        compositeDisposable.clear();
+        super.onDestroy();
     }
 
 

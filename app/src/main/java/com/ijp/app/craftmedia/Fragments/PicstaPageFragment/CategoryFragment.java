@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.ijp.app.craftmedia.Adapter.PicstaFragmentViewHolders.CategoryFragmentAdapter;
 import com.ijp.app.craftmedia.Model.PicstaModel.CategoryFragmentItem;
@@ -29,6 +30,8 @@ public class CategoryFragment extends Fragment {
 
     RecyclerView categoryRV;
     ICraftsMediaApi mService;
+
+    ProgressBar progressBar;
     CompositeDisposable compositeDisposable=new CompositeDisposable();
 
     private static CategoryFragment INSTANCE=null;
@@ -45,6 +48,9 @@ public class CategoryFragment extends Fragment {
         mService= Common.getAPI();
 
         View view=inflater.inflate(R.layout.fragment_category, container, false);
+
+        progressBar=view.findViewById(R.id.progress_category);
+
         categoryRV=view.findViewById(R.id.category_rv);
         categoryRV.setLayoutManager(new GridLayoutManager(getContext(),2));
         categoryRV.setHasFixedSize(true);
@@ -61,11 +67,13 @@ public class CategoryFragment extends Fragment {
                 .subscribe(new Consumer<List<CategoryFragmentItem>>() {
                     @Override
                     public void accept(List<CategoryFragmentItem> categoryFragmentItems) throws Exception {
+                        progressBar.setVisibility(View.GONE);
                         displayCategoryItems(categoryFragmentItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        progressBar.setVisibility(View.GONE);
 
                     }
                 }));
