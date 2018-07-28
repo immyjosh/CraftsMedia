@@ -1,24 +1,19 @@
-package com.ijp.app.craftmedia.Model;
+package com.ijp.app.craftmedia.Model.VideoModel;
 
-import com.google.gson.annotations.SerializedName;
-
-public class TopVideosItem {
-    public String ID ;
-    public String Name ;
-    public String Link ;
-    public String Category ;
+public class VideoBannerItem {
+    public String ID;
+    public String Name;
+    public String Link;
     public String video_link;
 
-    public TopVideosItem() {
+
+    public VideoBannerItem() {
     }
 
-
-
-    public TopVideosItem(String ID, String name, String link, String category,String video_link) {
+    public VideoBannerItem(String ID, String name, String link,String video_link) {
         this.ID = ID;
         Name = name;
         Link = link;
-        Category = category;
         this.video_link = video_link;
     }
 
@@ -52,13 +47,5 @@ public class TopVideosItem {
 
     public void setLink(String link) {
         Link = link;
-    }
-
-    public String getCategory() {
-        return Category;
-    }
-
-    public void setCategory(String category) {
-        Category = category;
     }
 }

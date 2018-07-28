@@ -1,48 +1,81 @@
 package com.ijp.app.craftmedia.Adapter;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.content.Intent;
+import android.support.annotation.NonNull;
 
-import com.ijp.app.craftmedia.Fragments.PicstaPageFragment.CategoryFragment;
+import android.support.v4.view.PagerAdapter;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
-public class ViewPagerAdapter extends FragmentPagerAdapter {
+import com.ijp.app.craftmedia.Model.VideoModel.VideoBannerItem;
+import com.ijp.app.craftmedia.R;
+import com.ijp.app.craftmedia.Utils.Common;
+import com.ijp.app.craftmedia.VideoDetailsPage;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+public class ViewPagerAdapter extends PagerAdapter{
 
     private Context context;
 
-    public ViewPagerAdapter(FragmentManager fm, Context context) {
-        super(fm);
-        this.context=context;
-    }
+    private List<VideoBannerItem> videoBannerItemList;
 
-    @Override
-    public Fragment getItem(int position) {
-        if(position==0)
-            return CategoryFragment.getInstance();
-
-        else
-            return null;
+    public ViewPagerAdapter(Context context, List<VideoBannerItem> videoBannerItemList) {
+        this.context = context;
+        this.videoBannerItemList = videoBannerItemList;
     }
 
     @Override
     public int getCount() {
-        return 2;
+        return videoBannerItemList.size();
     }
 
-    @Nullable
     @Override
-    public CharSequence getPageTitle(int position) {
-        switch(position)
-        {
-            case 0:
-                return "Category";
+    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
 
-            case 1:
-                return "Recents";
 
-        }
-        return "";
+
+        return view.equals(object);
+    }
+
+    @NonNull
+    @Override
+    public Object instantiateItem(@NonNull ViewGroup container, final int position) {
+
+        LayoutInflater inflater=LayoutInflater.from(context);
+
+        View view=inflater.inflate(R.layout.video_slider,container,false);
+
+        ImageView imageView=view.findViewById(R.id.slider_image);
+
+        Picasso.with(context).load(videoBannerItemList.get(position).Link)
+                .into(imageView);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.d("TESTING",videoBannerItemList.get(position)+"position");
+                Common.currentVideoBannerItem=videoBannerItemList.get(position);
+                context.startActivity(new Intent(context, VideoDetailsPage.class));
+            }
+        });
+
+        container.addView(view);
+
+        return view;
+
+
+    }
+
+    @Override
+    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+        container.removeView((RelativeLayout)object);
     }
 }

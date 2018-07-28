@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ijp.app.craftmedia.Adapter.PicstaFragmentViewHolders.RandomFragmentAdapter;
+import com.ijp.app.craftmedia.Adapter.PicstaFragmentAdapters.RandomFragmentAdapter;
 import com.ijp.app.craftmedia.Model.PicstaModel.RandomListItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;

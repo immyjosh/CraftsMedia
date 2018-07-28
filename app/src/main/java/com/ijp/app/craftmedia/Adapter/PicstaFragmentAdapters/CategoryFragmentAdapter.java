@@ -1,4 +1,4 @@
-package com.ijp.app.craftmedia.Adapter.PicstaFragmentViewHolders;
+package com.ijp.app.craftmedia.Adapter.PicstaFragmentAdapters;
 
 import android.content.Context;
 
@@ -16,10 +16,8 @@ import com.ijp.app.craftmedia.Interface.IitemClickListner;
 import com.ijp.app.craftmedia.Model.PicstaModel.CategoryFragmentItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
-import com.ijp.app.craftmedia.WallpaperDetailActivity;
 import com.squareup.picasso.Picasso;
 
-import java.net.MalformedURLException;
 import java.util.List;
 
 public class CategoryFragmentAdapter extends RecyclerView.Adapter<CategoryFragmentAdapter.CatrgoryFragmentViewHolder> {

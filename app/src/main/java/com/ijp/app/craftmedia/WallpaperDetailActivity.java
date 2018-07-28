@@ -21,6 +21,8 @@ import android.widget.Toast;
 
 import com.ijp.app.craftmedia.Adapter.WallpaperDetailAdapter;
 
+import com.ijp.app.craftmedia.Database.DataSource.FavoriteRepository;
+import com.ijp.app.craftmedia.Database.Local.FavoriteDataSource;
 import com.ijp.app.craftmedia.Helper.SaveImageHelper;
 import com.ijp.app.craftmedia.Model.WallpeperDetailItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
@@ -107,9 +109,6 @@ public class WallpaperDetailActivity extends AppCompatActivity {
 
         mService= Common.getAPI();
 
-
-
-
         rootLayout=findViewById(R.id.root_layout);
 
         wallpaperDetailRV=findViewById(R.id.wallpaper_detail_rv);
@@ -119,7 +118,36 @@ public class WallpaperDetailActivity extends AppCompatActivity {
         wallpaperDownload=findViewById(R.id.wallpaper_download);
         wallpaperSet=findViewById(R.id.wallpaper_set);
 
-        //Download and image
+
+        //Loading All Wallpaper Items
+        if (Common.currentPicsItem!=null ){
+            loadPics(Common.currentPicsItem.ID);
+            setWallpaperImage();
+            downloadWallpaperImage();
+
+        }
+        else if (Common.currentNewPicsItem!=null){
+            loadNewPics(Common.currentNewPicsItem.ID);
+            setWallpaperImage();
+            downloadWallpaperImage();
+
+
+        }else if (Common.currentCategoryListItem!=null){
+            loadCategoryItemsPage(Common.currentCategoryListItem.ID);
+            setWallpaperImage();
+            downloadWallpaperImage();
+
+        }else if (Common.currentRandomListItem!=null){
+            loadRandomItemsPage(Common.currentRandomListItem.ID);
+            setWallpaperImage();
+            downloadWallpaperImage();
+
+        }
+    }
+
+
+
+    private void downloadWallpaperImage() {
         wallpaperDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,6 +155,7 @@ public class WallpaperDetailActivity extends AppCompatActivity {
                 if(ActivityCompat.checkSelfPermission(WallpaperDetailActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
                 {
                     requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1000);
+
                 }
                 else
                 {
@@ -170,8 +199,9 @@ public class WallpaperDetailActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
-        // Setting a wallpaper
+    private void setWallpaperImage() {
         wallpaperSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -206,23 +236,6 @@ public class WallpaperDetailActivity extends AppCompatActivity {
 
             }
         });
-
-
-
-        if (Common.currentPicsItem!=null ){
-            loadPics(Common.currentPicsItem.ID);
-            Common.currentPicsItem=null;
-        }
-        else if (Common.currentNewPicsItem!=null){
-            loadNewPics(Common.currentNewPicsItem.ID);
-            Common.currentNewPicsItem=null;
-        }else if (Common.currentCategoryListItem!=null){
-            loadCategoryItemsPage(Common.currentCategoryListItem.ID);
-            Common.currentCategoryListItem=null;
-        }else if (Common.currentRandomListItem!=null){
-            loadRandomItemsPage(Common.currentRandomListItem.ID);
-            Common.currentRandomListItem=null;
-        }
     }
 
     private void loadRandomItemsPage(String randomId) {
@@ -326,5 +339,12 @@ public class WallpaperDetailActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Common.currentPicsItem=null;
+        Common.currentNewPicsItem=null;
+        Common.currentCategoryListItem=null;
+        Common.currentRandomListItem=null;
+    }
 }

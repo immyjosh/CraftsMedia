@@ -1,4 +1,4 @@
-package com.ijp.app.craftmedia.Adapter.PicstaFragmentViewHolders;
+package com.ijp.app.craftmedia.Adapter.PicstaFragmentAdapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.ijp.app.craftmedia.Interface.IitemClickListner;
-import com.ijp.app.craftmedia.Model.PicstaModel.CategoryListItem;
+import com.ijp.app.craftmedia.Model.PicstaModel.RandomListItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.ijp.app.craftmedia.WallpaperDetailActivity;
@@ -18,49 +18,46 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class CategoryListItemAdapter extends RecyclerView.Adapter<CategoryListItemAdapter.CategoryListViewHolder> {
-    private Context mContext;
-    private List<CategoryListItem> categoryListItems;
+public class RandomFragmentAdapter extends RecyclerView.Adapter<RandomFragmentAdapter.RandomFragmentViewHolder> {
 
-    public CategoryListItemAdapter(Context mContext, List<CategoryListItem> categoryListItems) {
+    private Context mContext;
+    private List<RandomListItem> randomListItems;
+
+    public RandomFragmentAdapter(Context mContext, List<RandomListItem> randomListItems) {
         this.mContext = mContext;
-        this.categoryListItems = categoryListItems;
+        this.randomListItems = randomListItems;
     }
 
     @NonNull
     @Override
-    public CategoryListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RandomFragmentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         LayoutInflater inflater=LayoutInflater.from(mContext);
-        view=inflater.inflate(R.layout.category_list_item,parent,false);
+        view=inflater.inflate(R.layout.random_fragment_item,parent,false);
 
-        return new CategoryListItemAdapter.CategoryListViewHolder(view);
+        return new RandomFragmentViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CategoryListViewHolder holder, final int position) {
-        Picasso.with(mContext).load(categoryListItems.get(position).image_url)
+    public void onBindViewHolder(@NonNull RandomFragmentViewHolder holder, final int position) {
+        Picasso.with(mContext).load(randomListItems.get(position).image_url)
                 .into(holder.imgPics);
 
         holder.setItemClickListner(new IitemClickListner() {
             @Override
             public void onClick(View v) {
-
-                Common.currentCategoryListItem=categoryListItems.get(position);
-                Intent intent=new Intent(mContext, WallpaperDetailActivity.class);
-                mContext.startActivity(intent);
+                Common.currentRandomListItem=randomListItems.get(position);
+                mContext.startActivity(new Intent(mContext, WallpaperDetailActivity.class));
             }
         });
-
-
     }
 
     @Override
     public int getItemCount() {
-        return categoryListItems.size();
+        return randomListItems.size();
     }
 
-    public class CategoryListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class RandomFragmentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView imgPics;
         IitemClickListner iitemClickListner;
@@ -70,12 +67,12 @@ public class CategoryListItemAdapter extends RecyclerView.Adapter<CategoryListIt
         }
 
 
-        public CategoryListViewHolder(View itemView) {
+        public RandomFragmentViewHolder(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);
 
-            imgPics=itemView.findViewById(R.id.category_item_image);
+            imgPics=itemView.findViewById(R.id.random_item_image);
         }
 
         @Override

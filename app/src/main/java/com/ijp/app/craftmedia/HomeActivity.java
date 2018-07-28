@@ -143,9 +143,11 @@ public class HomeActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_video_favorites) {
+
+            startActivity(new Intent(HomeActivity.this,FavoritesActivity.class));
+
+        } else if (id == R.id.nav_picture_favorites) {
 
         } else if (id == R.id.nav_slideshow) {
 

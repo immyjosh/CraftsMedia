@@ -7,9 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.ijp.app.craftmedia.Adapter.PicstaFragmentViewHolders.CategoryListItemAdapter;
+import com.ijp.app.craftmedia.Adapter.PicstaFragmentAdapters.CategoryListItemAdapter;
 import com.ijp.app.craftmedia.Model.PicstaModel.CategoryListItem;
-import com.ijp.app.craftmedia.Model.WallpeperDetailItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
 
@@ -24,10 +23,10 @@ public class CategoryListWallpaper extends AppCompatActivity {
 
     ICraftsMediaApi mService;
 
-    RecyclerView categoryListWallpeperRV;
 
     CompositeDisposable compositeDisposable=new CompositeDisposable();
 
+    RecyclerView categoryListWallpeperRV;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

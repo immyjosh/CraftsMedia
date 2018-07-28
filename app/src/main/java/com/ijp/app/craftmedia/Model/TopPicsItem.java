@@ -9,12 +9,16 @@ public class TopPicsItem {
     public TopPicsItem() {
     }
 
+
     public TopPicsItem(String ID, String name, String link, String category) {
         this.ID = ID;
         Name = name;
         Link = link;
         Category = category;
     }
+
+
+
 
     public String getID() {
         return ID;

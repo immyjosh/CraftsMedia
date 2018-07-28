@@ -16,8 +16,8 @@ import java.util.List;
 
 public class InfiniteListItemAdapter extends BaseAdapter {
 
-    List<InfiniteListItem> infiniteListItems;
-    Context context;
+    private List<InfiniteListItem> infiniteListItems;
+    private Context context;
 
     public InfiniteListItemAdapter(List<InfiniteListItem> infiniteListItems, Context context) {
         this.infiniteListItems = infiniteListItems;

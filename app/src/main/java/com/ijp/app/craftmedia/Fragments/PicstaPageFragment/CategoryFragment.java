@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.ijp.app.craftmedia.Adapter.PicstaFragmentViewHolders.CategoryFragmentAdapter;
+import com.ijp.app.craftmedia.Adapter.PicstaFragmentAdapters.CategoryFragmentAdapter;
 import com.ijp.app.craftmedia.Model.PicstaModel.CategoryFragmentItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
@@ -29,9 +29,10 @@ import io.reactivex.schedulers.Schedulers;
 public class CategoryFragment extends Fragment {
 
     RecyclerView categoryRV;
+    ProgressBar progressBar;
+
     ICraftsMediaApi mService;
 
-    ProgressBar progressBar;
     CompositeDisposable compositeDisposable=new CompositeDisposable();
 
     private static CategoryFragment INSTANCE=null;

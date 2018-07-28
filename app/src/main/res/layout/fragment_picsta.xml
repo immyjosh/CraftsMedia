@@ -20,7 +20,7 @@
 
         <Button
             android:id="@+id/btn1"
-            android:text="Download"
+            android:text="Categories"
             android:textSize="15dp"
             android:background="@android:color/black"
             android:textColor="@android:color/white"
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content" />
         <Button
             android:id="@+id/btn2"
-            android:text="Set"
+            android:text="Random"
             android:textSize="15dp"
             android:textColor="@android:color/white"
             android:layout_weight="1"

@@ -8,6 +8,9 @@ import com.ijp.app.craftmedia.Model.PicstaModel.RandomListItem;
 import com.ijp.app.craftmedia.Model.TopPicsItem;
 import com.ijp.app.craftmedia.Model.TopVideosItem;
 import com.ijp.app.craftmedia.Model.VideoDetailItem;
+import com.ijp.app.craftmedia.Model.VideoModel.VideoBannerItem;
+import com.ijp.app.craftmedia.Model.VideoModel.VideoCategoriesItem;
+import com.ijp.app.craftmedia.Model.VideoModel.VideoRandomModel;
 import com.ijp.app.craftmedia.Model.WallpeperDetailItem;
 
 import java.util.List;
@@ -58,4 +61,25 @@ public interface ICraftsMediaApi {
     @FormUrlEncoded
     @POST("randompicsdetail.php")
     Observable<List<WallpeperDetailItem>> getRandomLink(@Field("random_pics_id") String randomPicsId);
+
+    @GET("getvideobanner.php")
+    Observable<List<VideoBannerItem>> getVideoBannerItem();
+
+    @GET("getvideocategories.php")
+    Observable<List<VideoCategoriesItem>> getVideoCategoryItem();
+
+    @GET("getvideorandom.php")
+    Observable<List<VideoRandomModel>> getVideoRandomItem();
+
+    @FormUrlEncoded
+    @POST("videosbannerdetail.php")
+    Observable<List<VideoDetailItem>> getVideoBannerLink(@Field("video_banner_id") String video_banner_id);
+
+    @FormUrlEncoded
+    @POST("videosrandomDetail.php")
+    Observable<List<VideoDetailItem>> getVideoRandomLink(@Field("video_random_item_id") String video_random_item_id);
+
+    @FormUrlEncoded
+    @POST("favoritesvideodetails.php")
+    Observable<List<VideoDetailItem>> getVideoFavLink(@Field("ID") String favId);
 }
