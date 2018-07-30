@@ -8,9 +8,34 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/video_detail_rv"
+        android:nestedScrollingEnabled="false"
+        android:background="@color/bottom_nav_title"
+        app:fastScrollEnabled="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
 
+    <TextView
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/video_download"
+        android:text="Download This Video" />
+
+    <Button
+        android:id="@+id/video_download"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="216dp"
+        android:background="@drawable/rounded_button"
+        android:gravity="bottom"
+        android:paddingBottom="12dp"
+        android:text="Download"
+        android:textAlignment="center"
+        android:textSize="20sp" />
 
 
 </RelativeLayout>

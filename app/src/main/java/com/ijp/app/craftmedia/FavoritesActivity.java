@@ -105,4 +105,12 @@ public class FavoritesActivity extends AppCompatActivity {
     }
 
 
+
+    @Override
+    protected void onStop() {
+        compositeDisposable.clear();
+        super.onStop();
+    }
+
+
 }

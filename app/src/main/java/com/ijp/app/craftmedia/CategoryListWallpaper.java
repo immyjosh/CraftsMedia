@@ -77,4 +77,16 @@ public class CategoryListWallpaper extends AppCompatActivity {
         CategoryListItemAdapter adapter=new CategoryListItemAdapter(this,categoryListItems);
         categoryListWallpeperRV.setAdapter(adapter);
     }
+
+    @Override
+    protected void onDestroy() {
+        compositeDisposable.clear();
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStop() {
+        compositeDisposable.clear();
+        super.onStop();
+    }
 }

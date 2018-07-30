@@ -67,5 +67,8 @@ dependencies {
     //circle image view
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
+    //material search bar
+    implementation 'com.github.mancj:MaterialSearchBar:0.7.6'
+
 
 }

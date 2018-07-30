@@ -52,7 +52,17 @@
             android:name=".FavoritesActivity"
             android:label="@string/title_video_favorite_list"
             android:screenOrientation="portrait"
-            android:theme="@style/App_no_action_bar"/>
+            android:theme="@style/App_no_action_bar" />
+        <activity
+            android:name=".VideoSearchActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/App_no_action_bar"
+            />
+        <activity
+            android:name=".PicstaSearchActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/App_no_action_bar"
+            />
     </application>
 
 </manifest>

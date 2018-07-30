@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/bottom_nav_title"
+    android:padding="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PicstaSearchActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.mancj.materialsearchbar.MaterialSearchBar
+            android:id="@+id/picture_searchBar"
+            android:layout_alignParentTop="true"
+            app:mt_speechMode="false"
+            app:mt_maxSuggestionsCount="10"
+            app:mt_placeholder="Search for pictures"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></com.mancj.materialsearchbar.MaterialSearchBar>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/picture_search_rv"
+            android:scrollbars="vertical"
+            android:layout_below="@id/picture_searchBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
+
+
+</android.support.constraint.ConstraintLayout>

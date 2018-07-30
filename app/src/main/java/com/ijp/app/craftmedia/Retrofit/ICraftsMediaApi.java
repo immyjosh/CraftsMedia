@@ -82,4 +82,14 @@ public interface ICraftsMediaApi {
     @FormUrlEncoded
     @POST("favoritesvideodetails.php")
     Observable<List<VideoDetailItem>> getVideoFavLink(@Field("ID") String favId);
+
+    @GET("getallvideos.php")
+    Observable<List<VideoDetailItem>> getAllVideos();
+
+    @GET("getallpics.php")
+    Observable<List<WallpeperDetailItem>> getAllPics();
+
+    @FormUrlEncoded
+    @POST("favoritespicsdetail.php")
+    Observable<List<WallpeperDetailItem>> getPicsFavLink(@Field("ID") String favId);
 }

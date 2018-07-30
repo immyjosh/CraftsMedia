@@ -38,26 +38,26 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
     private Context mContext;
     private List<VideoDetailItem> videoDetailItems;
 
-    private Handler handler;
-
-    private BroadcastReceiver receiver;
-
-    private Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            if (done)
-                return;
-            updateStatus();
-            handler.postDelayed(this, 1000);
-        }
-    };
-    private volatile boolean done;
-
-    private DownloadManager dm;
-    private long queueId;
-
-    private Uri uri;
-    private String description;
+//    private Handler handler;
+//
+//    private BroadcastReceiver receiver;
+//
+//    private Runnable runnable = new Runnable() {
+//        @Override
+//        public void run() {
+//            if (done)
+//                return;
+//            updateStatus();
+//            handler.postDelayed(this, 1000);
+//        }
+//    };
+//    private volatile boolean done;
+//
+//    private DownloadManager dm;
+//    private long queueId;
+//
+//    private Uri uri;
+//    private String description;
 
     public VideoDetailAdapter(Context mContext, List<VideoDetailItem> videoDetailItems) {
         this.mContext = mContext;
@@ -94,32 +94,32 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
         else
             holder.video_favorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
 
-        done = false;
-
-        holder.videoDownload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dm = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
-                uri = Uri.parse(videoDetailItems.get(position).video_link);
-                description = videoDetailItems.get(position).Name;
-                downloadClick();
-
-            }
-        });
-
-        // For Download in the background
-        receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                long refId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-
-                if (refId == queueId)
-                    Toast.makeText(context, "Download Completed", Toast.LENGTH_SHORT).show();
-            }
-        };
-        IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-        mContext.registerReceiver(receiver, intentFilter);
+//        done = false;
+//
+//        holder.videoDownload.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                dm = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
+//                uri = Uri.parse(videoDetailItems.get(position).video_link);
+//                description = videoDetailItems.get(position).Name;
+//                downloadClick();
+//
+//            }
+//        });
+//
+//        // For Download in the background
+//        receiver = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                long refId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+//
+//                if (refId == queueId)
+//                    Toast.makeText(context, "Download Completed", Toast.LENGTH_SHORT).show();
+//            }
+//        };
+//        IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+//        mContext.registerReceiver(receiver, intentFilter);
 
 
 
@@ -141,8 +141,6 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
     }
 
 
-
-
     private void addOrRemoveTopVideoFavorite(VideoDetailItem videoDetailItem, boolean isAdd) {
         Favorites favorites = new Favorites();
         favorites.id = videoDetailItem.ID;
@@ -157,113 +155,113 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
 
     }
 
-    private void updateStatus() {
-        DownloadManager.Query reqQuery = new DownloadManager.Query();
-        reqQuery.setFilterById(queueId);
+//    private void updateStatus() {
+//        DownloadManager.Query reqQuery = new DownloadManager.Query();
+//        reqQuery.setFilterById(queueId);
+//
+//        Cursor cursor = dm.query(reqQuery);
+//
+//        if (cursor.moveToFirst()) {
+//
+//            int columnStatusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
+//            int columnReasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
+//            int columnFileIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+//
+//            int status = cursor.getInt(columnStatusIndex);
+//            int reason = cursor.getInt(columnReasonIndex);
+//            String fileName = cursor.getString(columnFileIndex);
+//
+//            String statusTxt = null, reasonStr = null;
+//
+//            switch (status) {
+//                case DownloadManager.STATUS_FAILED:
+//                    statusTxt = "STATUS_FAILED";
+//                    done = true;
+//
+//                    switch (reason) {
+//                        case DownloadManager.ERROR_CANNOT_RESUME:
+//                            reasonStr = "ERROR_CANNOT_RESUME";
+//                            break;
+//                        case DownloadManager.ERROR_DEVICE_NOT_FOUND:
+//                            reasonStr = "ERROR_DEVICE_NOT_FOUND";
+//                            break;
+//                        case DownloadManager.ERROR_FILE_ALREADY_EXISTS:
+//                            reasonStr = "ERROR_FILE_ALREADY_EXISTS";
+//                            break;
+//                        case DownloadManager.ERROR_FILE_ERROR:
+//                            reasonStr = "ERROR_FILE_ERROR";
+//                            break;
+//                        case DownloadManager.ERROR_HTTP_DATA_ERROR:
+//                            reasonStr = "ERROR_HTTP_DATA_ERROR";
+//                            break;
+//                        case DownloadManager.ERROR_INSUFFICIENT_SPACE:
+//                            reasonStr = "ERROR_INSUFFICIENT_SPACE";
+//                            break;
+//                        case DownloadManager.ERROR_TOO_MANY_REDIRECTS:
+//                            reasonStr = "ERROR_TOO_MANY_REDIRECTS";
+//                            break;
+//                        case DownloadManager.ERROR_UNHANDLED_HTTP_CODE:
+//                            reasonStr = "ERROR_UNHANDLED_HTTP_CODE";
+//                            break;
+//                        case DownloadManager.ERROR_UNKNOWN:
+//                            reasonStr = "ERROR_UNKNOWN";
+//                            break;
+//                    }
+//                    break;
+//                case DownloadManager.STATUS_PAUSED:
+//                    statusTxt = "STATUS_PAUSED";
+//                    switch (reason) {
+//                        case DownloadManager.PAUSED_QUEUED_FOR_WIFI:
+//                            reasonStr = "PAUSED_QUEUED_FOR_WIFI";
+//                            break;
+//                        case DownloadManager.PAUSED_UNKNOWN:
+//                            reasonStr = "PAUSED_UNKNOWN";
+//                            break;
+//                        case DownloadManager.PAUSED_WAITING_FOR_NETWORK:
+//                            reasonStr = "PAUSED_WAITING_FOR_NETWORK";
+//                            break;
+//                        case DownloadManager.PAUSED_WAITING_TO_RETRY:
+//                            reasonStr = "PAUSED_WAITING_TO_RETRY";
+//                            break;
+//                    }
+//                    break;
+//                case DownloadManager.STATUS_PENDING:
+//                    statusTxt = "STATUS_PENDING";
+//                    break;
+//                case DownloadManager.STATUS_RUNNING:
+//                    statusTxt = "STATUS_RUNNING";
+//                    break;
+//                case DownloadManager.STATUS_SUCCESSFUL:
+//                    statusTxt = "STATUS_SUCCESSFUL";
+//                    done = true;
+//                    break;
+//
+//
+//            }
+//
+//        }
+//        cursor.close();
+//
+//    }
 
-        Cursor cursor = dm.query(reqQuery);
-
-        if (cursor.moveToFirst()) {
-
-            int columnStatusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
-            int columnReasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
-            int columnFileIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
-
-            int status = cursor.getInt(columnStatusIndex);
-            int reason = cursor.getInt(columnReasonIndex);
-            String fileName = cursor.getString(columnFileIndex);
-
-            String statusTxt = null, reasonStr = null;
-
-            switch (status) {
-                case DownloadManager.STATUS_FAILED:
-                    statusTxt = "STATUS_FAILED";
-                    done = true;
-
-                    switch (reason) {
-                        case DownloadManager.ERROR_CANNOT_RESUME:
-                            reasonStr = "ERROR_CANNOT_RESUME";
-                            break;
-                        case DownloadManager.ERROR_DEVICE_NOT_FOUND:
-                            reasonStr = "ERROR_DEVICE_NOT_FOUND";
-                            break;
-                        case DownloadManager.ERROR_FILE_ALREADY_EXISTS:
-                            reasonStr = "ERROR_FILE_ALREADY_EXISTS";
-                            break;
-                        case DownloadManager.ERROR_FILE_ERROR:
-                            reasonStr = "ERROR_FILE_ERROR";
-                            break;
-                        case DownloadManager.ERROR_HTTP_DATA_ERROR:
-                            reasonStr = "ERROR_HTTP_DATA_ERROR";
-                            break;
-                        case DownloadManager.ERROR_INSUFFICIENT_SPACE:
-                            reasonStr = "ERROR_INSUFFICIENT_SPACE";
-                            break;
-                        case DownloadManager.ERROR_TOO_MANY_REDIRECTS:
-                            reasonStr = "ERROR_TOO_MANY_REDIRECTS";
-                            break;
-                        case DownloadManager.ERROR_UNHANDLED_HTTP_CODE:
-                            reasonStr = "ERROR_UNHANDLED_HTTP_CODE";
-                            break;
-                        case DownloadManager.ERROR_UNKNOWN:
-                            reasonStr = "ERROR_UNKNOWN";
-                            break;
-                    }
-                    break;
-                case DownloadManager.STATUS_PAUSED:
-                    statusTxt = "STATUS_PAUSED";
-                    switch (reason) {
-                        case DownloadManager.PAUSED_QUEUED_FOR_WIFI:
-                            reasonStr = "PAUSED_QUEUED_FOR_WIFI";
-                            break;
-                        case DownloadManager.PAUSED_UNKNOWN:
-                            reasonStr = "PAUSED_UNKNOWN";
-                            break;
-                        case DownloadManager.PAUSED_WAITING_FOR_NETWORK:
-                            reasonStr = "PAUSED_WAITING_FOR_NETWORK";
-                            break;
-                        case DownloadManager.PAUSED_WAITING_TO_RETRY:
-                            reasonStr = "PAUSED_WAITING_TO_RETRY";
-                            break;
-                    }
-                    break;
-                case DownloadManager.STATUS_PENDING:
-                    statusTxt = "STATUS_PENDING";
-                    break;
-                case DownloadManager.STATUS_RUNNING:
-                    statusTxt = "STATUS_RUNNING";
-                    break;
-                case DownloadManager.STATUS_SUCCESSFUL:
-                    statusTxt = "STATUS_SUCCESSFUL";
-                    done = true;
-                    break;
-
-
-            }
-
-        }
-        cursor.close();
-
-    }
-
-    private void downloadClick() {
-
-        DownloadManager.Request request = new DownloadManager.Request(uri);
-        request.setTitle("CraftsMedia-"+description);
-        request.setDescription("Downloading File, please wait...");
-        request.setAllowedNetworkTypes(
-                DownloadManager.Request.NETWORK_WIFI
-                        | DownloadManager.Request.NETWORK_MOBILE)
-                .allowScanningByMediaScanner();
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setDestinationInExternalPublicDir("CraftsMedia_Videos", description + ".mp4");
-
-        queueId = dm.enqueue(request);
-
-        handler = new Handler();
-        handler.post(runnable);
-
-    }
+//    private void downloadClick() {
+//
+//        DownloadManager.Request request = new DownloadManager.Request(uri);
+//        request.setTitle("CraftsMedia-"+description);
+//        request.setDescription("Downloading File, please wait...");
+//        request.setAllowedNetworkTypes(
+//                DownloadManager.Request.NETWORK_WIFI
+//                        | DownloadManager.Request.NETWORK_MOBILE)
+//                .allowScanningByMediaScanner();
+//        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+//        request.setDestinationInExternalPublicDir("CraftsMedia_Videos", description + ".mp4");
+//
+//        queueId = dm.enqueue(request);
+//
+//        handler = new Handler();
+//        handler.post(runnable);
+//
+//    }
 
 
     @Override
@@ -277,7 +275,7 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
 
         TextView videoDetailTitle;
 
-        ImageView videoDownload, video_favorite;
+        ImageView video_favorite;
 
 
         public VideoDetailViewholder(View itemView) {
@@ -285,7 +283,6 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
 
             videoPlayer = itemView.findViewById(R.id.video_player);
             videoDetailTitle = itemView.findViewById(R.id.video_details_title);
-            videoDownload = itemView.findViewById(R.id.video_download);
             video_favorite = itemView.findViewById(R.id.video_favorite);
         }
 

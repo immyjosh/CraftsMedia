@@ -16,6 +16,7 @@ import com.ijp.app.craftmedia.Model.VideoDetailItem;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoBannerItem;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoCategoriesItem;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoRandomModel;
+import com.ijp.app.craftmedia.Model.WallpeperDetailItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Retrofit.RetrofitClient;
 
@@ -33,6 +34,7 @@ public class Common {
     public static TopVideosItem currentVideosItem = null;
     public static NewPicsItem currentNewPicsItem = null;
     public static NewVideosItem currentNewVideosItem = null;
+    public static WallpeperDetailItem currentWallpaperDetailItem=null;
 
     public static CategoryFragmentItem currentCategoryFragmentsItem = null;
     public static CategoryListItem currentCategoryListItem = null;
