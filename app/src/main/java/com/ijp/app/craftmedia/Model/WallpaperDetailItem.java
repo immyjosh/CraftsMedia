@@ -1,23 +1,50 @@
 package com.ijp.app.craftmedia.Model;
 
-public class WallpeperDetailItem {
+public class WallpaperDetailItem {
     public String ID;
     public String Category;
     public String image_link ;
+    public String orig_image_link ;
     private String top_pics_id;
     private String new_pics_id;
     private String picsta_category_list_id;
 
 
-    public WallpeperDetailItem() {
+    public WallpaperDetailItem() {
     }
 
-    public WallpeperDetailItem(String category, String image_link, String top_pics_id, String new_pics_id, String picsta_category_list_id) {
+    public WallpaperDetailItem(String ID, String category, String image_link, String orig_image_link, String top_pics_id, String new_pics_id, String picsta_category_list_id) {
+        this.ID = ID;
         Category = category;
         this.image_link = image_link;
+        this.orig_image_link = orig_image_link;
         this.top_pics_id = top_pics_id;
         this.new_pics_id = new_pics_id;
         this.picsta_category_list_id = picsta_category_list_id;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
+    public String getCategory() {
+        return Category;
+    }
+
+    public void setCategory(String category) {
+        Category = category;
+    }
+
+    public String getOrig_image_link() {
+        return orig_image_link;
+    }
+
+    public void setOrig_image_link(String orig_image_link) {
+        this.orig_image_link = orig_image_link;
     }
 
     public String getName() {

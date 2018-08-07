@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -49,6 +50,7 @@ public class TopVideosAdapter extends RecyclerView.Adapter<TopVideosAdapter.TopV
                 Common.currentVideosItem=topVideosItemList.get(position);
 
                 mContext.startActivity(new Intent(mContext, VideoDetailsPage.class));
+                ((Activity) mContext).overridePendingTransition(R.anim.fadein,R.anim.fade_out);
             }
         });
     }

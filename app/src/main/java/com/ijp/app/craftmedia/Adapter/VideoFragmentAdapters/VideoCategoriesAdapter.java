@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia.Adapter.VideoFragmentAdapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -52,6 +53,8 @@ public class VideoCategoriesAdapter extends RecyclerView.Adapter<VideoCategories
             public void onClick(View v) {
                 Common.currentVideoCategoriesItem=videoCategoriesItemList.get(position);
                 mContext.startActivity(new Intent(mContext, VideoCategoryList.class));
+                ((Activity) mContext).overridePendingTransition(R.anim.fadein,R.anim.fade_out);
+
             }
         });
     }

@@ -3,16 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.PicstaPageFragment.CategoryFragment">
 
-    <ProgressBar
-        android:id="@+id/progress_category"
-        android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/progress_bar_picsta"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="193dp"
+        app:indicatorColor="@color/text_color"
+        app:indicatorName="PacmanIndicator" />
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/category_rv"
+        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
 

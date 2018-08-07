@@ -14,6 +14,7 @@
     <LinearLayout
         android:id="@+id/action_btn"
         android:orientation="horizontal"
+        android:paddingBottom="5dp"
         android:weightSum="2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -22,7 +23,7 @@
             android:id="@+id/btn1"
             android:text="Categories"
             android:textSize="15dp"
-            android:background="@android:color/black"
+            android:background="#27253d"
             android:textColor="@android:color/white"
             android:layout_weight="1"
             android:layout_width="match_parent"

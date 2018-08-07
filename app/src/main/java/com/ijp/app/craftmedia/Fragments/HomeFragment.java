@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
@@ -26,6 +27,7 @@ import com.ijp.app.craftmedia.Model.TopVideosItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.List;
 
@@ -46,6 +48,9 @@ public class HomeFragment extends Fragment {
 
     ICraftsMediaApi mService;
     RecyclerView topPicsRV,topVideosRV,newPicsRV,newVideosRV;
+
+    AVLoadingIndicatorView avLoadingIndicatorView;
+    RelativeLayout relativeLayout;
 
     CompositeDisposable compositeDisposable=new CompositeDisposable();
 
@@ -108,6 +113,11 @@ public class HomeFragment extends Fragment {
 //            }
 //        });
 
+
+        relativeLayout=view.findViewById(R.id.after_prog_layout);
+        avLoadingIndicatorView=view.findViewById(R.id.progress_bar);
+        avLoadingIndicatorView.smoothToShow();
+
         //Horizontal View of Top Pics Items
         topPicsRV=view.findViewById(R.id.top_pics_rv);
         topPicsRV.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
@@ -132,6 +142,7 @@ public class HomeFragment extends Fragment {
         getVideosItem();
         getNewPicsItem();
         getNewVideosItem();
+
 
     }
 
@@ -164,6 +175,8 @@ public class HomeFragment extends Fragment {
                 .subscribe(new Consumer<List<NewPicsItem>>() {
                     @Override
                     public void accept(List<NewPicsItem> newPicsItems) throws Exception {
+                        avLoadingIndicatorView.smoothToHide();
+                        relativeLayout.setVisibility(View.VISIBLE);
                         displayNewPics(newPicsItems);
                     }
                 }, new Consumer<Throwable>() {

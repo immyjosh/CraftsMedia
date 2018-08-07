@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
                 launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                 startActivity(launchNextActivity);
+                overridePendingTransition(R.anim.pop_in,R.anim.pop_out);
             }
         },2000);
     }

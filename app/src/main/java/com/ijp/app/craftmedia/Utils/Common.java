@@ -2,8 +2,10 @@ package com.ijp.app.craftmedia.Utils;
 
 
 import com.ijp.app.craftmedia.Database.DataSource.FavoriteRepository;
+import com.ijp.app.craftmedia.Database.DataSource.PicstaFavoriteRepository;
 import com.ijp.app.craftmedia.Database.Local.CraftsMediaRoomDatabase;
 import com.ijp.app.craftmedia.Database.ModelDB.Favorites;
+import com.ijp.app.craftmedia.Database.ModelDB.PicstaFavorites;
 import com.ijp.app.craftmedia.Model.InfiniteListItem;
 import com.ijp.app.craftmedia.Model.NewPicsItem;
 import com.ijp.app.craftmedia.Model.NewVideosItem;
@@ -16,7 +18,7 @@ import com.ijp.app.craftmedia.Model.VideoDetailItem;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoBannerItem;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoCategoriesItem;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoRandomModel;
-import com.ijp.app.craftmedia.Model.WallpeperDetailItem;
+import com.ijp.app.craftmedia.Model.WallpaperDetailItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Retrofit.RetrofitClient;
 
@@ -34,7 +36,7 @@ public class Common {
     public static TopVideosItem currentVideosItem = null;
     public static NewPicsItem currentNewPicsItem = null;
     public static NewVideosItem currentNewVideosItem = null;
-    public static WallpeperDetailItem currentWallpaperDetailItem=null;
+    public static WallpaperDetailItem currentWallpaperDetailItem=null;
 
     public static CategoryFragmentItem currentCategoryFragmentsItem = null;
     public static CategoryListItem currentCategoryListItem = null;
@@ -48,6 +50,9 @@ public class Common {
     public static CraftsMediaRoomDatabase craftsMediaRoomDatabase;
     public static FavoriteRepository favoriteRepository;
     public static Favorites currentFavoritesItem=null;
+
+    public static PicstaFavoriteRepository picstaFavoriteRepository;
+    public static PicstaFavorites currentPicstaFavorites=null;
 
 
 

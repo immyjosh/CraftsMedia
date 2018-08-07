@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia.Adapter.PicstaFragmentAdapters;
 
+import android.app.Activity;
 import android.content.Context;
 
 import android.content.Intent;
@@ -20,6 +21,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+
 public class CategoryFragmentAdapter extends RecyclerView.Adapter<CategoryFragmentAdapter.CatrgoryFragmentViewHolder> {
     private Context mContext;
     private List<CategoryFragmentItem> categoryFragmentItemList;
@@ -30,6 +32,8 @@ public class CategoryFragmentAdapter extends RecyclerView.Adapter<CategoryFragme
         this.mContext = mContext;
         this.categoryFragmentItemList = categoryFragmentItemList;
     }
+
+
 
     @NonNull
     @Override
@@ -53,8 +57,11 @@ public class CategoryFragmentAdapter extends RecyclerView.Adapter<CategoryFragme
         holder.setItemClickListner(new IitemClickListner() {
             @Override
             public void onClick(View v) {
+
                 Common.currentCategoryFragmentsItem=categoryFragmentItemList.get(position);
                 mContext.startActivity(new Intent(mContext, CategoryListWallpaper.class));
+                ((Activity) mContext).overridePendingTransition(R.anim.fadein,R.anim.fade_out);
+
             }
         });
     }

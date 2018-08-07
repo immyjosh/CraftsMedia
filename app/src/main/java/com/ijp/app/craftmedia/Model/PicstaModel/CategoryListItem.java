@@ -3,15 +3,27 @@ package com.ijp.app.craftmedia.Model.PicstaModel;
 public class CategoryListItem {
     public String ID;
     public String image_url;
+    public String orig_image_url;
     public String category_item_id;
 
     public CategoryListItem() {
     }
 
-    public CategoryListItem(String ID, String image_url, String category_item_id) {
+
+
+    public CategoryListItem(String ID, String image_url, String orig_image_url, String category_item_id) {
         this.ID = ID;
         this.image_url = image_url;
+        this.orig_image_url = orig_image_url;
         this.category_item_id = category_item_id;
+    }
+
+    public String getOrig_image_url() {
+        return orig_image_url;
+    }
+
+    public void setOrig_image_url(String orig_image_url) {
+        this.orig_image_url = orig_image_url;
     }
 
     public String getID() {

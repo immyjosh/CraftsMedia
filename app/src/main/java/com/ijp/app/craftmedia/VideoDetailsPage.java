@@ -1,54 +1,47 @@
 package com.ijp.app.craftmedia;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 
 import com.ijp.app.craftmedia.Adapter.VideoDetailAdapter;
 import com.ijp.app.craftmedia.Database.DataSource.FavoriteRepository;
 import com.ijp.app.craftmedia.Database.Local.CraftsMediaRoomDatabase;
 import com.ijp.app.craftmedia.Database.Local.FavoriteDataSource;
-import com.ijp.app.craftmedia.Database.ModelDB.Favorites;
-import com.ijp.app.craftmedia.Helper.SaveImageHelper;
-import com.ijp.app.craftmedia.Model.TopPicsItem;
-import com.ijp.app.craftmedia.Model.TopVideosItem;
 import com.ijp.app.craftmedia.Model.VideoDetailItem;
-import com.ijp.app.craftmedia.Model.VideoModel.VideoBannerItem;
-import com.ijp.app.craftmedia.Model.VideoModel.VideoRandomModel;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
-import com.squareup.picasso.Picasso;
+import com.shashank.sony.fancydialoglib.Animation;
+import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
+import com.shashank.sony.fancydialoglib.Icon;
+import com.wang.avi.AVLoadingIndicatorView;
 
-
-import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.UUID;
 
 import cn.jzvd.JZVideoPlayer;
-import cn.jzvd.JZVideoPlayerStandard;
 import dmax.dialog.SpotsDialog;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -61,6 +54,12 @@ public class VideoDetailsPage extends AppCompatActivity {
 
     RecyclerView videoDetailRV;
     Button videoDownload;
+    TextView videoDetailTextDownloading;
+    AVLoadingIndicatorView avLoadingIndicatorView,avLoadingVideoDetail;
+    RelativeLayout videoDetailLayout;
+
+    FancyAlertDialog builder;
+
 
 
     ICraftsMediaApi mService;
@@ -98,9 +97,27 @@ public class VideoDetailsPage extends AppCompatActivity {
                     dialog.setMessage("Please Wait...");
 
 
+                } else {
+//                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(WallpaperDetailActivity.this);
+//                    builder.setTitle("Permission Required");
+//                    builder.setMessage("You need to accept the permission to download images");
+//
+//                    builder.setNegativeButton("Sure", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            if(ActivityCompat.checkSelfPermission(VideoDetailsPage.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+//                            {
+//                                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1000);
+//
+//                            }
+//                            else {
+//
+//                            }
+//                        }
+//                    });
 
-                } else
-                    Toast.makeText(this, "You Need To Accept Permission To Download Image", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "You need to accept permission", Toast.LENGTH_SHORT).show();
+                }
             }
             break;
         }
@@ -118,73 +135,58 @@ public class VideoDetailsPage extends AppCompatActivity {
         videoDetailRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         videoDetailRV.setHasFixedSize(true);
 
+        done = false;
+
+        videoDownload = findViewById(R.id.video_download);
+        videoDetailTextDownloading=findViewById(R.id.video_detail_text_downloading);
+
+        videoDetailLayout=findViewById(R.id.video_detail_layout);
+
+        avLoadingIndicatorView=findViewById(R.id.progress_bar_video_download);
+        avLoadingVideoDetail=findViewById(R.id.progress_bar_video_detail);
+        avLoadingVideoDetail.smoothToShow();
+
+        // For Download in the background
+        initBroadcastReceiver();
+
+        //Load All Videos
+        loadingVideos();
+
         // Init Database
         initDB();
 
-        done = false;
-        videoDownload=findViewById(R.id.video_download);
-
-        videoDownload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                downloadClick();
-            }
-        });
+        //Video Download
+        downloadClick();
+    }
 
 
-        // For Download in the background
+    // Initialize Room Database
+    private void initDB() {
+        Common.craftsMediaRoomDatabase = CraftsMediaRoomDatabase.getInstance(this);
+        Common.favoriteRepository =
+                FavoriteRepository.
+                        getInstance(FavoriteDataSource.
+                                getInstance(Common.craftsMediaRoomDatabase.favoriteDAO()));
+    }
+
+    private void initBroadcastReceiver() {
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 long refId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
 
-                if (refId == queueId)
+                if (refId == queueId) {
                     Toast.makeText(context, "Download Completed", Toast.LENGTH_SHORT).show();
-                videoDownload.setEnabled(true);
+                    videoDownload.setVisibility(View.VISIBLE);
+                    avLoadingIndicatorView.smoothToHide();
+                    videoDetailTextDownloading.setVisibility(View.INVISIBLE);
+                }
+
             }
         };
         IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
         registerReceiver(receiver, intentFilter);
-
-        /**  Load Videos Coming From API  **/
-        if (Common.currentVideosItem != null) {
-
-            loadVideo(Common.currentVideosItem.ID);
-
-
-        } else if (Common.currentVideoBannerItem != null) {
-
-            loadVideoBanner(Common.currentVideoBannerItem.ID);
-
-        } else if (Common.currentVideoRandomItem != null) {
-
-            loadVideoRandom(Common.currentVideoRandomItem.ID);
-
-        } else if (Common.currentFavoritesItem != null) {
-
-            loadFavoriteVideo(Common.currentFavoritesItem.id);
-
-        }else if (Common.currentVideoDetailItem!=null){
-            loadSearchVideos(Common.currentVideoDetailItem.ID);
-        }
     }
-
-    private void loadSearchVideos(String searchId) {
-        compositeDisposable.add(mService.getVideoFavLink(searchId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<VideoDetailItem>>() {
-                    @Override
-                    public void accept(List<VideoDetailItem> videoDetailItems) throws Exception {
-                        displayVideoFav(videoDetailItems);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                    }
-                }));
-    }
-
 
     private void updateStatus() {
         DownloadManager.Query reqQuery = new DownloadManager.Query();
@@ -276,62 +278,184 @@ public class VideoDetailsPage extends AppCompatActivity {
     }
 
     private void downloadClick() {
-        dm = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
 
-        videoDownload.setEnabled(false);
+        videoDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        if (Common.currentVideosItem!=null) {
+                if (ActivityCompat.checkSelfPermission(VideoDetailsPage.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1000);
 
-            uri = Uri.parse(Common.currentVideosItem.getVideo_link());
+                } else {
 
-            description = Common.currentVideosItem.getName();
+                    dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
 
-        }else if (Common.currentVideoBannerItem != null){
+                    showMaterialDialog();
 
-            uri = Uri.parse(Common.currentVideoBannerItem.getVideo_link());
+                    if (Common.currentVideosItem != null) {
 
-            description = Common.currentVideoBannerItem.getName();
-        }else if (Common.currentVideoRandomItem != null) {
+                        uri = Uri.parse(Common.currentVideosItem.getVideo_link());
 
-            uri = Uri.parse(Common.currentVideoRandomItem.getVideo_link());
+                        description = Common.currentVideosItem.getName();
 
-            description = Common.currentVideoRandomItem.getDescription();
+                    } else if (Common.currentVideoBannerItem != null) {
 
-        } else if (Common.currentFavoritesItem != null) {
+                        uri = Uri.parse(Common.currentVideoBannerItem.getVideo_link());
 
-            uri = Uri.parse(Common.currentFavoritesItem.video_link);
+                        description = Common.currentVideoBannerItem.getName();
+                    } else if (Common.currentVideoRandomItem != null) {
 
-            description = Common.currentFavoritesItem.name;
-        }else if (Common.currentWallpaperDetailItem!=null){
-            uri = Uri.parse(Common.currentVideoDetailItem.video_link);
+                        uri = Uri.parse(Common.currentVideoRandomItem.getVideo_link());
 
-            description = Common.currentVideoDetailItem.Name;
-        }
+                        description = Common.currentVideoRandomItem.getDescription();
 
-        DownloadManager.Request request = new DownloadManager.Request(uri);
-        request.setTitle("CraftsMedia-"+description);
-        request.setDescription("Downloading File, please wait...");
-        request.setAllowedNetworkTypes(
-                DownloadManager.Request.NETWORK_WIFI
-                        | DownloadManager.Request.NETWORK_MOBILE)
-                .allowScanningByMediaScanner();
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setDestinationInExternalPublicDir("CraftsMedia_Videos", description + ".mp4");
+                    } else if (Common.currentFavoritesItem != null) {
 
-        queueId = dm.enqueue(request);
+                        uri = Uri.parse(Common.currentFavoritesItem.video_link);
 
-        handler = new Handler();
-        handler.post(runnable);
+                        description = Common.currentFavoritesItem.name;
+                    } else if (Common.currentWallpaperDetailItem != null) {
+                        uri = Uri.parse(Common.currentVideoDetailItem.video_link);
+
+                        description = Common.currentVideoDetailItem.Name;
+                    }
+
+                    DownloadManager.Request request = new DownloadManager.Request(uri);
+                    request.setTitle("CraftsMedia-" + description);
+                    request.setDescription("Downloading File, please wait...");
+                    request.setAllowedNetworkTypes(
+                            DownloadManager.Request.NETWORK_WIFI
+                                    | DownloadManager.Request.NETWORK_MOBILE)
+                            .allowScanningByMediaScanner();
+                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                    request.setDestinationInExternalPublicDir("CraftsMedia_Videos", description + ".mp4");
+
+                    queueId = dm.enqueue(request);
+
+                    handler = new Handler();
+                    handler.post(runnable);
+
+                }
+
+            }
+        });
 
     }
 
-    // Initialize Room Database
-    private void initDB() {
-        Common.craftsMediaRoomDatabase = CraftsMediaRoomDatabase.getInstance(this);
-        Common.favoriteRepository =
-                FavoriteRepository.
-                        getInstance(FavoriteDataSource.
-                                getInstance(Common.craftsMediaRoomDatabase.favoriteDAO()));
+    private void showMaterialDialog() {
+
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(this)
+                .setTitle("Downloading in Background")
+                .setIcon(R.drawable.ic_cloud_download_grey_24dp)
+                .setMessage("Thanks For Downloading");
+
+        final AlertDialog alert = dialog.create();
+        alert.show();
+
+        avLoadingIndicatorView.setVisibility(View.VISIBLE);
+        avLoadingIndicatorView.smoothToShow();
+        videoDetailTextDownloading.setVisibility(View.VISIBLE);
+
+        videoDownload.setVisibility(View.INVISIBLE);
+
+
+        // Hide after some seconds
+        final Handler handler  = new Handler();
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (alert.isShowing()) {
+                    alert.dismiss();
+
+
+                }
+            }
+        };
+
+        alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                handler.removeCallbacks(runnable);
+            }
+        });
+
+        handler.postDelayed(runnable, 3000);
+
+
+    }
+
+    private void showAlertDialog() {
+        builder=new FancyAlertDialog.Builder(this)
+                .setTitle("Rate us if you like the app")
+                .setBackgroundColor(Color.parseColor("#303F9F"))  //Don't pass R.color.colorvalue
+                .setMessage("Do you really want to Exit ?")
+                .setNegativeBtnText("Cancel")
+                .setPositiveBtnBackground(Color.parseColor("#FF4081"))  //Don't pass R.color.colorvalue
+                .setPositiveBtnText("Rate")
+                .setNegativeBtnBackground(Color.parseColor("#FFA9A7A8"))  //Don't pass R.color.colorvalue
+                .setAnimation(Animation.POP)
+                .isCancellable(true)
+                .setIcon(R.drawable.ic_cloud_download_grey_24dp, Icon.Visible)
+                .OnPositiveClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        Toast.makeText(getApplicationContext(),"Rate",Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .OnNegativeClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+                    }
+                })
+                .build();
+
+    }
+
+
+    /**
+     * Load Videos Coming From API
+     */
+    private void loadingVideos() {
+        if (Common.currentVideosItem != null) {
+
+            loadVideo(Common.currentVideosItem.ID);
+
+        } else if (Common.currentVideoBannerItem != null) {
+
+            loadVideoBanner(Common.currentVideoBannerItem.ID);
+
+        } else if (Common.currentVideoRandomItem != null) {
+
+            loadVideoRandom(Common.currentVideoRandomItem.ID);
+
+        } else if (Common.currentFavoritesItem != null) {
+
+            loadFavoriteVideo(Common.currentFavoritesItem.id);
+
+        } else if (Common.currentVideoDetailItem != null) {
+
+            loadSearchVideos(Common.currentVideoDetailItem.ID);
+
+        }
+    }
+
+    private void loadSearchVideos(String searchId) {
+        compositeDisposable.add(mService.getVideoFavLink(searchId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<VideoDetailItem>>() {
+                    @Override
+                    public void accept(List<VideoDetailItem> videoDetailItems) throws Exception {
+                        avLoadingVideoDetail.smoothToHide();
+                        videoDetailLayout.setVisibility(View.VISIBLE);
+                        displayVideoFav(videoDetailItems);
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
     }
 
     //Load Favorite Videos-Videos Fragment
@@ -342,6 +466,8 @@ public class VideoDetailsPage extends AppCompatActivity {
                 .subscribe(new Consumer<List<VideoDetailItem>>() {
                     @Override
                     public void accept(List<VideoDetailItem> videoDetailItems) throws Exception {
+                        avLoadingVideoDetail.smoothToHide();
+                        videoDetailLayout.setVisibility(View.VISIBLE);
                         displayVideoFav(videoDetailItems);
                     }
                 }, new Consumer<Throwable>() {
@@ -365,6 +491,8 @@ public class VideoDetailsPage extends AppCompatActivity {
                 .subscribe(new Consumer<List<VideoDetailItem>>() {
                     @Override
                     public void accept(List<VideoDetailItem> videoDetailItems) throws Exception {
+                        avLoadingVideoDetail.smoothToHide();
+                        videoDetailLayout.setVisibility(View.VISIBLE);
                         displayVideoRandom(videoDetailItems);
                     }
                 }, new Consumer<Throwable>() {
@@ -389,6 +517,8 @@ public class VideoDetailsPage extends AppCompatActivity {
                 .subscribe(new Consumer<List<VideoDetailItem>>() {
                     @Override
                     public void accept(List<VideoDetailItem> videoDetailItems) throws Exception {
+                        avLoadingVideoDetail.smoothToHide();
+                        videoDetailLayout.setVisibility(View.VISIBLE);
                         displayVideoBanner(videoDetailItems);
                     }
                 }, new Consumer<Throwable>() {
@@ -414,6 +544,8 @@ public class VideoDetailsPage extends AppCompatActivity {
                 .subscribe(new Consumer<List<VideoDetailItem>>() {
                     @Override
                     public void accept(List<VideoDetailItem> videoDetailItems) throws Exception {
+                        avLoadingVideoDetail.smoothToHide();
+                        videoDetailLayout.setVisibility(View.VISIBLE);
                         displayVideo(videoDetailItems);
                     }
                 }, new Consumer<Throwable>() {
@@ -441,12 +573,15 @@ public class VideoDetailsPage extends AppCompatActivity {
 
         super.onBackPressed();
 
+
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+
         // Set Loaded Videos to null
         Common.currentVideosItem = null;
         Common.currentVideoBannerItem = null;
         Common.currentVideoRandomItem = null;
         Common.currentFavoritesItem = null;
-        Common.currentVideoDetailItem=null;
+        Common.currentVideoDetailItem = null;
 
         unregisterReceiver(receiver);
 
@@ -458,6 +593,7 @@ public class VideoDetailsPage extends AppCompatActivity {
         JZVideoPlayer.releaseAllVideos();
 
     }
+
     @Override
     protected void onDestroy() {
         compositeDisposable.clear();
@@ -469,4 +605,6 @@ public class VideoDetailsPage extends AppCompatActivity {
         compositeDisposable.clear();
         super.onStop();
     }
+
+
 }

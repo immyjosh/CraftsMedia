@@ -6,12 +6,16 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.ijp.app.craftmedia.Adapter.AllVideoDetailAdapter;
 import com.ijp.app.craftmedia.Model.VideoDetailItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.mancj.materialsearchbar.MaterialSearchBar;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,10 @@ public class VideoSearchActivity extends AppCompatActivity {
 
     MaterialSearchBar searchBar;
 
+    RelativeLayout videoSearchLayout;
+
+    AVLoadingIndicatorView avLoadingIndicatorView;
+
     ICraftsMediaApi mService;
 
     RecyclerView recyclerSearch;
@@ -43,8 +51,14 @@ public class VideoSearchActivity extends AppCompatActivity {
 
         mService= Common.getAPI();
 
+        videoSearchLayout=findViewById(R.id.video_search_layout);
+        avLoadingIndicatorView=findViewById(R.id.progress_bar_search_videos);
+        avLoadingIndicatorView.smoothToShow();
+
         recyclerSearch=findViewById(R.id.videos_search_rv);
         recyclerSearch.setLayoutManager(new GridLayoutManager(this,2));
+
+        loadAllVideos();
 
         searchBar=findViewById(R.id.video_searchBar);
 
@@ -75,13 +89,14 @@ public class VideoSearchActivity extends AppCompatActivity {
         searchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
             @Override
             public void onSearchStateChanged(boolean enabled) {
-                loadAllVideos();
                 if(!enabled)
                     recyclerSearch.setAdapter(adapter); // restores full list of drinks
             }
 
             @Override
             public void onSearchConfirmed(CharSequence text) {
+                avLoadingIndicatorView.smoothToShow();
+                videoSearchLayout.setVisibility(View.INVISIBLE);
                 startSearch(text);
 
             }
@@ -94,12 +109,30 @@ public class VideoSearchActivity extends AppCompatActivity {
     }
 
     private void startSearch(CharSequence text) {
+        searchBar.setText(text.toString().toLowerCase());
         List<VideoDetailItem> result=new ArrayList<>();
         for(VideoDetailItem videos:localDataSource)
-            if(videos.Name.contains(text))
+        {
+            if(videos.Category.contains(text))
+            {
                 result.add(videos);
-        searchAdapter=new AllVideoDetailAdapter(this,result);
-        recyclerSearch.setAdapter(searchAdapter);
+
+            }
+
+            searchAdapter=new AllVideoDetailAdapter(this,result);
+            recyclerSearch.setAdapter(searchAdapter);
+            avLoadingIndicatorView.smoothToHide();
+            videoSearchLayout.setVisibility(View.VISIBLE);
+        }
+
+
+
+
+
+
+
+
+
     }
 
     private void loadAllVideos() {
@@ -108,8 +141,10 @@ public class VideoSearchActivity extends AppCompatActivity {
                 .subscribe(new Consumer<List<VideoDetailItem>>() {
                     @Override
                     public void accept(List<VideoDetailItem> videoDetailItems) throws Exception {
+                        videoSearchLayout.setVisibility(View.VISIBLE);
+                        avLoadingIndicatorView.smoothToHide();
                         displayLastVideo(videoDetailItems);
-                        buildSuggestList(videoDetailItems);
+                       // buildSuggestList(videoDetailItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -121,7 +156,7 @@ public class VideoSearchActivity extends AppCompatActivity {
 
     private void buildSuggestList(List<VideoDetailItem> videoDetailItems) {
         for(VideoDetailItem video:videoDetailItems)
-            suggestList.add(video.Name);
+            suggestList.add(video.Category);
         searchBar.setLastSuggestions(suggestList);
     }
 

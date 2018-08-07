@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -64,6 +65,7 @@ public class ViewPagerAdapter extends PagerAdapter{
                 Log.d("TESTING",videoBannerItemList.get(position)+"position");
                 Common.currentVideoBannerItem=videoBannerItemList.get(position);
                 context.startActivity(new Intent(context, VideoDetailsPage.class));
+                ((Activity) context).overridePendingTransition(R.anim.fadein,R.anim.fade_out);
             }
         });
 

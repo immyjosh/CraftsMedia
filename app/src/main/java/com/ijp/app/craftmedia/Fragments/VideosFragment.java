@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 
 
 import com.ijp.app.craftmedia.Adapter.VideoFragmentAdapters.VideoCategoriesAdapter;
@@ -22,6 +23,7 @@ import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.rd.PageIndicatorView;
+import com.wang.avi.AVLoadingIndicatorView;
 
 
 import java.util.List;
@@ -43,6 +45,8 @@ public class VideosFragment extends Fragment {
     CompositeDisposable compositeDisposable=new CompositeDisposable();
 
     RecyclerView videoCategoriesRV,videoRandomRV;
+    AVLoadingIndicatorView avLoadingIndicatorView;
+    ScrollView scrollView;
 
 
 
@@ -75,6 +79,10 @@ public class VideosFragment extends Fragment {
         videoRandomRV.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
         videoRandomRV.setHasFixedSize(true);
 
+        scrollView=view.findViewById(R.id.scroll_view);
+        avLoadingIndicatorView=view.findViewById(R.id.progress_bar_videos);
+        avLoadingIndicatorView.smoothToShow();
+
         getBannerImage();
 
         getVideosCategory();
@@ -91,6 +99,8 @@ public class VideosFragment extends Fragment {
                 .subscribe(new Consumer<List<VideoRandomModel>>() {
                     @Override
                     public void accept(List<VideoRandomModel> videoRandomModels) throws Exception {
+                        avLoadingIndicatorView.smoothToHide();
+                        scrollView.setVisibility(View.VISIBLE);
                         displayRandomItems(videoRandomModels);
                     }
                 }, new Consumer<Throwable>() {

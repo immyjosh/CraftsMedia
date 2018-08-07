@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia.Adapter.PicstaFragmentAdapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -48,6 +49,7 @@ public class RandomFragmentAdapter extends RecyclerView.Adapter<RandomFragmentAd
             public void onClick(View v) {
                 Common.currentRandomListItem=randomListItems.get(position);
                 mContext.startActivity(new Intent(mContext, WallpaperDetailActivity.class));
+                ((Activity) mContext).overridePendingTransition(R.anim.fadein,R.anim.fade_out);
             }
         });
     }

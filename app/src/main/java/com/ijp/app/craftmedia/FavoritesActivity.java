@@ -14,6 +14,7 @@ import com.ijp.app.craftmedia.Database.Local.CraftsMediaRoomDatabase;
 import com.ijp.app.craftmedia.Database.Local.FavoriteDataSource;
 import com.ijp.app.craftmedia.Database.ModelDB.Favorites;
 import com.ijp.app.craftmedia.Utils.Common;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ import io.reactivex.schedulers.Schedulers;
 public class FavoritesActivity extends AppCompatActivity {
 
     RecyclerView videoFavoritesRV;
+    AVLoadingIndicatorView avLoadingIndicatorView;
 
     CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -43,8 +45,13 @@ public class FavoritesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+
             }
         });
+
+        avLoadingIndicatorView=findViewById(R.id.progress_bar_video_fav);
+        avLoadingIndicatorView.smoothToShow();
 
         videoFavoritesRV=findViewById(R.id.video_favorites_rv);
         videoFavoritesRV.setLayoutManager(new GridLayoutManager(this, 2));
@@ -70,6 +77,7 @@ public class FavoritesActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
        
     }
 
@@ -80,6 +88,8 @@ public class FavoritesActivity extends AppCompatActivity {
                     .subscribe(new Consumer<List<Favorites>>() {
                         @Override
                         public void accept(List<Favorites> favorites) throws Exception {
+                            avLoadingIndicatorView.smoothToHide();
+                            videoFavoritesRV.setVisibility(View.VISIBLE);
                             displayFavoriteItem(favorites);
                         }
                     }, new Consumer<Throwable>() {

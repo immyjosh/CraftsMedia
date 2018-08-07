@@ -20,12 +20,18 @@
             android:layout_height="?android:attr/actionBarSize"></android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
+<com.yalantis.phoenix.PullToRefreshView
+    android:id="@+id/pul_to_refresh"
+    android:layout_below="@+id/appbar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/Category_list_wallpaper_rv"
-        android:layout_below="@+id/appbar"
         android:clipToPadding="false"
         android:padding="0dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+</com.yalantis.phoenix.PullToRefreshView>
 
 </RelativeLayout>

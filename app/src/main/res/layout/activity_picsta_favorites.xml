@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PicstaFavoritesActivity">
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/picsta_favorites_toolbar"
+            android:theme="@style/ToolbarColouredBlackArrow"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:background="?android:attr/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"></android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/progress_bar_piscta_fav"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="223dp"
+        app:indicatorColor="@color/text_color"
+        app:indicatorName="BallClipRotatePulseIndicator" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/picsta_favorites_rv"
+        android:visibility="invisible"
+        android:layout_below="@+id/appbar"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:clipToPadding="false"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+
+</RelativeLayout>

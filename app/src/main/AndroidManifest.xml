@@ -28,7 +28,7 @@
             android:name=".HomeActivity"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/TextTheme" />
         <activity
             android:name=".VideoDetailsPage"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -56,13 +56,16 @@
         <activity
             android:name=".VideoSearchActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/App_no_action_bar"
-            />
+            android:theme="@style/App_no_action_bar" />
         <activity
             android:name=".PicstaSearchActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/App_no_action_bar"
-            />
+            android:theme="@style/App_no_action_bar" />
+        <activity
+            android:name=".PicstaFavoritesActivity"
+            android:label="@string/title_picsta_favorite_list"
+            android:screenOrientation="portrait"
+            android:theme="@style/App_no_action_bar"/>
     </application>
 
 </manifest>

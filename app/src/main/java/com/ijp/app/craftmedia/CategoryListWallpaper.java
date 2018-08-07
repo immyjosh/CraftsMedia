@@ -11,13 +11,16 @@ import com.ijp.app.craftmedia.Adapter.PicstaFragmentAdapters.CategoryListItemAda
 import com.ijp.app.craftmedia.Model.PicstaModel.CategoryListItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
+import com.yalantis.phoenix.PullToRefreshView;
 
 import java.util.List;
+
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+
 
 public class CategoryListWallpaper extends AppCompatActivity {
 
@@ -26,7 +29,11 @@ public class CategoryListWallpaper extends AppCompatActivity {
 
     CompositeDisposable compositeDisposable=new CompositeDisposable();
 
-    RecyclerView categoryListWallpeperRV;
+    RecyclerView categoryListWallpaperRV;
+
+    PullToRefreshView mPullToRefreshView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,12 +51,31 @@ public class CategoryListWallpaper extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                overridePendingTransition(R.anim.fadein,R.anim.fade_out);
+
             }
         });
 
-        categoryListWallpeperRV=findViewById(R.id.Category_list_wallpaper_rv);
-        categoryListWallpeperRV.setLayoutManager(new GridLayoutManager(this,3));
-        categoryListWallpeperRV.setHasFixedSize(true);
+
+        mPullToRefreshView =findViewById(R.id.pul_to_refresh);
+        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPullToRefreshView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadCategoryItemsPage(Common.currentCategoryFragmentsItem.ID);
+                        mPullToRefreshView.setRefreshing(false);
+                    }
+                }, 1000);
+            }
+        });
+
+
+
+        categoryListWallpaperRV =findViewById(R.id.Category_list_wallpaper_rv);
+        categoryListWallpaperRV.setLayoutManager(new GridLayoutManager(this,3));
+        categoryListWallpaperRV.setHasFixedSize(true);
 
         loadCategoryItemsPage(Common.currentCategoryFragmentsItem.ID);
     }
@@ -75,7 +101,14 @@ public class CategoryListWallpaper extends AppCompatActivity {
 
     private void displayCategoryItemPics(List<CategoryListItem> categoryListItems) {
         CategoryListItemAdapter adapter=new CategoryListItemAdapter(this,categoryListItems);
-        categoryListWallpeperRV.setAdapter(adapter);
+        categoryListWallpaperRV.setAdapter(adapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.fadein,R.anim.fade_out);
+
     }
 
     @Override

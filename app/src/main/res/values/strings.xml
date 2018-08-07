@@ -4,6 +4,7 @@
     <string name="title_picsta_category_list">Picsta</string>
     <string name="title_video_category_list">Video Categories</string>
     <string name="title_video_favorite_list">Video Favorites</string>
+    <string name="title_picsta_favorite_list">Picsta Favorites</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>

@@ -13,132 +13,138 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white">
+            android:layout_height="wrap_content">
 
-
+            <com.wang.avi.AVLoadingIndicatorView
+                android:id="@+id/progress_bar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="223dp"
+                app:indicatorColor="@color/text_color"
+                app:indicatorName="PacmanIndicator" />
 
             <RelativeLayout
-                android:id="@+id/rel"
+                android:id="@+id/after_prog_layout"
+                android:visibility="invisible"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:background="#333639">
+                android:layout_height="wrap_content"
+                android:background="@color/colorBackground">
 
-                <it.moondroid.coverflow.components.ui.containers.FeatureCoverFlow
-                    android:id="@+id/cover_flow"
+                <RelativeLayout
+                    android:id="@+id/rel"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:background="#333639">
+
+                    <it.moondroid.coverflow.components.ui.containers.FeatureCoverFlow
+                        android:id="@+id/cover_flow"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:coverHeight="200dp"
+                        app:coverWidth="150dp"
+                        app:maxScaleFactor="1.5"
+                        app:reflectionGap="0px"
+                        app:rotationThreshold="0.5"
+                        app:scalingThreshold="0.5"
+                        app:spacing="0.6">
+
+                    </it.moondroid.coverflow.components.ui.containers.FeatureCoverFlow>
+
+                    <TextSwitcher
+                        android:id="@+id/m_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerVertical="true"
+                        android:paddingBottom="16dp"></TextSwitcher>
+
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/txt1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/rel"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="monospace"
+                    android:paddingLeft="10dp"
+                    android:text="Top Pictures" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/top_pics_rv"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:coverHeight="200dp"
-                    app:coverWidth="150dp"
-                    app:maxScaleFactor="1.5"
-                    app:reflectionGap="0px"
-                    app:rotationThreshold="0.5"
-                    app:scalingThreshold="0.5"
-                    app:spacing="0.6">
+                    android:layout_below="@+id/txt1"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:scrollbars="none" />
 
-                </it.moondroid.coverflow.components.ui.containers.FeatureCoverFlow>
-
-                <TextSwitcher
-                    android:id="@+id/m_title"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/txt2"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerVertical="true"
-                    android:paddingBottom="16dp"></TextSwitcher>
+                    android:layout_below="@+id/top_pics_rv"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="monospace"
+                    android:paddingLeft="10dp"
+                    android:text="Top Videos" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/top_videos_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/txt2"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:scrollbars="none" />
+
+                <TextView
+                    android:id="@+id/txt3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/top_videos_rv"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="monospace"
+                    android:paddingLeft="10dp"
+                    android:text="New Pictures" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/top_new_pics_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/txt3"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:scrollbars="none" />
+
+                <TextView
+                    android:id="@+id/txt4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/top_new_pics_rv"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="monospace"
+                    android:paddingLeft="10dp"
+                    android:text="New Videos" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/top_new_videos_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/txt4"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:scrollbars="none" />
+
 
             </RelativeLayout>
 
-
-
-            <TextView
-                android:id="@+id/txt1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/rel"
-                android:layout_marginTop="10dp"
-                android:fontFamily="monospace"
-                android:paddingLeft="10dp"
-                android:text="Top Pictures"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/top_pics_rv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/txt1"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:scrollbars="none" />
-            <TextView
-                android:id="@+id/txt2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/top_pics_rv"
-                android:layout_marginTop="10dp"
-                android:fontFamily="monospace"
-                android:paddingLeft="10dp"
-                android:text="Top Videos"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/top_videos_rv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/txt2"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:scrollbars="none" />
-
-            <TextView
-                android:id="@+id/txt3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/top_videos_rv"
-                android:layout_marginTop="10dp"
-                android:fontFamily="monospace"
-                android:paddingLeft="10dp"
-                android:text="New Pictures"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/top_new_pics_rv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/txt3"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:scrollbars="none" />
-
-            <TextView
-                android:id="@+id/txt4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/top_new_pics_rv"
-                android:layout_marginTop="10dp"
-                android:fontFamily="monospace"
-                android:paddingLeft="10dp"
-                android:text="New Videos"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/top_new_videos_rv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/txt4"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:scrollbars="none" />
-
-
         </RelativeLayout>
+
+
     </ScrollView>
 
 

@@ -47,8 +47,6 @@ dependencies {
     //JZ Video Player Plugin
     implementation 'cn.jzvd:jiaozivideoplayer:6.2.10'
 
-    //volley lib
-    implementation 'com.android.volley:volley:1.1.0'
 
     //photo preview
     implementation 'com.github.chrisbanes:PhotoView:2.1.3'
@@ -64,11 +62,27 @@ dependencies {
     //page indicator
     implementation 'com.romandanylyk:pageindicatorview:1.0.1'
 
-    //circle image view
+    //circle image view-used in video categories
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
     //material search bar
     implementation 'com.github.mancj:MaterialSearchBar:0.7.6'
+
+    //pull to refresh
+    implementation 'com.yalantis:phoenix:1.2.3'
+
+
+    //Fancy Alert Dialog
+    implementation 'com.github.Shashank02051997:FancyAlertDialog-Android:0.1'
+
+    //Progress bar
+    implementation 'com.wang.avi:library:2.1.3'
+
+
+
+
+
+
 
 
 }

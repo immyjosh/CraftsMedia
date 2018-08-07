@@ -6,11 +6,13 @@
         android:icon="@drawable/ic_search_black_24dp"
         android:title="Video Search"
         app:showAsAction="always"
+        app:actionLayout="@layout/picsta_search_icon_layout"
         />
     <item
         android:id="@+id/search_video"
         android:icon="@drawable/ic_youtube_searched_for_black_24dp"
         android:title="Video Search"
         app:showAsAction="always"
+        app:actionLayout="@layout/video_search_icon_layout"
         />
 </menu>

@@ -22,7 +22,7 @@ public class PicstaFragment extends Fragment {
 
 
     String hexColorTransparent="#99000000";
-    String hexColorBlack="#000000";
+    String hexColorBlack="#27253d";
     SwipeRefreshLayout refreshLayout;
 
 

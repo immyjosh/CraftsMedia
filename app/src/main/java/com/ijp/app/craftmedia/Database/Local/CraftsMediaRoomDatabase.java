@@ -10,13 +10,15 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.ijp.app.craftmedia.Database.ModelDB.Favorites;
+import com.ijp.app.craftmedia.Database.ModelDB.PicstaFavorites;
 
 
-@Database(entities = {Favorites.class},version = 1)
+@Database(entities = {Favorites.class, PicstaFavorites.class},version = 1)
 
 public abstract class CraftsMediaRoomDatabase extends RoomDatabase {
 
     public abstract FavoriteDAO favoriteDAO();
+    public abstract PicstaFavoriteDAO picstaFavoriteDAO();
 
     private static CraftsMediaRoomDatabase instance;
 

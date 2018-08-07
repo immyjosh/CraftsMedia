@@ -6,14 +6,16 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.ijp.app.craftmedia.Adapter.AllPicsDetailAdapter;
-import com.ijp.app.craftmedia.Adapter.AllVideoDetailAdapter;
-import com.ijp.app.craftmedia.Model.VideoDetailItem;
-import com.ijp.app.craftmedia.Model.WallpeperDetailItem;
+import com.ijp.app.craftmedia.Model.WallpaperDetailItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.mancj.materialsearchbar.MaterialSearchBar;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,11 @@ import io.reactivex.schedulers.Schedulers;
 public class PicstaSearchActivity extends AppCompatActivity {
 
     List<String> suggestList=new ArrayList<>();
-    List<WallpeperDetailItem> localDataSource=new ArrayList<>();
+    List<WallpaperDetailItem> localDataSource=new ArrayList<>();
+
+    RelativeLayout picstaSearchLayout;
+
+    AVLoadingIndicatorView avLoadingIndicatorView;
 
     MaterialSearchBar searchBar;
 
@@ -48,7 +54,14 @@ public class PicstaSearchActivity extends AppCompatActivity {
         recyclerSearch=findViewById(R.id.picture_search_rv);
         recyclerSearch.setLayoutManager(new GridLayoutManager(this,2));
 
+        picstaSearchLayout=findViewById(R.id.picsta_search_layout);
+        avLoadingIndicatorView=findViewById(R.id.progress_bar_search);
+        avLoadingIndicatorView.smoothToShow();
+
+
         searchBar=findViewById(R.id.picture_searchBar);
+
+        loadAllPics();
 
         searchBar.setHint("Enter Picture Name");
         searchBar.setCardViewElevation(10);
@@ -67,6 +80,8 @@ public class PicstaSearchActivity extends AppCompatActivity {
                         suggest.add(search);
                 }
                 searchBar.setLastSuggestions(suggest);
+
+
             }
 
             @Override
@@ -77,14 +92,18 @@ public class PicstaSearchActivity extends AppCompatActivity {
         searchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
             @Override
             public void onSearchStateChanged(boolean enabled) {
-                loadAllPics();
+
                 if(!enabled)
                     recyclerSearch.setAdapter(adapter); // restores full list of drinks
+
             }
 
             @Override
             public void onSearchConfirmed(CharSequence text) {
+                avLoadingIndicatorView.smoothToShow();
+                picstaSearchLayout.setVisibility(View.INVISIBLE);
                 startSearch(text);
+
 
             }
 
@@ -96,22 +115,32 @@ public class PicstaSearchActivity extends AppCompatActivity {
     }
 
     private void startSearch(CharSequence text) {
-        List<WallpeperDetailItem> result=new ArrayList<>();
-        for(WallpeperDetailItem pics:localDataSource)
-            if(pics.Category.contains(text))
+        searchBar.setText(text.toString().toLowerCase());
+        List<WallpaperDetailItem> result=new ArrayList<>();
+        for(WallpaperDetailItem pics:localDataSource)
+        {
+            if(pics.Category.contains(text)){
                 result.add(pics);
+            }
+
+        }
+
         searchAdapter=new AllPicsDetailAdapter(this,result);
         recyclerSearch.setAdapter(searchAdapter);
+        avLoadingIndicatorView.smoothToHide();
+        picstaSearchLayout.setVisibility(View.VISIBLE);
     }
 
     private void loadAllPics() {
         compositeDisposable.add(mService.getAllPics().observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Consumer<List<WallpeperDetailItem>>() {
+                .subscribe(new Consumer<List<WallpaperDetailItem>>() {
                     @Override
-                    public void accept(List<WallpeperDetailItem> wallpeperDetailItems) throws Exception {
-                        displayLastVideo(wallpeperDetailItems);
-                        buildSuggestList(wallpeperDetailItems);
+                    public void accept(List<WallpaperDetailItem> wallpaperDetailItems) throws Exception {
+                        picstaSearchLayout.setVisibility(View.VISIBLE);
+                        avLoadingIndicatorView.smoothToHide();
+                        displayLastPics(wallpaperDetailItems);
+                      //  buildSuggestList(wallpaperDetailItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -122,15 +151,15 @@ public class PicstaSearchActivity extends AppCompatActivity {
 
     }
 
-    private void buildSuggestList(List<WallpeperDetailItem> wallpeperDetailItems) {
-        for(WallpeperDetailItem pics:wallpeperDetailItems)
+    private void buildSuggestList(List<WallpaperDetailItem> wallpaperDetailItems) {
+        for(WallpaperDetailItem pics: wallpaperDetailItems)
             suggestList.add(pics.Category);
         searchBar.setLastSuggestions(suggestList);
     }
 
-    private void displayLastVideo(List<WallpeperDetailItem> wallpeperDetailItems) {
-        localDataSource=wallpeperDetailItems;
-        adapter=new AllPicsDetailAdapter(this,wallpeperDetailItems);
+    private void displayLastPics(List<WallpaperDetailItem> wallpaperDetailItems) {
+        localDataSource= wallpaperDetailItems;
+        adapter=new AllPicsDetailAdapter(this, wallpaperDetailItems);
         recyclerSearch.setAdapter(adapter);
     }
 

@@ -4,18 +4,28 @@ public class VideoDetailItem {
     public String ID;
     public String video_link ;
     public String thumb_image_link ;
+    public String Category;
     public String Name ;
     public String video_banner_id;
 
     public VideoDetailItem() {
     }
 
-    public VideoDetailItem(String ID, String video_link, String thumb_image_link, String name, String video_banner_id) {
+    public VideoDetailItem(String ID, String video_link, String thumb_image_link, String category, String name, String video_banner_id) {
         this.ID = ID;
         this.video_link = video_link;
         this.thumb_image_link = thumb_image_link;
+        Category = category;
         Name = name;
         this.video_banner_id = video_banner_id;
+    }
+
+    public String getCategory() {
+        return Category;
+    }
+
+    public void setCategory(String category) {
+        Category = category;
     }
 
     public String getID() {

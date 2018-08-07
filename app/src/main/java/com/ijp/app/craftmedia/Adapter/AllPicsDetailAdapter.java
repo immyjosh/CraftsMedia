@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -10,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.ijp.app.craftmedia.Interface.IitemClickListner;
-import com.ijp.app.craftmedia.Model.WallpeperDetailItem;
+import com.ijp.app.craftmedia.Model.WallpaperDetailItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.ijp.app.craftmedia.WallpaperDetailActivity;
@@ -20,11 +21,11 @@ import java.util.List;
 
 public class AllPicsDetailAdapter extends RecyclerView.Adapter<AllPicsDetailAdapter.AllPicsDetailViewHolder> {
     private Context mContext;
-    private List<WallpeperDetailItem> wallpeperDetailItemList;
+    private List<WallpaperDetailItem> wallpaperDetailItemList;
 
-    public AllPicsDetailAdapter(Context mContext, List<WallpeperDetailItem> wallpeperDetailItemList) {
+    public AllPicsDetailAdapter(Context mContext, List<WallpaperDetailItem> wallpaperDetailItemList) {
         this.mContext = mContext;
-        this.wallpeperDetailItemList = wallpeperDetailItemList;
+        this.wallpaperDetailItemList = wallpaperDetailItemList;
     }
 
     @NonNull
@@ -40,15 +41,16 @@ public class AllPicsDetailAdapter extends RecyclerView.Adapter<AllPicsDetailAdap
 
     @Override
     public void onBindViewHolder(@NonNull AllPicsDetailViewHolder holder, final int position) {
-        Picasso.with(mContext).load(wallpeperDetailItemList.get(position).image_link)
+        Picasso.with(mContext).load(wallpaperDetailItemList.get(position).image_link)
                 .into(holder.imgPics);
 
         holder.setItemClickListner(new IitemClickListner() {
             @Override
             public void onClick(View v) {
 
-                Common.currentWallpaperDetailItem=wallpeperDetailItemList.get(position);
+                Common.currentWallpaperDetailItem= wallpaperDetailItemList.get(position);
                 mContext.startActivity(new Intent(mContext, WallpaperDetailActivity.class));
+                ((Activity) mContext).overridePendingTransition(R.anim.fadein,R.anim.fade_out);
 
             }
         });
@@ -56,7 +58,7 @@ public class AllPicsDetailAdapter extends RecyclerView.Adapter<AllPicsDetailAdap
 
     @Override
     public int getItemCount() {
-        return wallpeperDetailItemList.size();
+        return wallpaperDetailItemList.size();
     }
 
     public class AllPicsDetailViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

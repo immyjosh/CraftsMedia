@@ -11,17 +11,15 @@ import com.ijp.app.craftmedia.Model.VideoDetailItem;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoBannerItem;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoCategoriesItem;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoRandomModel;
-import com.ijp.app.craftmedia.Model.WallpeperDetailItem;
+import com.ijp.app.craftmedia.Model.WallpaperDetailItem;
 
 import java.util.List;
 
 import io.reactivex.Observable;
-import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Query;
 
 public interface ICraftsMediaApi {
     @GET("gettoppics.php")
@@ -36,7 +34,7 @@ public interface ICraftsMediaApi {
 
     @FormUrlEncoded
     @POST("toppicsdetail.php")
-    Observable<List<WallpeperDetailItem>> getWallpaperLink(@Field("top_pics_id") String topPicsId);
+    Observable<List<WallpaperDetailItem>> getWallpaperLink(@Field("top_pics_id") String topPicsId);
 
     @GET("gettoppics.php")
     Observable<List<NewPicsItem>> getNewPicsItem();
@@ -53,14 +51,14 @@ public interface ICraftsMediaApi {
 
     @FormUrlEncoded
     @POST("categorypicsdetail.php")
-    Observable<List<WallpeperDetailItem>> getCategoryLink(@Field("picsta_category_list_id") String CategoryPicsId);
+    Observable<List<WallpaperDetailItem>> getCategoryLink(@Field("picsta_category_list_id") String CategoryPicsId);
 
     @GET("getrandompics.php")
     Observable<List<RandomListItem>> getRandomPics();
 
     @FormUrlEncoded
     @POST("randompicsdetail.php")
-    Observable<List<WallpeperDetailItem>> getRandomLink(@Field("random_pics_id") String randomPicsId);
+    Observable<List<WallpaperDetailItem>> getRandomLink(@Field("random_pics_id") String randomPicsId);
 
     @GET("getvideobanner.php")
     Observable<List<VideoBannerItem>> getVideoBannerItem();
@@ -87,9 +85,9 @@ public interface ICraftsMediaApi {
     Observable<List<VideoDetailItem>> getAllVideos();
 
     @GET("getallpics.php")
-    Observable<List<WallpeperDetailItem>> getAllPics();
+    Observable<List<WallpaperDetailItem>> getAllPics();
 
     @FormUrlEncoded
     @POST("favoritespicsdetail.php")
-    Observable<List<WallpeperDetailItem>> getPicsFavLink(@Field("ID") String favId);
+    Observable<List<WallpaperDetailItem>> getPicsFavLink(@Field("ID") String favId);
 }
