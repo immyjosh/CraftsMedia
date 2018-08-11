@@ -3,13 +3,16 @@ package com.ijp.app.craftmedia.Adapter;
 
 import android.content.Context;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 
 import com.github.chrisbanes.photoview.PhotoView;
@@ -24,11 +27,15 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import de.mateware.snacky.Snacky;
+
 
 public class WallpaperDetailAdapter extends RecyclerView.Adapter<WallpaperDetailAdapter.WallpaperDetailViewHolder> {
 
     private Context mContext;
     private List<WallpaperDetailItem> wallpaperDetailItemList;
+
+    private Snacky.Builder snacky;
 
     public WallpaperDetailAdapter(Context mContext, List<WallpaperDetailItem> wallpaperDetailItemList) {
         this.mContext = mContext;
@@ -41,6 +48,8 @@ public class WallpaperDetailAdapter extends RecyclerView.Adapter<WallpaperDetail
         View view;
         LayoutInflater inflater=LayoutInflater.from(mContext);
         view=inflater.inflate(R.layout.wallpaper_detail_cv,parent,false);
+
+
 
         return new WallpaperDetailAdapter.WallpaperDetailViewHolder(view);
     }
@@ -62,6 +71,11 @@ public class WallpaperDetailAdapter extends RecyclerView.Adapter<WallpaperDetail
             @Override
             public void onClick(View v) {
                 if (Common.picstaFavoriteRepository.isFavorite(Integer.parseInt(wallpaperDetailItemList.get(position).ID)) != 1) {
+
+                    snacky=Snacky.builder().setView(holder.rootView);
+                    snacky.setText("Added to Picsta Favorites").setTextColor(Color.parseColor("#ffffff"))
+                            .setDuration(Snacky.LENGTH_LONG).success().show();
+
                     addOrRemoveTopVideoFavorite(wallpaperDetailItemList.get(position), true);
                     holder.imageView.setImageResource(R.drawable.ic_favorite_black_24dp);
                 } else {
@@ -97,6 +111,7 @@ public class WallpaperDetailAdapter extends RecyclerView.Adapter<WallpaperDetail
 
         PhotoView photoView;
         ImageView imageView;
+        RelativeLayout rootView;
 
         IitemClickListner iitemClickListner;
 
@@ -111,6 +126,7 @@ public class WallpaperDetailAdapter extends RecyclerView.Adapter<WallpaperDetail
 
             photoView =itemView.findViewById(R.id.photo_view);
             imageView=itemView.findViewById(R.id.pic_fav);
+            rootView=itemView.findViewById(R.id.wallpaper_detail_cv);
 
         }
 

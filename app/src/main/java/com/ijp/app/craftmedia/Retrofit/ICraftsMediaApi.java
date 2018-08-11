@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia.Retrofit;
 
+import com.ijp.app.craftmedia.Model.InfiniteListItem;
 import com.ijp.app.craftmedia.Model.NewPicsItem;
 import com.ijp.app.craftmedia.Model.NewVideosItem;
 import com.ijp.app.craftmedia.Model.PicstaModel.CategoryFragmentItem;
@@ -22,6 +23,17 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface ICraftsMediaApi {
+    @GET("getcoverflow.php")
+    Observable<List<InfiniteListItem>> getInfiniteListItem();
+
+    @FormUrlEncoded
+    @POST("infinitedetail.php")
+    Observable<List<VideoDetailItem>> getInfiniteVideoDetail(@Field("coverflow_id") String coverflowId);
+
+    @FormUrlEncoded
+    @POST("infinitepicsdetail.php")
+    Observable<List<WallpaperDetailItem>> getInfinitePicsDetail(@Field("coverflow_id") String coverflowId);
+
     @GET("gettoppics.php")
     Observable<List<TopPicsItem>> getPicsItem();
 

@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -8,9 +9,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.ijp.app.craftmedia.Adapter.AllVideoDetailAdapter;
+import com.ijp.app.craftmedia.Internet.ConnectivityReceiver;
+import com.ijp.app.craftmedia.Internet.MyApplication;
 import com.ijp.app.craftmedia.Model.VideoDetailItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
@@ -20,12 +22,13 @@ import com.wang.avi.AVLoadingIndicatorView;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.mateware.snacky.Snacky;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class VideoSearchActivity extends AppCompatActivity {
+public class VideoSearchActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener{
 
     List<String> suggestList=new ArrayList<>();
     List<VideoDetailItem> localDataSource=new ArrayList<>();
@@ -126,13 +129,6 @@ public class VideoSearchActivity extends AppCompatActivity {
         }
 
 
-
-
-
-
-
-
-
     }
 
     private void loadAllVideos() {
@@ -140,7 +136,7 @@ public class VideoSearchActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<List<VideoDetailItem>>() {
                     @Override
-                    public void accept(List<VideoDetailItem> videoDetailItems) throws Exception {
+                    public void accept(List<VideoDetailItem> videoDetailItems)  {
                         videoSearchLayout.setVisibility(View.VISIBLE);
                         avLoadingIndicatorView.smoothToHide();
                         displayLastVideo(videoDetailItems);
@@ -148,7 +144,7 @@ public class VideoSearchActivity extends AppCompatActivity {
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable)  {
 
                     }
                 }));
@@ -166,6 +162,48 @@ public class VideoSearchActivity extends AppCompatActivity {
         recyclerSearch.setAdapter(adapter);
     }
 
+    // Showing the status in Snackbar- Internet Handling
+    private void showSnack(boolean isConnected) {
+        Snacky.Builder snacky;
+        snacky=Snacky.builder().setActivity(VideoSearchActivity.this);
+
+        String message;
+        int color;
+
+        if (isConnected) {
+            message = "Good! Connected to Internet";
+            color = Color.WHITE;
+            snacky.setText(message).setTextColor(color).success().show();
+
+
+
+        } else {
+
+            message = "Sorry! Not connected to internet";
+            color = Color.WHITE;
+            snacky.setText(message).setTextColor(color).error().show();
+
+        }
+
+
+
+
+
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // register connection status listener
+        MyApplication.getInstance().setConnectivityListener(this);
+    }
+
     @Override
     protected void onDestroy() {
         compositeDisposable.clear();
@@ -176,5 +214,11 @@ public class VideoSearchActivity extends AppCompatActivity {
     protected void onStop() {
         compositeDisposable.clear();
         super.onStop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.fadein,R.anim.fade_out);
     }
 }

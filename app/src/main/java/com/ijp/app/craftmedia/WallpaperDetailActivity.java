@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
@@ -23,7 +24,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -33,9 +33,12 @@ import com.ijp.app.craftmedia.Database.DataSource.PicstaFavoriteRepository;
 import com.ijp.app.craftmedia.Database.Local.CraftsMediaRoomDatabase;
 import com.ijp.app.craftmedia.Database.Local.PicstaFavoriteDataSource;
 import com.ijp.app.craftmedia.Helper.SaveImageHelper;
+import com.ijp.app.craftmedia.Internet.ConnectivityReceiver;
+import com.ijp.app.craftmedia.Internet.MyApplication;
 import com.ijp.app.craftmedia.Model.WallpaperDetailItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
+import com.lid.lib.LabelButtonView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -43,19 +46,20 @@ import com.wang.avi.AVLoadingIndicatorView;
 import java.util.List;
 import java.util.UUID;
 
+import de.mateware.snacky.Snacky;
 import dmax.dialog.SpotsDialog;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class WallpaperDetailActivity extends AppCompatActivity {
+public class WallpaperDetailActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
     ICraftsMediaApi mService;
 
     RelativeLayout rootLayout,wallpaperDetailLayout;
 
-    Button wallpaperDownload,wallpaperSet;
+    LabelButtonView wallpaperDownload,wallpaperSet;
     RecyclerView wallpaperDetailRV;
 
     AVLoadingIndicatorView avLoadingIndicatorView;
@@ -313,6 +317,10 @@ public class WallpaperDetailActivity extends AppCompatActivity {
                         uri = Uri.parse(Common.currentPicstaFavorites.getLink());
 
                         fileName = UUID.randomUUID().toString();
+                    }else if (Common.infiniteListItems!=null){
+                        uri = Uri.parse(Common.infiniteListItems.getImage_link());
+
+                        fileName = UUID.randomUUID().toString();
                     }
 
                     DownloadManager.Request request = new DownloadManager.Request(uri);
@@ -376,6 +384,10 @@ public class WallpaperDetailActivity extends AppCompatActivity {
                             Picasso.with(getBaseContext())
                                     .load(Common.currentPicstaFavorites.getLink())
                                     .into(target);
+                        }else if (Common.infiniteListItems!=null){
+                            Picasso.with(getBaseContext())
+                                    .load(Common.infiniteListItems.getImage_link())
+                                    .into(target);
                         }
 
                     }
@@ -427,10 +439,34 @@ public class WallpaperDetailActivity extends AppCompatActivity {
 
             loadPicstaFav(Common.currentPicstaFavorites.id);
 
+        }else if (Common.infiniteListItems!=null){
+            loadInfiniteListItems(Common.infiniteListItems.ID);
         }
 
     }
 
+    private void loadInfiniteListItems(String infiniteId) {
+        compositeDisposable.add(mService.getInfinitePicsDetail(infiniteId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<WallpaperDetailItem>>() {
+                    @Override
+                    public void accept(List<WallpaperDetailItem> wallpaperDetailItems) throws Exception {
+                        avLoadingIndicatorView.smoothToHide();
+                        wallpaperDetailLayout.setVisibility(View.VISIBLE);
+                        displayInfiniteItems(wallpaperDetailItems);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void displayInfiniteItems(List<WallpaperDetailItem> wallpaperDetailItems) {
+        WallpaperDetailAdapter adapter=new WallpaperDetailAdapter(this, wallpaperDetailItems);
+        wallpaperDetailRV.setAdapter(adapter);
+    }
 
 
     private void loadPicstaFav(String favId) {
@@ -439,14 +475,14 @@ public class WallpaperDetailActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<WallpaperDetailItem>>() {
                     @Override
-                    public void accept(List<WallpaperDetailItem> wallpaperDetailItems) throws Exception {
+                    public void accept(List<WallpaperDetailItem> wallpaperDetailItems)  {
                         avLoadingIndicatorView.smoothToHide();
                         wallpaperDetailLayout.setVisibility(View.VISIBLE);
                         displayPicsFav(wallpaperDetailItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable)  {
 
                     }
                 }));
@@ -458,14 +494,14 @@ public class WallpaperDetailActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<WallpaperDetailItem>>() {
                     @Override
-                    public void accept(List<WallpaperDetailItem> wallpaperDetailItems) throws Exception {
+                    public void accept(List<WallpaperDetailItem> wallpaperDetailItems)  {
                         avLoadingIndicatorView.smoothToHide();
                         wallpaperDetailLayout.setVisibility(View.VISIBLE);
                         displayPicsFav(wallpaperDetailItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable)  {
 
                     }
                 }));
@@ -482,7 +518,7 @@ public class WallpaperDetailActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<WallpaperDetailItem>>() {
                     @Override
-                    public void accept(List<WallpaperDetailItem> wallpaperDetailItems) throws Exception {
+                    public void accept(List<WallpaperDetailItem> wallpaperDetailItems)  {
                         avLoadingIndicatorView.smoothToHide();
                         wallpaperDetailLayout.setVisibility(View.VISIBLE);
                         displayRandomItemPics(wallpaperDetailItems);
@@ -490,7 +526,7 @@ public class WallpaperDetailActivity extends AppCompatActivity {
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable)  {
 
                     }
                 }));
@@ -508,14 +544,14 @@ public class WallpaperDetailActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<WallpaperDetailItem>>() {
                     @Override
-                    public void accept(List<WallpaperDetailItem> wallpaperDetailItems) throws Exception {
+                    public void accept(List<WallpaperDetailItem> wallpaperDetailItems)  {
                         avLoadingIndicatorView.smoothToHide();
                         wallpaperDetailLayout.setVisibility(View.VISIBLE);
                         displayCategoryItemPics(wallpaperDetailItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable)  {
 
                     }
                 }));
@@ -533,14 +569,14 @@ public class WallpaperDetailActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe( new Consumer<List<WallpaperDetailItem>>() {
                     @Override
-                    public void accept(List<WallpaperDetailItem> wallpaperDetailItems) throws Exception {
+                    public void accept(List<WallpaperDetailItem> wallpaperDetailItems)  {
                         avLoadingIndicatorView.smoothToHide();
                         wallpaperDetailLayout.setVisibility(View.VISIBLE);
                         displayNewPics(wallpaperDetailItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable)  {
 
                     }
                 }));
@@ -558,14 +594,14 @@ public class WallpaperDetailActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe( new Consumer<List<WallpaperDetailItem>>() {
                     @Override
-                    public void accept(List<WallpaperDetailItem> wallpaperDetailItems) throws Exception {
+                    public void accept(List<WallpaperDetailItem> wallpaperDetailItems)  {
                         avLoadingIndicatorView.smoothToHide();
                         wallpaperDetailLayout.setVisibility(View.VISIBLE);
                         displayPics(wallpaperDetailItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable)  {
 
                     }
                 }));
@@ -575,6 +611,48 @@ public class WallpaperDetailActivity extends AppCompatActivity {
     private void displayPics(List<WallpaperDetailItem> wallpaperDetailItems) {
         WallpaperDetailAdapter adapter=new WallpaperDetailAdapter(this, wallpaperDetailItems);
         wallpaperDetailRV.setAdapter(adapter);
+    }
+
+    // Showing the status in Snackbar- Internet Handling
+    private void showSnack(boolean isConnected) {
+        Snacky.Builder snacky;
+        snacky=Snacky.builder().setActivity(WallpaperDetailActivity.this);
+
+        String message;
+        int color;
+
+        if (isConnected) {
+            message = "Good! Connected to Internet";
+            color = Color.WHITE;
+            snacky.setText(message).setTextColor(color).success().show();
+
+
+
+        } else {
+
+            message = "Sorry! Not connected to internet";
+            color = Color.WHITE;
+            snacky.setText(message).setTextColor(color).error().show();
+
+        }
+
+
+
+
+
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // register connection status listener
+        MyApplication.getInstance().setConnectivityListener(this);
     }
 
     @Override
@@ -606,3 +684,6 @@ public class WallpaperDetailActivity extends AppCompatActivity {
         super.onStop();
     }
 }
+
+
+

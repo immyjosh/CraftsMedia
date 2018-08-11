@@ -30,18 +30,17 @@ import com.ijp.app.craftmedia.Adapter.VideoDetailAdapter;
 import com.ijp.app.craftmedia.Database.DataSource.FavoriteRepository;
 import com.ijp.app.craftmedia.Database.Local.CraftsMediaRoomDatabase;
 import com.ijp.app.craftmedia.Database.Local.FavoriteDataSource;
+import com.ijp.app.craftmedia.Internet.ConnectivityReceiver;
+import com.ijp.app.craftmedia.Internet.MyApplication;
 import com.ijp.app.craftmedia.Model.VideoDetailItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
-import com.shashank.sony.fancydialoglib.Animation;
-import com.shashank.sony.fancydialoglib.FancyAlertDialog;
-import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
-import com.shashank.sony.fancydialoglib.Icon;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.List;
 
 import cn.jzvd.JZVideoPlayer;
+import de.mateware.snacky.Snacky;
 import dmax.dialog.SpotsDialog;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -49,7 +48,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class VideoDetailsPage extends AppCompatActivity {
+public class VideoDetailsPage extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
 
     RecyclerView videoDetailRV;
@@ -57,10 +56,6 @@ public class VideoDetailsPage extends AppCompatActivity {
     TextView videoDetailTextDownloading;
     AVLoadingIndicatorView avLoadingIndicatorView,avLoadingVideoDetail;
     RelativeLayout videoDetailLayout;
-
-    FancyAlertDialog builder;
-
-
 
     ICraftsMediaApi mService;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -318,6 +313,10 @@ public class VideoDetailsPage extends AppCompatActivity {
                         uri = Uri.parse(Common.currentVideoDetailItem.video_link);
 
                         description = Common.currentVideoDetailItem.Name;
+                    }else if (Common.infiniteListItems!=null){
+                        uri = Uri.parse(Common.infiniteListItems.getVideo_link());
+
+                        description = Common.infiniteListItems.Name;
                     }
 
                     DownloadManager.Request request = new DownloadManager.Request(uri);
@@ -384,33 +383,6 @@ public class VideoDetailsPage extends AppCompatActivity {
 
     }
 
-    private void showAlertDialog() {
-        builder=new FancyAlertDialog.Builder(this)
-                .setTitle("Rate us if you like the app")
-                .setBackgroundColor(Color.parseColor("#303F9F"))  //Don't pass R.color.colorvalue
-                .setMessage("Do you really want to Exit ?")
-                .setNegativeBtnText("Cancel")
-                .setPositiveBtnBackground(Color.parseColor("#FF4081"))  //Don't pass R.color.colorvalue
-                .setPositiveBtnText("Rate")
-                .setNegativeBtnBackground(Color.parseColor("#FFA9A7A8"))  //Don't pass R.color.colorvalue
-                .setAnimation(Animation.POP)
-                .isCancellable(true)
-                .setIcon(R.drawable.ic_cloud_download_grey_24dp, Icon.Visible)
-                .OnPositiveClicked(new FancyAlertDialogListener() {
-                    @Override
-                    public void OnClick() {
-                        Toast.makeText(getApplicationContext(),"Rate",Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .OnNegativeClicked(new FancyAlertDialogListener() {
-                    @Override
-                    public void OnClick() {
-                    }
-                })
-                .build();
-
-    }
-
 
     /**
      * Load Videos Coming From API
@@ -436,7 +408,33 @@ public class VideoDetailsPage extends AppCompatActivity {
 
             loadSearchVideos(Common.currentVideoDetailItem.ID);
 
+        }else if (Common.infiniteListItems!=null){
+            loadInfiniteListItems(Common.infiniteListItems.ID);
         }
+    }
+
+    private void loadInfiniteListItems(String infiniteId) {
+        compositeDisposable.add(mService.getInfiniteVideoDetail(infiniteId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<VideoDetailItem>>() {
+                    @Override
+                    public void accept(List<VideoDetailItem> videoDetailItems)  {
+                        avLoadingVideoDetail.smoothToHide();
+                        videoDetailLayout.setVisibility(View.VISIBLE);
+                        displayInfiniteItems(videoDetailItems);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) {
+
+                    }
+                }));
+    }
+
+    private void displayInfiniteItems(List<VideoDetailItem> videoDetailItems) {
+        VideoDetailAdapter adapter = new VideoDetailAdapter(this, videoDetailItems);
+        videoDetailRV.setAdapter(adapter);
     }
 
     private void loadSearchVideos(String searchId) {
@@ -445,7 +443,7 @@ public class VideoDetailsPage extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<VideoDetailItem>>() {
                     @Override
-                    public void accept(List<VideoDetailItem> videoDetailItems) throws Exception {
+                    public void accept(List<VideoDetailItem> videoDetailItems)  {
                         avLoadingVideoDetail.smoothToHide();
                         videoDetailLayout.setVisibility(View.VISIBLE);
                         displayVideoFav(videoDetailItems);
@@ -453,7 +451,7 @@ public class VideoDetailsPage extends AppCompatActivity {
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable)  {
                     }
                 }));
     }
@@ -465,14 +463,14 @@ public class VideoDetailsPage extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<VideoDetailItem>>() {
                     @Override
-                    public void accept(List<VideoDetailItem> videoDetailItems) throws Exception {
+                    public void accept(List<VideoDetailItem> videoDetailItems)  {
                         avLoadingVideoDetail.smoothToHide();
                         videoDetailLayout.setVisibility(View.VISIBLE);
                         displayVideoFav(videoDetailItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable)  {
                     }
                 }));
     }
@@ -490,14 +488,14 @@ public class VideoDetailsPage extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<VideoDetailItem>>() {
                     @Override
-                    public void accept(List<VideoDetailItem> videoDetailItems) throws Exception {
+                    public void accept(List<VideoDetailItem> videoDetailItems)  {
                         avLoadingVideoDetail.smoothToHide();
                         videoDetailLayout.setVisibility(View.VISIBLE);
                         displayVideoRandom(videoDetailItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable)  {
 
                     }
                 }));
@@ -516,14 +514,14 @@ public class VideoDetailsPage extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<VideoDetailItem>>() {
                     @Override
-                    public void accept(List<VideoDetailItem> videoDetailItems) throws Exception {
+                    public void accept(List<VideoDetailItem> videoDetailItems)  {
                         avLoadingVideoDetail.smoothToHide();
                         videoDetailLayout.setVisibility(View.VISIBLE);
                         displayVideoBanner(videoDetailItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable)  {
 
                     }
                 }));
@@ -543,14 +541,14 @@ public class VideoDetailsPage extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<VideoDetailItem>>() {
                     @Override
-                    public void accept(List<VideoDetailItem> videoDetailItems) throws Exception {
+                    public void accept(List<VideoDetailItem> videoDetailItems)  {
                         avLoadingVideoDetail.smoothToHide();
                         videoDetailLayout.setVisibility(View.VISIBLE);
                         displayVideo(videoDetailItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable)  {
 
                     }
                 }));
@@ -562,6 +560,48 @@ public class VideoDetailsPage extends AppCompatActivity {
 
         VideoDetailAdapter adapter = new VideoDetailAdapter(this, videoDetailItem);
         videoDetailRV.setAdapter(adapter);
+    }
+
+    // Showing the status in Snackbar- Internet Handling
+    private void showSnack(boolean isConnected) {
+        Snacky.Builder snacky;
+        snacky=Snacky.builder().setActivity(VideoDetailsPage.this);
+
+        String message;
+        int color;
+
+        if (isConnected) {
+            message = "Good! Connected to Internet";
+            color = Color.WHITE;
+            snacky.setText(message).setTextColor(color).success().show();
+
+
+
+        } else {
+
+            message = "Sorry! Not connected to internet";
+            color = Color.WHITE;
+            snacky.setText(message).setTextColor(color).error().show();
+
+        }
+
+
+
+
+
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // register connection status listener
+        MyApplication.getInstance().setConnectivityListener(this);
     }
 
     @Override

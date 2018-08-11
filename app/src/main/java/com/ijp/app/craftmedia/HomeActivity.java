@@ -1,7 +1,7 @@
 package com.ijp.app.craftmedia;
 
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,39 +12,38 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.ijp.app.craftmedia.Fragments.HomeFragment;
 import com.ijp.app.craftmedia.Fragments.PicstaFragment;
 import com.ijp.app.craftmedia.Fragments.VideosFragment;
+import com.ijp.app.craftmedia.Internet.ConnectivityReceiver;
+import com.ijp.app.craftmedia.Internet.MyApplication;
 import com.shashank.sony.fancydialoglib.Animation;
 import com.shashank.sony.fancydialoglib.FancyAlertDialog;
 import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
 import com.shashank.sony.fancydialoglib.Icon;
 
-public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
 
-    private BottomNavigationView mBottomNav;
-    private FrameLayout mMainFrame;
+import de.mateware.snacky.Snacky;
+
+public class HomeActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener,ConnectivityReceiver.ConnectivityReceiverListener {
 
     private HomeFragment homeFragment;
     private PicstaFragment picstaFragment;
     private VideosFragment videosFragment;
 
-    ImageView picstaSearchIcon,videoSearchIcon;
+    private BottomNavigationView mBottomNav;
+
+    ImageView picstaSearchIcon, videoSearchIcon;
 
     FancyAlertDialog fancyAlertDialogbuilder;
-
 
 
 
@@ -52,24 +51,26 @@ public class HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        checkConnection();
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
-
-        homeFragment=new HomeFragment();
-        picstaFragment=new PicstaFragment();
-        videosFragment=new VideosFragment();
+        homeFragment = new HomeFragment();
+        picstaFragment = new PicstaFragment();
+        videosFragment = new VideosFragment();
 
         setFragment(homeFragment);
 
-        mBottomNav=findViewById(R.id.bottom_navigation);
-        mMainFrame=findViewById(R.id.main_frame);
+
+        BottomNavigationView mBottomNav = findViewById(R.id.bottom_navigation);
 
         mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.action_home:
                         setFragment(homeFragment);
                         return true;
@@ -82,32 +83,73 @@ public class HomeActivity extends AppCompatActivity
                         setFragment(videosFragment);
                         return true;
 
-                        default:
-                            return false;
+                    default:
+                        return false;
                 }
             }
         });
 
 
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void setFragment(Fragment fragment) {
-        FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.main_frame,fragment);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_frame, fragment);
         fragmentTransaction.commit();
+
     }
 
+    // Method to manually check connection status
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+        showSnack(isConnected);
+    }
+
+    // Showing the status in Snackbar- Internet Handling
+    private void showSnack(boolean isConnected) {
+        Snacky.Builder snacky;
+        snacky=Snacky.builder().setActivity(HomeActivity.this);
+
+        String message;
+        int color;
+
+        if (isConnected) {
+            message = "Good! Connected to Internet";
+            color = Color.WHITE;
+            snacky.setText(message).setTextColor(color).success().show();
+
+            homeFragment = new HomeFragment();
+            picstaFragment = new PicstaFragment();
+            videosFragment = new VideosFragment();
+            setFragment(homeFragment);
+
+        } else {
+
+            message = "Sorry! Not connected to internet";
+            color = Color.WHITE;
+            snacky.setText(message).setTextColor(color).error().show();
+
+        }
+
+
+
+
+
+    }
+
+    /**
+     * Exit Alert Dialog
+     */
     private void showAlertDialog() {
-        fancyAlertDialogbuilder=new FancyAlertDialog.Builder(this)
+        fancyAlertDialogbuilder = new FancyAlertDialog.Builder(this)
                 .setTitle("Exit Application ?")
                 .setBackgroundColor(Color.parseColor("#f5f5c6"))  //Don't pass R.color.colorvalue
                 .setMessage("Do you really want to Exit ?")
@@ -133,21 +175,30 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
 
+
+
+    /**
+     * Callback will be triggered when there is change in
+     * network connection
+     */
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // register connection status listener
+        MyApplication.getInstance().setConnectivityListener(this);
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer =findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -161,23 +212,25 @@ public class HomeActivity extends AppCompatActivity
         View view;
         getMenuInflater().inflate(R.menu.home, menu);
 
-        view=menu.findItem(R.id.search_picture).getActionView();
+        view = menu.findItem(R.id.search_picture).getActionView();
 
-        picstaSearchIcon=view.findViewById(R.id.picsta_search_icon);
+        picstaSearchIcon = view.findViewById(R.id.picsta_search_icon);
         picstaSearchIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this,PicstaSearchActivity.class));
+                startActivity(new Intent(HomeActivity.this, PicstaSearchActivity.class));
+                overridePendingTransition(R.anim.fadein, R.anim.fade_out);
             }
         });
 
-        view=menu.findItem(R.id.search_video).getActionView();
+        view = menu.findItem(R.id.search_video).getActionView();
 
-        videoSearchIcon=view.findViewById(R.id.video_search_icon);
+        videoSearchIcon = view.findViewById(R.id.video_search_icon);
         videoSearchIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this,VideoSearchActivity.class));
+                startActivity(new Intent(HomeActivity.this, VideoSearchActivity.class));
+                overridePendingTransition(R.anim.fadein, R.anim.fade_out);
             }
         });
         return true;
@@ -188,30 +241,23 @@ public class HomeActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.search_video) {
-        }else if (id==R.id.search_picture){
-
-        }
 
         return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_video_favorites) {
 
-            startActivity(new Intent(HomeActivity.this,FavoritesActivity.class));
+            startActivity(new Intent(HomeActivity.this, FavoritesActivity.class));
             overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 
         } else if (id == R.id.nav_picture_favorites) {
-            startActivity(new Intent(HomeActivity.this,PicstaFavoritesActivity.class));
+            startActivity(new Intent(HomeActivity.this, PicstaFavoritesActivity.class));
             overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 
         } else if (id == R.id.nav_slideshow) {
@@ -224,12 +270,10 @@ public class HomeActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer =findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
 
 
 }

@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,19 +12,22 @@ import com.ijp.app.craftmedia.Adapter.PicstaFavoritesAdapter;
 import com.ijp.app.craftmedia.Database.DataSource.PicstaFavoriteRepository;
 import com.ijp.app.craftmedia.Database.Local.CraftsMediaRoomDatabase;
 import com.ijp.app.craftmedia.Database.Local.PicstaFavoriteDataSource;
-import com.ijp.app.craftmedia.Database.ModelDB.Favorites;
 import com.ijp.app.craftmedia.Database.ModelDB.PicstaFavorites;
+import com.ijp.app.craftmedia.Internet.ConnectivityReceiver;
+import com.ijp.app.craftmedia.Internet.MyApplication;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.List;
+import java.util.Objects;
 
+import de.mateware.snacky.Snacky;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class PicstaFavoritesActivity extends AppCompatActivity {
+public class PicstaFavoritesActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
     RecyclerView picstaFavoritesRV;
     AVLoadingIndicatorView avLoadingIndicatorView;
@@ -37,7 +41,7 @@ public class PicstaFavoritesActivity extends AppCompatActivity {
         Toolbar toolbar=findViewById(R.id.picsta_favorites_toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -66,14 +70,14 @@ public class PicstaFavoritesActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<List<PicstaFavorites>>() {
                     @Override
-                    public void accept(List<PicstaFavorites> picstaFavorites) throws Exception {
+                    public void accept(List<PicstaFavorites> picstaFavorites) {
                         avLoadingIndicatorView.smoothToHide();
                         picstaFavoritesRV.setVisibility(View.VISIBLE);
                         displayPicstaFavoriteItem(picstaFavorites);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
 
                     }
                 }));
@@ -92,6 +96,50 @@ public class PicstaFavoritesActivity extends AppCompatActivity {
                                 getInstance(Common.craftsMediaRoomDatabase.picstaFavoriteDAO()));
     }
 
+    // Showing the status in Snackbar- Internet Handling
+    private void showSnack(boolean isConnected) {
+        Snacky.Builder snacky;
+        snacky=Snacky.builder().setActivity(PicstaFavoritesActivity.this);
+
+        String message;
+        int color;
+
+        if (isConnected) {
+            message = "Good! Connected to Internet";
+            color = Color.WHITE;
+            snacky.setText(message).setTextColor(color).success().show();
+
+
+
+        } else {
+
+            message = "Sorry! Not connected to internet";
+            color = Color.WHITE;
+            snacky.setText(message).setTextColor(color).error().show();
+
+        }
+
+
+
+
+
+    }
+
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        loadPicstaFavorites();
+        // register connection status listener
+        MyApplication.getInstance().setConnectivityListener(this);
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -104,11 +152,7 @@ public class PicstaFavoritesActivity extends AppCompatActivity {
         compositeDisposable.clear();
         super.onStop();
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadPicstaFavorites();
-    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

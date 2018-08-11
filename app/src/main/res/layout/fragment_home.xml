@@ -38,27 +38,13 @@
                     android:layout_height="250dp"
                     android:background="#333639">
 
-                    <it.moondroid.coverflow.components.ui.containers.FeatureCoverFlow
-                        android:id="@+id/cover_flow"
+                    <com.yarolegovich.discretescrollview.DiscreteScrollView
+                        android:id="@+id/discrete_picker"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:coverHeight="200dp"
-                        app:coverWidth="150dp"
-                        app:maxScaleFactor="1.5"
-                        app:reflectionGap="0px"
-                        app:rotationThreshold="0.5"
-                        app:scalingThreshold="0.5"
-                        app:spacing="0.6">
 
-                    </it.moondroid.coverflow.components.ui.containers.FeatureCoverFlow>
+                        app:dsv_orientation="horizontal" />
 
-                    <TextSwitcher
-                        android:id="@+id/m_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerVertical="true"
-                        android:paddingBottom="16dp"></TextSwitcher>
 
                 </RelativeLayout>
 
@@ -72,6 +58,7 @@
                     android:fontFamily="monospace"
                     android:paddingLeft="10dp"
                     android:text="Top Pictures" />
+
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/top_pics_rv"

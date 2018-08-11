@@ -26,11 +26,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Common {
-    public static List<InfiniteListItem> infiniteListItems=new ArrayList<>();
 
     //10.0.2.2 - Emulator localhost
     //http://www.thingspeakapi.tk/DrinkShop/
     public static final String BASE_URL = "http://www.thingspeakapi.tk/CraftsMedia/";
+
+    public static InfiniteListItem infiniteListItems= null;
 
     public static TopPicsItem currentPicsItem = null;
     public static TopVideosItem currentVideosItem = null;

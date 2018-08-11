@@ -1,17 +1,22 @@
 package com.ijp.app.craftmedia;
 
-import android.app.Activity;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.ijp.app.craftmedia.Internet.ConnectivityReceiver;
+import com.ijp.app.craftmedia.Internet.MyApplication;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
 
+import java.util.Objects;
+
+import de.mateware.snacky.Snacky;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class VideoCategoryList extends AppCompatActivity {
+public class VideoCategoryList extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
     ICraftsMediaApi mService;
 
@@ -27,7 +32,7 @@ public class VideoCategoryList extends AppCompatActivity {
         Toolbar toolbar=findViewById(R.id.video_category_toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -38,6 +43,48 @@ public class VideoCategoryList extends AppCompatActivity {
 
             }
         });
+    }
+
+    // Showing the status in Snackbar- Internet Handling
+    private void showSnack(boolean isConnected) {
+        Snacky.Builder snacky;
+        snacky=Snacky.builder().setActivity(VideoCategoryList.this);
+
+        String message;
+        int color;
+
+        if (isConnected) {
+            message = "Good! Connected to Internet";
+            color = Color.WHITE;
+            snacky.setText(message).setTextColor(color).success().show();
+
+
+
+        } else {
+
+            message = "Sorry! Not connected to internet";
+            color = Color.WHITE;
+            snacky.setText(message).setTextColor(color).error().show();
+
+        }
+
+
+
+
+
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // register connection status listener
+        MyApplication.getInstance().setConnectivityListener(this);
     }
 
     @Override

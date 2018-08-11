@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +32,7 @@ import java.util.List;
 
 import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.JZVideoPlayerStandard;
+import de.mateware.snacky.Snacky;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 
@@ -37,6 +40,8 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
 
     private Context mContext;
     private List<VideoDetailItem> videoDetailItems;
+
+    private Snacky.Builder snacky;
 
 
     public VideoDetailAdapter(Context mContext, List<VideoDetailItem> videoDetailItems) {
@@ -84,6 +89,12 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
             @Override
             public void onClick(View v) {
                 if (Common.favoriteRepository.isFavorite(Integer.parseInt(videoDetailItems.get(position).ID)) != 1) {
+
+                    snacky=Snacky.builder().setView(holder.rootView);
+                    snacky.setText("Added to Video Favorites").setTextColor(Color.parseColor("#ffffff"))
+                            .setDuration(Snacky.LENGTH_LONG)
+                            .success().show();
+
                     addOrRemoveTopVideoFavorite(videoDetailItems.get(position), true);
                     holder.video_favorite.setImageResource(R.drawable.ic_favorite_black_24dp);
                 } else {
@@ -125,6 +136,8 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
 
         ImageView video_favorite;
 
+        RelativeLayout rootView;
+
 
         public VideoDetailViewholder(View itemView) {
             super(itemView);
@@ -132,6 +145,8 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
             videoPlayer = itemView.findViewById(R.id.video_player);
             videoDetailTitle = itemView.findViewById(R.id.video_details_title);
             video_favorite = itemView.findViewById(R.id.video_favorite);
+
+            rootView=itemView.findViewById(R.id.video_detail_cv);
 
             mp4Text=itemView.findViewById(R.id.mp4_text);
         }

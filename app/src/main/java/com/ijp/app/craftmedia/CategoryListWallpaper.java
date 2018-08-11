@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -8,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.ijp.app.craftmedia.Adapter.PicstaFragmentAdapters.CategoryListItemAdapter;
+import com.ijp.app.craftmedia.Internet.ConnectivityReceiver;
+import com.ijp.app.craftmedia.Internet.MyApplication;
 import com.ijp.app.craftmedia.Model.PicstaModel.CategoryListItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
@@ -16,13 +19,14 @@ import com.yalantis.phoenix.PullToRefreshView;
 import java.util.List;
 
 
+import de.mateware.snacky.Snacky;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class CategoryListWallpaper extends AppCompatActivity {
+public class CategoryListWallpaper extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
     ICraftsMediaApi mService;
 
@@ -38,6 +42,8 @@ public class CategoryListWallpaper extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_list_wallpaper);
+
+
 
         mService= Common.getAPI();
 
@@ -104,6 +110,50 @@ public class CategoryListWallpaper extends AppCompatActivity {
         categoryListWallpaperRV.setAdapter(adapter);
     }
 
+
+
+    // Showing the status in Snackbar- Internet Handling
+    private void showSnack(boolean isConnected) {
+        Snacky.Builder snacky;
+        snacky=Snacky.builder().setActivity(CategoryListWallpaper.this);
+
+        String message;
+        int color;
+
+        if (isConnected) {
+            message = "Good! Connected to Internet";
+            color = Color.WHITE;
+            snacky.setText(message).setTextColor(color).success().show();
+
+
+
+        } else {
+
+            message = "Sorry! Not connected to internet";
+            color = Color.WHITE;
+            snacky.setText(message).setTextColor(color).error().show();
+
+        }
+
+
+
+
+
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // register connection status listener
+        MyApplication.getInstance().setConnectivityListener(this);
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -122,4 +172,6 @@ public class CategoryListWallpaper extends AppCompatActivity {
         compositeDisposable.clear();
         super.onStop();
     }
+
+
 }

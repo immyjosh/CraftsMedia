@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,17 +14,20 @@ import com.ijp.app.craftmedia.Database.DataSource.FavoriteRepository;
 import com.ijp.app.craftmedia.Database.Local.CraftsMediaRoomDatabase;
 import com.ijp.app.craftmedia.Database.Local.FavoriteDataSource;
 import com.ijp.app.craftmedia.Database.ModelDB.Favorites;
+import com.ijp.app.craftmedia.Internet.ConnectivityReceiver;
+import com.ijp.app.craftmedia.Internet.MyApplication;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.List;
 
+import de.mateware.snacky.Snacky;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class FavoritesActivity extends AppCompatActivity {
+public class FavoritesActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener{
 
     RecyclerView videoFavoritesRV;
     AVLoadingIndicatorView avLoadingIndicatorView;
@@ -63,11 +67,50 @@ public class FavoritesActivity extends AppCompatActivity {
 
     }
 
+    // Showing the status in Snackbar- Internet Handling
+    private void showSnack(boolean isConnected) {
+        Snacky.Builder snacky;
+        snacky=Snacky.builder().setActivity(FavoritesActivity.this);
+
+        String message;
+        int color;
+
+        if (isConnected) {
+            message = "Good! Connected to Internet";
+            color = Color.WHITE;
+            snacky.setText(message).setTextColor(color).success().show();
+
+
+
+        } else {
+
+            message = "Sorry! Not connected to internet";
+            color = Color.WHITE;
+            snacky.setText(message).setTextColor(color).error().show();
+
+        }
+
+
+
+
+
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+
         loadFavoritesItem();
+        // register connection status listener
+        MyApplication.getInstance().setConnectivityListener(this);
     }
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -121,6 +164,7 @@ public class FavoritesActivity extends AppCompatActivity {
         compositeDisposable.clear();
         super.onStop();
     }
+
 
 
 }
