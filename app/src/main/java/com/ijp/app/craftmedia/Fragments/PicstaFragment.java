@@ -3,9 +3,9 @@ package com.ijp.app.craftmedia.Fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +23,6 @@ public class PicstaFragment extends Fragment {
 
     String hexColorTransparent="#99000000";
     String hexColorBlack="#27253d";
-    SwipeRefreshLayout refreshLayout;
 
 
     public PicstaFragment() {
@@ -32,14 +31,14 @@ public class PicstaFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_picsta, container, false);
     }
 
     @Override
-    public void onViewCreated(final View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, Bundle savedInstanceState) {
 
         Fragment categoryFragment = new CategoryFragment();
         FragmentTransaction categoryTransaction = getChildFragmentManager().beginTransaction();

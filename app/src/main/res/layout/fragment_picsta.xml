@@ -14,7 +14,6 @@
     <LinearLayout
         android:id="@+id/action_btn"
         android:orientation="horizontal"
-        android:paddingBottom="5dp"
         android:weightSum="2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -22,7 +21,7 @@
         <Button
             android:id="@+id/btn1"
             android:text="Categories"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:background="#27253d"
             android:textColor="@android:color/white"
             android:layout_weight="1"
@@ -31,7 +30,7 @@
         <Button
             android:id="@+id/btn2"
             android:text="Random"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:textColor="@android:color/white"
             android:layout_weight="1"
             android:background="#99000000"

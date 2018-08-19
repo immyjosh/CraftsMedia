@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -20,6 +19,7 @@ import com.ijp.app.craftmedia.Utils.Common;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.List;
+import java.util.Objects;
 
 import de.mateware.snacky.Snacky;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -42,7 +42,7 @@ public class FavoritesActivity extends AppCompatActivity implements Connectivity
         Toolbar toolbar=findViewById(R.id.video_favorites_toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -168,3 +168,6 @@ public class FavoritesActivity extends AppCompatActivity implements Connectivity
 
 
 }
+
+
+

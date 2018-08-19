@@ -38,6 +38,7 @@ import com.ijp.app.craftmedia.Utils.Common;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.List;
+import java.util.UUID;
 
 import cn.jzvd.JZVideoPlayer;
 import de.mateware.snacky.Snacky;
@@ -291,32 +292,32 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
 
                         uri = Uri.parse(Common.currentVideosItem.getVideo_link());
 
-                        description = Common.currentVideosItem.getName();
+                        description = UUID.randomUUID().toString();
 
                     } else if (Common.currentVideoBannerItem != null) {
 
                         uri = Uri.parse(Common.currentVideoBannerItem.getVideo_link());
 
-                        description = Common.currentVideoBannerItem.getName();
+                        description = UUID.randomUUID().toString();
                     } else if (Common.currentVideoRandomItem != null) {
 
                         uri = Uri.parse(Common.currentVideoRandomItem.getVideo_link());
 
-                        description = Common.currentVideoRandomItem.getDescription();
+                        description = UUID.randomUUID().toString();
 
                     } else if (Common.currentFavoritesItem != null) {
 
                         uri = Uri.parse(Common.currentFavoritesItem.video_link);
 
-                        description = Common.currentFavoritesItem.name;
+                        description = UUID.randomUUID().toString();
                     } else if (Common.currentWallpaperDetailItem != null) {
                         uri = Uri.parse(Common.currentVideoDetailItem.video_link);
 
-                        description = Common.currentVideoDetailItem.Name;
+                        description = UUID.randomUUID().toString();
                     }else if (Common.infiniteListItems!=null){
                         uri = Uri.parse(Common.infiniteListItems.getVideo_link());
 
-                        description = Common.infiniteListItems.Name;
+                        description = UUID.randomUUID().toString();
                     }
 
                     DownloadManager.Request request = new DownloadManager.Request(uri);
@@ -410,7 +411,33 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
 
         }else if (Common.infiniteListItems!=null){
             loadInfiniteListItems(Common.infiniteListItems.ID);
+        }else if (Common.currentVideoCategoriesDataItem!=null){
+            loadVideoCategoriesData(Common.currentVideoCategoriesDataItem.getID());
         }
+    }
+
+    private void loadVideoCategoriesData(String videoCategoryDataId) {
+        compositeDisposable.add(mService.getVideoCategoryDataLink(videoCategoryDataId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<VideoDetailItem>>() {
+                    @Override
+                    public void accept(List<VideoDetailItem> videoDetailItems) throws Exception {
+                        avLoadingVideoDetail.smoothToHide();
+                        videoDetailLayout.setVisibility(View.VISIBLE);
+                        displayVideoCategoryData(videoDetailItems);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                }));
+    }
+
+    private void displayVideoCategoryData(List<VideoDetailItem> videoDetailItems) {
+        VideoDetailAdapter adapter = new VideoDetailAdapter(this, videoDetailItems);
+        videoDetailRV.setAdapter(adapter);
     }
 
     private void loadInfiniteListItems(String infiniteId) {

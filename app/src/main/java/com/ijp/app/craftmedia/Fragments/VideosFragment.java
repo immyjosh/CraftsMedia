@@ -2,7 +2,7 @@ package com.ijp.app.craftmedia.Fragments;
 
 
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,13 +22,10 @@ import com.ijp.app.craftmedia.Model.VideoModel.VideoRandomModel;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
-import com.rd.PageIndicatorView;
 import com.wang.avi.AVLoadingIndicatorView;
 
 
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -50,19 +47,13 @@ public class VideosFragment extends Fragment {
 
 
 
-//    int currentPage = 0;
-//    Timer timer;
-//    final long DELAY_MS = 500;//delay in milliseconds before task is to be executed
-//    final long PERIOD_MS = 3000; // time in milliseconds between successive task executions.
-
-
     public VideosFragment() {
         // Required empty public constructor
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_videos, container, false);
@@ -98,14 +89,14 @@ public class VideosFragment extends Fragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<VideoRandomModel>>() {
                     @Override
-                    public void accept(List<VideoRandomModel> videoRandomModels) throws Exception {
+                    public void accept(List<VideoRandomModel> videoRandomModels)  {
                         avLoadingIndicatorView.smoothToHide();
                         scrollView.setVisibility(View.VISIBLE);
                         displayRandomItems(videoRandomModels);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable)  {
 
                     }
                 }));
@@ -122,12 +113,12 @@ public class VideosFragment extends Fragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<VideoCategoriesItem>>() {
                     @Override
-                    public void accept(List<VideoCategoriesItem> videoCategoriesItems) throws Exception {
+                    public void accept(List<VideoCategoriesItem> videoCategoriesItems)  {
                         displayCategoryItems(videoCategoriesItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable)  {
                     }
                 }));
     }
@@ -144,12 +135,12 @@ public class VideosFragment extends Fragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<VideoBannerItem>>() {
                     @Override
-                    public void accept(List<VideoBannerItem> videoBannerItems) throws Exception {
+                    public void accept(List<VideoBannerItem> videoBannerItems)  {
                         displayImage(videoBannerItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable)  {
 
                     }
                 }));
@@ -160,26 +151,6 @@ public class VideosFragment extends Fragment {
         ViewPagerAdapter adapter=new ViewPagerAdapter(getContext(),videoBannerItems);
 
         viewPager.setAdapter(adapter);
-
-//        /*After setting the adapter use the timer */
-//        final Handler handler = new Handler();
-//        final Runnable Update = new Runnable() {
-//            public void run() {
-//                if (currentPage == videoBannerItems.size()) {
-//                    currentPage = 0;
-//                }
-//                viewPager.setCurrentItem(currentPage++, true);
-//            }
-//        };
-//
-//        timer = new Timer(); // This will create a new Thread
-//        timer .schedule(new TimerTask() { // task to be scheduled
-//
-//            @Override
-//            public void run() {
-//                handler.post(Update);
-//            }
-//        }, DELAY_MS, PERIOD_MS);
 
 
     }

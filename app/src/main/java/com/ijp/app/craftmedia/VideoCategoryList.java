@@ -3,18 +3,26 @@ package com.ijp.app.craftmedia;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.ijp.app.craftmedia.Adapter.VideoFragmentAdapters.VideoCategoryDataAdapter;
 import com.ijp.app.craftmedia.Internet.ConnectivityReceiver;
 import com.ijp.app.craftmedia.Internet.MyApplication;
+import com.ijp.app.craftmedia.Model.VideoModel.VideoCategoryDataItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
 
+import java.util.List;
 import java.util.Objects;
 
 import de.mateware.snacky.Snacky;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class VideoCategoryList extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
@@ -22,6 +30,8 @@ public class VideoCategoryList extends AppCompatActivity implements Connectivity
 
 
     CompositeDisposable compositeDisposable=new CompositeDisposable();
+
+    RecyclerView CategoryListVideoRV;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +53,34 @@ public class VideoCategoryList extends AppCompatActivity implements Connectivity
 
             }
         });
+
+        CategoryListVideoRV=findViewById(R.id.Category_list_video_rv);
+        CategoryListVideoRV.setLayoutManager(new GridLayoutManager(this, 2));
+        CategoryListVideoRV.setHasFixedSize(true);
+
+        loadVideoCategoriesDataItem(Common.currentVideoCategoriesItem.ID);
+    }
+
+    private void loadVideoCategoriesDataItem(String videoCategoryId) {
+        compositeDisposable.add(mService.getVideoCategoryData(videoCategoryId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<VideoCategoryDataItem>>() {
+                    @Override
+                    public void accept(List<VideoCategoryDataItem> videoCategoryDataItems) throws Exception {
+                        displayVideoCategoryData(videoCategoryDataItems);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                }));
+    }
+
+    private void displayVideoCategoryData(List<VideoCategoryDataItem> videoCategoryDataItems) {
+        VideoCategoryDataAdapter adapter=new VideoCategoryDataAdapter(this,videoCategoryDataItems);
+        CategoryListVideoRV.setAdapter(adapter);
     }
 
     // Showing the status in Snackbar- Internet Handling

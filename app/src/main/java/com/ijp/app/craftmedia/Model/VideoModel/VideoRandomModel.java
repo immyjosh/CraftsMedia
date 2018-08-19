@@ -5,15 +5,25 @@ public class VideoRandomModel {
     public String Description;
     public String Image_link;
     public String video_link;
+    public String Category;
 
     public VideoRandomModel() {
     }
 
-    public VideoRandomModel(String ID, String description, String image_link, String video_link) {
+    public VideoRandomModel(String ID, String description, String image_link, String video_link, String category) {
         this.ID = ID;
         Description = description;
         Image_link = image_link;
         this.video_link = video_link;
+        Category = category;
+    }
+
+    public String getCategory() {
+        return Category;
+    }
+
+    public void setCategory(String category) {
+        Category = category;
     }
 
     public String getID() {

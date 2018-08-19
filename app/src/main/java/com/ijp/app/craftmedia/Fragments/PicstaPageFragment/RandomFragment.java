@@ -1,7 +1,9 @@
 package com.ijp.app.craftmedia.Fragments.PicstaPageFragment;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +16,7 @@ import com.ijp.app.craftmedia.Model.PicstaModel.RandomListItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
+import com.yalantis.phoenix.PullToRefreshView;
 
 import java.util.List;
 
@@ -33,6 +36,9 @@ public class RandomFragment extends Fragment {
 
     CompositeDisposable compositeDisposable=new CompositeDisposable();
 
+    PullToRefreshView mPullToRefreshView;
+
+    @SuppressLint("StaticFieldLeak")
     private static RandomFragment INSTANCE=null;
     public RandomFragment() {
         // Required empty public constructor
@@ -40,12 +46,26 @@ public class RandomFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_random, container, false);
 
         mService= Common.getAPI();
+
+        mPullToRefreshView =view.findViewById(R.id.pull_to_refresh_random_pics);
+        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPullToRefreshView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getRandomPics();
+                        mPullToRefreshView.setRefreshing(false);
+                    }
+                }, 1000);
+            }
+        });
 
         randomRV=view.findViewById(R.id.random_rv);
         randomRV.setLayoutManager(new GridLayoutManager(getContext(),3));
@@ -62,12 +82,12 @@ public class RandomFragment extends Fragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<RandomListItem>>() {
                     @Override
-                    public void accept(List<RandomListItem> randomListItems) throws Exception {
+                    public void accept(List<RandomListItem> randomListItems)  {
                         displayRandomItems(randomListItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
 
                     }
                 }));

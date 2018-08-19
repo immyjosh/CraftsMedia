@@ -5,10 +5,11 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
+    android:backgroundTint="@color/cardViewBackground"
     android:layout_margin="5dp"
     app:cardElevation="8dp"
-    android:layout_width="150dp"
-    android:layout_height="150dp">
+    android:layout_width="160dp"
+    android:layout_height="160dp">
 
     <LinearLayout
         android:orientation="vertical"
@@ -19,6 +20,13 @@
             android:scaleType="fitXY"
             android:layout_width="match_parent"
             android:layout_height="120dp" />
+        <TextView
+            android:id="@+id/new_videos_text_cv"
+            android:textSize="15sp"
+            android:textColor="@color/text_color"
+            android:fontFamily="monospace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

@@ -13,13 +13,10 @@
             android:icon="@drawable/ic_filter_frames_black_24dp"
             android:title="Picsta Favorites" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings_applications_black_24dp"
+            android:title="Settings" />
+
     </group>
 
     <item android:title="Communicate">
@@ -30,8 +27,8 @@
                 android:title="Share" />
             <item
                 android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:icon="@drawable/ic_stars_black_24dp"
+                android:title="Rate App" />
         </menu>
     </item>
 

@@ -43,7 +43,6 @@ public class AllVideoDetailAdapter extends RecyclerView.Adapter<AllVideoDetailAd
         Picasso.with(mContext).load(videoDetailItemList.get(position).thumb_image_link)
                 .into(holder.imgPics);
 
-        holder.text.setText(videoDetailItemList.get(position).Name);
 
         holder.setItemClickListner(new IitemClickListner() {
             @Override
@@ -64,7 +63,6 @@ public class AllVideoDetailAdapter extends RecyclerView.Adapter<AllVideoDetailAd
     public class AllVideoDetailViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView imgPics;
-        TextView text;
         IitemClickListner iitemClickListner;
 
         public void setItemClickListner(IitemClickListner itemClickListner) {
@@ -76,7 +74,6 @@ public class AllVideoDetailAdapter extends RecyclerView.Adapter<AllVideoDetailAd
 
             itemView.setOnClickListener(this);
             imgPics=itemView.findViewById(R.id.video_favorite_image);
-            text=itemView.findViewById(R.id.video_favorite_text);
         }
 
         @Override

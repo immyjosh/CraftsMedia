@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ijp.app.craftmedia.Interface.IitemClickListner;
 import com.ijp.app.craftmedia.Model.TopVideosItem;
@@ -44,6 +45,8 @@ public class TopVideosAdapter extends RecyclerView.Adapter<TopVideosAdapter.TopV
         Picasso.with(mContext).load(topVideosItemList.get(position).Link)
                 .into(holder.imgPics);
 
+        holder.textView.setText("Category:"+topVideosItemList.get(position).Category);
+
         holder.setItemClickListner(new IitemClickListner() {
             @Override
             public void onClick(View v) {
@@ -64,6 +67,7 @@ public class TopVideosAdapter extends RecyclerView.Adapter<TopVideosAdapter.TopV
     public static class TopVideosViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView imgPics;
+        TextView textView;
         IitemClickListner iitemClickListner;
 
         public void setItemClickListner(IitemClickListner itemClickListner) {
@@ -75,6 +79,7 @@ public class TopVideosAdapter extends RecyclerView.Adapter<TopVideosAdapter.TopV
 
             itemView.setOnClickListener(this);
             imgPics=itemView.findViewById(R.id.top_video_pics_cv);
+            textView=itemView.findViewById(R.id.top_videos_text_cv);
         }
 
         @Override

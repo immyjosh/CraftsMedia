@@ -11,6 +11,7 @@ import com.ijp.app.craftmedia.Model.TopVideosItem;
 import com.ijp.app.craftmedia.Model.VideoDetailItem;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoBannerItem;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoCategoriesItem;
+import com.ijp.app.craftmedia.Model.VideoModel.VideoCategoryDataItem;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoRandomModel;
 import com.ijp.app.craftmedia.Model.WallpaperDetailItem;
 
@@ -82,8 +83,16 @@ public interface ICraftsMediaApi {
     Observable<List<VideoRandomModel>> getVideoRandomItem();
 
     @FormUrlEncoded
+    @POST("getvideocategorydata.php")
+    Observable<List<VideoCategoryDataItem>> getVideoCategoryData(@Field("video_category_item_id") String categoryVideoItemId);
+
+    @FormUrlEncoded
     @POST("videosbannerdetail.php")
     Observable<List<VideoDetailItem>> getVideoBannerLink(@Field("video_banner_id") String video_banner_id);
+
+    @FormUrlEncoded
+    @POST("getcategorydatadetail.php")
+    Observable<List<VideoDetailItem>> getVideoCategoryDataLink(@Field("video_category_item_id") String video_category_item_id);
 
     @FormUrlEncoded
     @POST("videosrandomDetail.php")

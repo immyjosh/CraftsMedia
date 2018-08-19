@@ -48,7 +48,6 @@ public class FavoritesPageAdapter extends RecyclerView.Adapter<FavoritesPageAdap
         Picasso.with(mContext).load(favoritesList.get(position).link)
                 .into(holder.imgPics);
 
-        holder.text.setText(favoritesList.get(position).name);
 
 
         holder.setItemClickListner(new IitemClickListner() {
@@ -72,7 +71,6 @@ public class FavoritesPageAdapter extends RecyclerView.Adapter<FavoritesPageAdap
     public class FavoritesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView imgPics;
-        TextView text;
         IitemClickListner iitemClickListner;
 
         public void setItemClickListner(IitemClickListner itemClickListner) {
@@ -84,7 +82,6 @@ public class FavoritesPageAdapter extends RecyclerView.Adapter<FavoritesPageAdap
 
             itemView.setOnClickListener(this);
             imgPics=itemView.findViewById(R.id.video_favorite_image);
-            text=itemView.findViewById(R.id.video_favorite_text);
         }
 
 

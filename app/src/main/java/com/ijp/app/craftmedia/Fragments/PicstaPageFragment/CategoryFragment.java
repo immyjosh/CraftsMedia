@@ -1,7 +1,9 @@
 package com.ijp.app.craftmedia.Fragments.PicstaPageFragment;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +37,7 @@ public class CategoryFragment extends Fragment {
 
     CompositeDisposable compositeDisposable=new CompositeDisposable();
 
+    @SuppressLint("StaticFieldLeak")
     private static CategoryFragment INSTANCE=null;
 
     public CategoryFragment() {
@@ -43,7 +46,7 @@ public class CategoryFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
@@ -71,7 +74,7 @@ public class CategoryFragment extends Fragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<CategoryFragmentItem>>() {
                     @Override
-                    public void accept(List<CategoryFragmentItem> categoryFragmentItems) throws Exception {
+                    public void accept(List<CategoryFragmentItem> categoryFragmentItems)  {
                         categoryRV.setVisibility(View.VISIBLE);
                         avLoadingIndicatorView.smoothToHide();
                         avLoadingIndicatorView.setVisibility(View.INVISIBLE);
@@ -79,7 +82,7 @@ public class CategoryFragment extends Fragment {
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable)  {
 
                     }
                 }));

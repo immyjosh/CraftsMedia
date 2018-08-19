@@ -1,13 +1,9 @@
 package com.ijp.app.craftmedia.Database.Local;
 
-import android.arch.persistence.db.SupportSQLiteOpenHelper;
 import android.arch.persistence.room.Database;
-import android.arch.persistence.room.DatabaseConfiguration;
-import android.arch.persistence.room.InvalidationTracker;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.ijp.app.craftmedia.Database.ModelDB.Favorites;
 import com.ijp.app.craftmedia.Database.ModelDB.PicstaFavorites;

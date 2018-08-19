@@ -1,7 +1,6 @@
 package com.ijp.app.craftmedia;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,18 +32,16 @@ import com.shashank.sony.fancydialoglib.Icon;
 import de.mateware.snacky.Snacky;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,ConnectivityReceiver.ConnectivityReceiverListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
     private HomeFragment homeFragment;
     private PicstaFragment picstaFragment;
     private VideosFragment videosFragment;
 
-    private BottomNavigationView mBottomNav;
 
     ImageView picstaSearchIcon, videoSearchIcon;
 
     FancyAlertDialog fancyAlertDialogbuilder;
-
 
 
     @Override
@@ -52,7 +49,6 @@ public class HomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        checkConnection();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -116,7 +112,7 @@ public class HomeActivity extends AppCompatActivity
     // Showing the status in Snackbar- Internet Handling
     private void showSnack(boolean isConnected) {
         Snacky.Builder snacky;
-        snacky=Snacky.builder().setActivity(HomeActivity.this);
+        snacky = Snacky.builder().setActivity(HomeActivity.this);
 
         String message;
         int color;
@@ -138,9 +134,6 @@ public class HomeActivity extends AppCompatActivity
             snacky.setText(message).setTextColor(color).error().show();
 
         }
-
-
-
 
 
     }
@@ -176,8 +169,6 @@ public class HomeActivity extends AppCompatActivity
     }
 
 
-
-
     /**
      * Callback will be triggered when there is change in
      * network connection
@@ -198,7 +189,7 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer =findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -260,17 +251,30 @@ public class HomeActivity extends AppCompatActivity
             startActivity(new Intent(HomeActivity.this, PicstaFavoritesActivity.class));
             overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_settings) {
+            startActivity(new Intent(HomeActivity.this, SettingsActivity.class));
+            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 
         } else if (id == R.id.nav_share) {
 
+            try {
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_SUBJECT, "Crafts Media");
+                String sAux = "\nLet me recommend you this application\n\n";
+                sAux = sAux + "https://play.google.com/store/apps/details?id=the.package.id \n\n";
+                i.putExtra(Intent.EXTRA_TEXT, sAux);
+                startActivity(Intent.createChooser(i, "choose one"));
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+
         } else if (id == R.id.nav_send) {
+
 
         }
 
-        DrawerLayout drawer =findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

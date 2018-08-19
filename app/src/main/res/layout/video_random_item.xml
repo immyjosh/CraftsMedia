@@ -5,6 +5,7 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
+    android:backgroundTint="@color/cardViewBackground"
     android:layout_margin="5dp"
     app:cardElevation="8dp"
     android:layout_width="190dp"
@@ -21,15 +22,12 @@
             android:layout_height="120dp" />
         <TextView
             android:id="@+id/video_random_text"
-            android:layout_gravity="start"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:textStyle="bold"
-            android:textAlignment="inherit"
-            android:textColor="@android:color/black"
-            android:textSize="17sp"
+            android:textSize="15sp"
+            android:textColor="@color/text_color"
+            android:fontFamily="monospace"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
 
     </LinearLayout>
 

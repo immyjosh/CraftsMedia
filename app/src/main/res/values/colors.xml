@@ -4,6 +4,16 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorPrimary">#7da87b</color>
 
+    <color name="cardViewBackground">#f4f4cd</color>
+
+    <color name="discreteBackground">#dcdcaf</color>
+
+    <color name="videoCategoriesBackground">#dcdcaf</color>
+
+    <color name="textViewBackground">#dcdcaf</color>
+
+    <color name="listViewDividerColor">#e7e7c1</color>
+
     <color name="btm_nav_color_background">#326765</color>
     <color name="bottom_nav_title">#e4f9f5</color>
 

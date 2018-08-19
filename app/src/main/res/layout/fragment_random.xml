@@ -6,9 +6,13 @@
     tools:context=".Fragments.PicstaPageFragment.RandomFragment">
 
     <!-- TODO: Update blank fragment layout -->
+    <com.yalantis.phoenix.PullToRefreshView
+        android:id="@+id/pull_to_refresh_random_pics"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/random_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
-
+    </com.yalantis.phoenix.PullToRefreshView>
 </FrameLayout>

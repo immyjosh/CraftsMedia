@@ -17,6 +17,7 @@ import com.ijp.app.craftmedia.Model.TopVideosItem;
 import com.ijp.app.craftmedia.Model.VideoDetailItem;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoBannerItem;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoCategoriesItem;
+import com.ijp.app.craftmedia.Model.VideoModel.VideoCategoryDataItem;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoRandomModel;
 import com.ijp.app.craftmedia.Model.WallpaperDetailItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
@@ -46,6 +47,7 @@ public class Common {
     public static VideoDetailItem currentVideoDetailItem=null;
     public static VideoBannerItem currentVideoBannerItem=null;
     public static VideoCategoriesItem currentVideoCategoriesItem=null;
+    public static VideoCategoryDataItem currentVideoCategoriesDataItem=null;
     public static VideoRandomModel currentVideoRandomItem=null;
 
     public static CraftsMediaRoomDatabase craftsMediaRoomDatabase;

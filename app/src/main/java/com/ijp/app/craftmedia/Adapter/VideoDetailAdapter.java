@@ -98,6 +98,10 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
                     addOrRemoveTopVideoFavorite(videoDetailItems.get(position), true);
                     holder.video_favorite.setImageResource(R.drawable.ic_favorite_black_24dp);
                 } else {
+                    snacky=Snacky.builder().setView(holder.rootView);
+                    snacky.setText("Removed From Video Favorites").setTextColor(Color.parseColor("#ffffff"))
+                            .setDuration(Snacky.LENGTH_LONG).error().show();
+
                     addOrRemoveTopVideoFavorite(videoDetailItems.get(position), false);
                     holder.video_favorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                 }

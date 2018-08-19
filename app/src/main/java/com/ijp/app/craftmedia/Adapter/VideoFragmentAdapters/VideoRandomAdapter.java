@@ -45,7 +45,7 @@ public class VideoRandomAdapter extends RecyclerView.Adapter<VideoRandomAdapter.
         Picasso.with(mContext).load(videoRandomModelList.get(position).Image_link)
                 .into(holder.imgPics);
 
-        holder.randomText.setText(videoRandomModelList.get(position).Description);
+        holder.randomText.setText(videoRandomModelList.get(position).Category);
 
         holder.setItemClickListner(new IitemClickListner() {
             @Override
