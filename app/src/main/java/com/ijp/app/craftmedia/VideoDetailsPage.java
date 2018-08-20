@@ -80,7 +80,9 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
     private long queueId;
 
     Uri uri;
+    Uri uriSD;
     String description;
+    String[] quality;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -286,7 +288,7 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
 
                     dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
 
-                    showMaterialDialog();
+
 
                     if (Common.currentVideosItem != null) {
 
@@ -296,7 +298,8 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
 
                     } else if (Common.currentVideoBannerItem != null) {
 
-                        uri = Uri.parse(Common.currentVideoBannerItem.getVideo_link());
+                        uri = Uri.parse(Common.currentVideoBannerItem.getHd_video_link());
+                        uriSD=Uri.parse(Common.currentVideoBannerItem.getSd_video_link());
 
                         description = UUID.randomUUID().toString();
                     } else if (Common.currentVideoRandomItem != null) {
@@ -318,22 +321,14 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
                         uri = Uri.parse(Common.infiniteListItems.getVideo_link());
 
                         description = UUID.randomUUID().toString();
+                    }else if (Common.currentVideoCategoriesDataItem!=null){
+
+                        uri = Uri.parse(Common.currentVideoCategoriesDataItem.getHd_video_link());
+                        uriSD=Uri.parse(Common.currentVideoCategoriesDataItem.getSd_video_link());
+                        description = UUID.randomUUID().toString();
                     }
 
-                    DownloadManager.Request request = new DownloadManager.Request(uri);
-                    request.setTitle("CraftsMedia-" + description);
-                    request.setDescription("Downloading File, please wait...");
-                    request.setAllowedNetworkTypes(
-                            DownloadManager.Request.NETWORK_WIFI
-                                    | DownloadManager.Request.NETWORK_MOBILE)
-                            .allowScanningByMediaScanner();
-                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                    request.setDestinationInExternalPublicDir("CraftsMedia_Videos", description + ".mp4");
-
-                    queueId = dm.enqueue(request);
-
-                    handler = new Handler();
-                    handler.post(runnable);
+                    selectHDorSD();
 
                 }
 
@@ -341,6 +336,68 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
         });
 
     }
+
+    private void selectHDorSD() {
+
+        quality=new String[]{"SD","HD"};
+
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(this)
+                .setTitle("Choose the Video Quality")
+                .setIcon(R.drawable.ic_cloud_download_grey_24dp)
+                .setSingleChoiceItems(quality, -1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (quality[which].equals("HD"))
+                        {
+                            showMaterialDialog();
+                            downloadManagerHD();
+                        }else if (quality[which].equals("SD")){
+                            showMaterialDialog();
+                            downloadManagerSD();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+        final AlertDialog alert = dialog.create();
+        alert.show();
+    }
+
+    private void downloadManagerHD() {
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+        request.setTitle("CraftsMedia-" + description);
+        request.setDescription("Downloading File, please wait...");
+        request.setAllowedNetworkTypes(
+                DownloadManager.Request.NETWORK_WIFI
+                        | DownloadManager.Request.NETWORK_MOBILE)
+                .allowScanningByMediaScanner();
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir("CraftsMedia_Videos", description + ".mp4");
+
+        queueId = dm.enqueue(request);
+
+        handler = new Handler();
+        handler.post(runnable);
+    }
+
+    private void downloadManagerSD() {
+        DownloadManager.Request request = new DownloadManager.Request(uriSD);
+        request.setTitle("CraftsMedia-" + description);
+        request.setDescription("Downloading File, please wait...");
+        request.setAllowedNetworkTypes(
+                DownloadManager.Request.NETWORK_WIFI
+                        | DownloadManager.Request.NETWORK_MOBILE)
+                .allowScanningByMediaScanner();
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir("CraftsMedia_Videos", description + ".mp4");
+
+        queueId = dm.enqueue(request);
+
+        handler = new Handler();
+        handler.post(runnable);
+    }
+
+
+
 
     private void showMaterialDialog() {
 
@@ -387,6 +444,7 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
 
     /**
      * Load Videos Coming From API
+     * Load Thumb Image From API
      */
     private void loadingVideos() {
         if (Common.currentVideosItem != null) {
@@ -395,7 +453,7 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
 
         } else if (Common.currentVideoBannerItem != null) {
 
-            loadVideoBanner(Common.currentVideoBannerItem.ID);
+            loadVideoBanner(Common.currentVideoBannerItem.getID());
 
         } else if (Common.currentVideoRandomItem != null) {
 
@@ -410,9 +468,13 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
             loadSearchVideos(Common.currentVideoDetailItem.ID);
 
         }else if (Common.infiniteListItems!=null){
+
             loadInfiniteListItems(Common.infiniteListItems.ID);
+
         }else if (Common.currentVideoCategoriesDataItem!=null){
+
             loadVideoCategoriesData(Common.currentVideoCategoriesDataItem.getID());
+
         }
     }
 
@@ -422,14 +484,14 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<VideoDetailItem>>() {
                     @Override
-                    public void accept(List<VideoDetailItem> videoDetailItems) throws Exception {
+                    public void accept(List<VideoDetailItem> videoDetailItems)  {
                         avLoadingVideoDetail.smoothToHide();
                         videoDetailLayout.setVisibility(View.VISIBLE);
                         displayVideoCategoryData(videoDetailItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
 
                     }
                 }));

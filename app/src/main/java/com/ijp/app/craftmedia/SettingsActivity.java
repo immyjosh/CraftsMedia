@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,13 +20,11 @@ import java.util.Objects;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    String[] title = {"Clear Cache", "dsd", "dsd"};
+    String[] title = {"Clear Cache"};
     String[] description = {"Remove Image Cache From your Storage Created After " +
-            "loading wallpaper thumbnails", "gfdgdfg", "gfdgdfgfd"};
+            "loading wallpaper thumbnails"};
 
-    int[] images = {R.drawable.ic_storage_black_24dp,
-            R.drawable.ic_broken_image_black_24dp,
-            R.drawable.jz_backward_icon};
+    int[] images = {R.drawable.ic_storage_black_24dp};
 
     ListView listView;
 
@@ -101,6 +100,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
 
+        @SuppressLint({"ViewHolder", "InflateParams"})
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 

@@ -2,6 +2,7 @@ package com.ijp.app.craftmedia;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -17,12 +18,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.ijp.app.craftmedia.Fragments.HomeFragment;
 import com.ijp.app.craftmedia.Fragments.PicstaFragment;
 import com.ijp.app.craftmedia.Fragments.VideosFragment;
 import com.ijp.app.craftmedia.Internet.ConnectivityReceiver;
 import com.ijp.app.craftmedia.Internet.MyApplication;
+import com.ijp.app.craftmedia.Utils.Common;
 import com.shashank.sony.fancydialoglib.Animation;
 import com.shashank.sony.fancydialoglib.FancyAlertDialog;
 import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
@@ -33,6 +36,7 @@ import de.mateware.snacky.Snacky;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ConnectivityReceiver.ConnectivityReceiverListener {
+
 
     private HomeFragment homeFragment;
     private PicstaFragment picstaFragment;
@@ -61,7 +65,8 @@ public class HomeActivity extends AppCompatActivity
         setFragment(homeFragment);
 
 
-        BottomNavigationView mBottomNav = findViewById(R.id.bottom_navigation);
+        BottomNavigationView mBottomNav= findViewById(R.id.bottom_navigation);
+
 
         mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -118,14 +123,17 @@ public class HomeActivity extends AppCompatActivity
         int color;
 
         if (isConnected) {
-            message = "Good! Connected to Internet";
-            color = Color.WHITE;
-            snacky.setText(message).setTextColor(color).success().show();
 
             homeFragment = new HomeFragment();
             picstaFragment = new PicstaFragment();
             videosFragment = new VideosFragment();
             setFragment(homeFragment);
+
+            message = "Good! Connected to Internet";
+            color = Color.WHITE;
+            snacky.setText(message).setTextColor(color).success().show();
+
+
 
         } else {
 
@@ -260,17 +268,22 @@ public class HomeActivity extends AppCompatActivity
             try {
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("text/plain");
-                i.putExtra(Intent.EXTRA_SUBJECT, "Crafts Media");
                 String sAux = "\nLet me recommend you this application\n\n";
-                sAux = sAux + "https://play.google.com/store/apps/details?id=the.package.id \n\n";
+                sAux = sAux + "https://play.google.com/store/apps/details?id="+Common.packageName+"\n\n";
                 i.putExtra(Intent.EXTRA_TEXT, sAux);
-                startActivity(Intent.createChooser(i, "choose one"));
+                startActivity(Intent.createChooser(i, "Crafts Media\nchoose one"));
             } catch(Exception e) {
                 e.printStackTrace();
             }
 
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_rate) {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("market://details?id=" + Common.packageName)));
+            } catch (android.content.ActivityNotFoundException e) {
+               // startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + Common.packageName)));
+                Toast.makeText(this, "App not Found "+e, Toast.LENGTH_SHORT).show();
+            }
 
         }
 

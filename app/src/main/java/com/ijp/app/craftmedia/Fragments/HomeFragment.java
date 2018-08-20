@@ -26,6 +26,7 @@ import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.wang.avi.AVLoadingIndicatorView;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
+import com.yarolegovich.discretescrollview.InfiniteScrollAdapter;
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 
 import java.util.List;
@@ -225,7 +226,8 @@ public class HomeFragment extends Fragment {
 
     private void displayInfiniteItems(List<InfiniteListItem> infiniteListItems) {
         DiscreteScrollAdapter adapter = new DiscreteScrollAdapter(getContext(), infiniteListItems);
-        scrollView.setAdapter(adapter);
+        InfiniteScrollAdapter  wrapper = InfiniteScrollAdapter.wrap(adapter);
+        scrollView.setAdapter(wrapper);
     }
 
 }

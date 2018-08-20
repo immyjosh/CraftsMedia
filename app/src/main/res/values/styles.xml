@@ -17,12 +17,12 @@
 
     <!--Black arrow ToolBar -->
     <style name="ToolbarColouredBlackArrow" parent="AppTheme">
-        <item name="android:textColorSecondary">@android:color/background_dark</item>
+        <item name="android:textColorSecondary">@color/text_color</item>
     </style>
 
     <!--Home Activity ToolBar Theme-->
     <style name="ToolbarTheme" parent="AppTheme" >
-        <item name="android:fontFamily">@font/pacifico</item>
+        <item name="android:fontFamily">@font/snap_itc</item>
     </style>
 
     <!--Drawer Hamburger Theme-->
@@ -38,6 +38,7 @@
     </style>
     <style name="App_no_action_bar" parent="Theme.AppCompat.Light.NoActionBar" >
         <item name="android:colorPrimaryDark">@color/colorPrimary</item>
+        <item name="android:titleTextStyle"></item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

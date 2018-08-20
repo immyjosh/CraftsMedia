@@ -55,7 +55,7 @@ public class ViewPagerAdapter extends PagerAdapter{
 
         ImageView imageView=view.findViewById(R.id.slider_image);
 
-        Picasso.with(context).load(videoBannerItemList.get(position).Link)
+        Picasso.with(context).load(videoBannerItemList.get(position).getLink())
                 .into(imageView);
 
         imageView.setOnClickListener(new View.OnClickListener() {

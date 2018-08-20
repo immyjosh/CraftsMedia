@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,7 +62,7 @@ public class WallpaperDetailAdapter extends RecyclerView.Adapter<WallpaperDetail
 
         //favorite list
         if (Common.picstaFavoriteRepository.isFavorite(Integer.parseInt(wallpaperDetailItemList.get(position).ID)) == 1)
-            holder.imageView.setImageResource(R.drawable.ic_favorite_black_24dp);
+            holder.imageView.setImageResource(R.drawable.ic_favorite_red_24dp);
         else
             holder.imageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
 
@@ -77,7 +76,7 @@ public class WallpaperDetailAdapter extends RecyclerView.Adapter<WallpaperDetail
                             .setDuration(Snacky.LENGTH_LONG).success().show();
 
                     addOrRemoveTopVideoFavorite(wallpaperDetailItemList.get(position), true);
-                    holder.imageView.setImageResource(R.drawable.ic_favorite_black_24dp);
+                    holder.imageView.setImageResource(R.drawable.ic_favorite_red_24dp);
                 } else {
                     snacky=Snacky.builder().setView(holder.rootView);
                     snacky.setText("Removed From Picsta Favorites").setTextColor(Color.parseColor("#ffffff"))

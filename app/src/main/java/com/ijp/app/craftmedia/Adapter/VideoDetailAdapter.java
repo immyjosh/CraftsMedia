@@ -1,14 +1,7 @@
 package com.ijp.app.craftmedia.Adapter;
 
-import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.database.Cursor;
 import android.graphics.Color;
-import android.net.Uri;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,24 +10,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ijp.app.craftmedia.Database.ModelDB.Favorites;
-import com.ijp.app.craftmedia.Interface.IitemClickListner;
-import com.ijp.app.craftmedia.Model.TopVideosItem;
 import com.ijp.app.craftmedia.Model.VideoDetailItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
-import com.ijp.app.craftmedia.VideoDetailsPage;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.JZVideoPlayerStandard;
 import de.mateware.snacky.Snacky;
-
-import static android.content.Context.DOWNLOAD_SERVICE;
 
 public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.VideoDetailViewholder> {
 
@@ -77,7 +63,7 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
 
         //favorite list
         if (Common.favoriteRepository.isFavorite(Integer.parseInt(videoDetailItems.get(position).ID)) == 1)
-            holder.video_favorite.setImageResource(R.drawable.ic_favorite_black_24dp);
+            holder.video_favorite.setImageResource(R.drawable.ic_favorite_red_24dp);
         else
             holder.video_favorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
 
@@ -96,7 +82,7 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
                             .success().show();
 
                     addOrRemoveTopVideoFavorite(videoDetailItems.get(position), true);
-                    holder.video_favorite.setImageResource(R.drawable.ic_favorite_black_24dp);
+                    holder.video_favorite.setImageResource(R.drawable.ic_favorite_red_24dp);
                 } else {
                     snacky=Snacky.builder().setView(holder.rootView);
                     snacky.setText("Removed From Video Favorites").setTextColor(Color.parseColor("#ffffff"))

@@ -14,6 +14,7 @@ import com.ijp.app.craftmedia.Internet.MyApplication;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoCategoryDataItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
+import com.yalantis.phoenix.PullToRefreshView;
 
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +31,8 @@ public class VideoCategoryList extends AppCompatActivity implements Connectivity
 
 
     CompositeDisposable compositeDisposable=new CompositeDisposable();
+
+    PullToRefreshView mPullToRefreshView;
 
     RecyclerView CategoryListVideoRV;
     @Override
@@ -51,6 +54,20 @@ public class VideoCategoryList extends AppCompatActivity implements Connectivity
                 finish();
                 overridePendingTransition(R.anim.fadein,R.anim.fade_out);
 
+            }
+        });
+
+        mPullToRefreshView =findViewById(R.id.pull_to_refresh_video_category);
+        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPullToRefreshView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadVideoCategoriesDataItem(Common.currentVideoCategoriesItem.ID);
+                        mPullToRefreshView.setRefreshing(false);
+                    }
+                }, 1000);
             }
         });
 

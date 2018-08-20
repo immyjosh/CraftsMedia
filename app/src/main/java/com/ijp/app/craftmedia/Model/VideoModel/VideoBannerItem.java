@@ -1,28 +1,44 @@
 package com.ijp.app.craftmedia.Model.VideoModel;
 
 public class VideoBannerItem {
-    public String ID;
-    public String Name;
-    public String Link;
-    public String video_link;
+    private String ID;
+    private String Link;
+    private String hd_video_link;
+    private String sd_video_link;
 
 
     public VideoBannerItem() {
     }
 
-    public VideoBannerItem(String ID, String name, String link,String video_link) {
+    public VideoBannerItem(String ID, String link, String hd_video_link, String sd_video_link) {
         this.ID = ID;
-        Name = name;
         Link = link;
-        this.video_link = video_link;
+        this.hd_video_link = hd_video_link;
+        this.sd_video_link = sd_video_link;
     }
 
-    public String getVideo_link() {
-        return video_link;
+    public String getSd_video_link() {
+        return sd_video_link;
     }
 
-    public void setVideo_link(String video_link) {
-        this.video_link = video_link;
+    public void setSd_video_link(String sd_video_link) {
+        this.sd_video_link = sd_video_link;
+    }
+
+    public String getLink() {
+        return Link;
+    }
+
+    public void setLink(String link) {
+        Link = link;
+    }
+
+    public String getHd_video_link() {
+        return hd_video_link;
+    }
+
+    public void setHd_video_link(String hd_video_link) {
+        this.hd_video_link = hd_video_link;
     }
 
     public String getID() {
@@ -33,19 +49,5 @@ public class VideoBannerItem {
         this.ID = ID;
     }
 
-    public String getName() {
-        return Name;
-    }
 
-    public void setName(String name) {
-        Name = name;
-    }
-
-    public String getLink() {
-        return Link;
-    }
-
-    public void setLink(String link) {
-        Link = link;
-    }
 }

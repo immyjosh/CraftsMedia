@@ -1,6 +1,7 @@
 package com.ijp.app.craftmedia.Utils;
 
 
+import com.ijp.app.craftmedia.BuildConfig;
 import com.ijp.app.craftmedia.Database.DataSource.FavoriteRepository;
 import com.ijp.app.craftmedia.Database.DataSource.PicstaFavoriteRepository;
 import com.ijp.app.craftmedia.Database.Local.CraftsMediaRoomDatabase;
@@ -29,7 +30,8 @@ import java.util.List;
 public class Common {
 
     //10.0.2.2 - Emulator localhost
-    //http://www.thingspeakapi.tk/DrinkShop/
+
+    public static String packageName= BuildConfig.APPLICATION_ID;
     public static final String BASE_URL = "http://www.thingspeakapi.tk/CraftsMedia/";
 
     public static InfiniteListItem infiniteListItems= null;

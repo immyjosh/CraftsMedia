@@ -15,11 +15,18 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/video_category_toolbar"
             android:theme="@style/ToolbarColouredBlackArrow"
+            app:titleTextColor="@color/text_color"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             android:background="?android:attr/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"></android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
+
+    <com.yalantis.phoenix.PullToRefreshView
+        android:id="@+id/pull_to_refresh_video_category"
+        android:layout_below="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/Category_list_video_rv"
@@ -28,5 +35,7 @@
         android:padding="0dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+    </com.yalantis.phoenix.PullToRefreshView>
 
 </RelativeLayout>

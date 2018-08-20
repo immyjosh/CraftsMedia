@@ -15,6 +15,7 @@
             android:id="@+id/toolbar"
             android:theme="@style/ToolbarColouredBlackArrow"
             app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:titleTextColor="@color/text_color"
             android:background="?android:attr/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"></android.support.v7.widget.Toolbar>
