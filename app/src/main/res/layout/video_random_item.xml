@@ -31,7 +31,12 @@
 
     </LinearLayout>
 
-
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/ic_play_arrow_green_24dp" />
 
 
 

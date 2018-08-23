@@ -13,11 +13,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoBannerItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.ijp.app.craftmedia.VideoDetailsPage;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -55,7 +55,7 @@ public class ViewPagerAdapter extends PagerAdapter{
 
         ImageView imageView=view.findViewById(R.id.slider_image);
 
-        Picasso.with(context).load(videoBannerItemList.get(position).getLink())
+        Glide.with(context).load(videoBannerItemList.get(position).getLink())
                 .into(imageView);
 
         imageView.setOnClickListener(new View.OnClickListener() {

@@ -10,14 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.ijp.app.craftmedia.Database.ModelDB.Favorites;
+import com.bumptech.glide.Glide;
 import com.ijp.app.craftmedia.Database.ModelDB.PicstaFavorites;
 import com.ijp.app.craftmedia.Interface.IitemClickListner;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
-import com.ijp.app.craftmedia.VideoDetailsPage;
 import com.ijp.app.craftmedia.WallpaperDetailActivity;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -43,7 +41,7 @@ public class PicstaFavoritesAdapter extends RecyclerView.Adapter<PicstaFavorites
 
     @Override
     public void onBindViewHolder(@NonNull PicstaFavoritesViewHolder holder, final int position) {
-        Picasso.with(mContext).load(favoritesList.get(position).link)
+        Glide.with(mContext).load(favoritesList.get(position).link)
                 .into(holder.imgPics);
 
         holder.setItemClickListner(new IitemClickListner() {

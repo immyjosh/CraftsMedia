@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 
+import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import com.ijp.app.craftmedia.Database.ModelDB.PicstaFavorites;
@@ -22,7 +23,6 @@ import com.ijp.app.craftmedia.Model.WallpaperDetailItem;
 import com.ijp.app.craftmedia.R;
 
 import com.ijp.app.craftmedia.Utils.Common;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -55,13 +55,13 @@ public class WallpaperDetailAdapter extends RecyclerView.Adapter<WallpaperDetail
 
     @Override
     public void onBindViewHolder(@NonNull final WallpaperDetailViewHolder holder, final int position) {
-        Picasso.with(mContext)
-                .load(wallpaperDetailItemList.get(position).image_link)
+        Glide.with(mContext)
+                .load(wallpaperDetailItemList.get(position).getImage_link())
                 .into(holder.photoView);
 
 
         //favorite list
-        if (Common.picstaFavoriteRepository.isFavorite(Integer.parseInt(wallpaperDetailItemList.get(position).ID)) == 1)
+        if (Common.picstaFavoriteRepository.isFavorite(Integer.parseInt(wallpaperDetailItemList.get(position).getID())) == 1)
             holder.imageView.setImageResource(R.drawable.ic_favorite_red_24dp);
         else
             holder.imageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
@@ -69,7 +69,7 @@ public class WallpaperDetailAdapter extends RecyclerView.Adapter<WallpaperDetail
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Common.picstaFavoriteRepository.isFavorite(Integer.parseInt(wallpaperDetailItemList.get(position).ID)) != 1) {
+                if (Common.picstaFavoriteRepository.isFavorite(Integer.parseInt(wallpaperDetailItemList.get(position).getID())) != 1) {
 
                     snacky=Snacky.builder().setView(holder.rootView);
                     snacky.setText("Added to Picsta Favorites").setTextColor(Color.parseColor("#ffffff"))
@@ -91,10 +91,11 @@ public class WallpaperDetailAdapter extends RecyclerView.Adapter<WallpaperDetail
     }
 
     private void addOrRemoveTopVideoFavorite(WallpaperDetailItem wallpaperDetailItem, boolean isAdd) {
-        PicstaFavorites picstaFavorites = new PicstaFavorites(wallpaperDetailItem.image_link);
-        picstaFavorites.id = wallpaperDetailItem.ID;
-        picstaFavorites.link = wallpaperDetailItem.image_link;
-        picstaFavorites.name = wallpaperDetailItem.Category;
+        PicstaFavorites picstaFavorites = new PicstaFavorites();
+        picstaFavorites.id = wallpaperDetailItem.getID();
+        picstaFavorites.link = wallpaperDetailItem.getImage_link();
+        picstaFavorites.name = wallpaperDetailItem.getCategory();
+        picstaFavorites.origLink=wallpaperDetailItem.getOrig_image_link();
 
         if (isAdd)
             Common.picstaFavoriteRepository.insertFav(picstaFavorites);

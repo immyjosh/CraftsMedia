@@ -1,10 +1,10 @@
 package com.ijp.app.craftmedia.Model;
 
 public class TopPicsItem {
-    public String ID;
-    public String Name;
-    public String Link;
-    public String Category ;
+    private String ID;
+    private String Name;
+    private String Link;
+    private String Category ;
 
     public TopPicsItem() {
     }

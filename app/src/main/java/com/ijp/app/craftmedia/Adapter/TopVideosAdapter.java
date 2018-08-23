@@ -11,12 +11,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ijp.app.craftmedia.Interface.IitemClickListner;
 import com.ijp.app.craftmedia.Model.TopVideosItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.ijp.app.craftmedia.VideoDetailsPage;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -42,10 +42,10 @@ public class TopVideosAdapter extends RecyclerView.Adapter<TopVideosAdapter.TopV
 
     @Override
     public void onBindViewHolder(@NonNull TopVideosViewHolder holder, final int position) {
-        Picasso.with(mContext).load(topVideosItemList.get(position).Link)
+        Glide.with(mContext).load(topVideosItemList.get(position).getLink())
                 .into(holder.imgPics);
 
-        holder.textView.setText("Category:"+topVideosItemList.get(position).Category);
+        holder.textView.setText("Category:"+topVideosItemList.get(position).getCategory());
 
         holder.setItemClickListner(new IitemClickListner() {
             @Override

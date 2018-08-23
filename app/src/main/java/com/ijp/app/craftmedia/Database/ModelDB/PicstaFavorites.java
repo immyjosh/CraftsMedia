@@ -18,22 +18,13 @@ public class PicstaFavorites {
     @ColumnInfo(name = "link")
     public String link;
 
+    @ColumnInfo(name = "orig_link")
+    public String origLink;
+
     @ColumnInfo(name = "category")
     public String Category;
 
-    public PicstaFavorites(String link) {
-        this.link = link;
-    }
 
-
-
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
 
 
 }

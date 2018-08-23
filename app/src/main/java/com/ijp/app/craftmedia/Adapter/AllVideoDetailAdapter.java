@@ -9,14 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ijp.app.craftmedia.Interface.IitemClickListner;
 import com.ijp.app.craftmedia.Model.VideoDetailItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.ijp.app.craftmedia.VideoDetailsPage;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class AllVideoDetailAdapter extends RecyclerView.Adapter<AllVideoDetailAd
 
     @Override
     public void onBindViewHolder(@NonNull AllVideoDetailViewHolder holder, final int position) {
-        Picasso.with(mContext).load(videoDetailItemList.get(position).thumb_image_link)
+        Glide.with(mContext).load(videoDetailItemList.get(position).thumb_image_link)
                 .into(holder.imgPics);
 
 

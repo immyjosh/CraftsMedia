@@ -12,12 +12,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ijp.app.craftmedia.CategoryListWallpaper;
 import com.ijp.app.craftmedia.Interface.IitemClickListner;
 import com.ijp.app.craftmedia.Model.PicstaModel.CategoryFragmentItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class CategoryFragmentAdapter extends RecyclerView.Adapter<CategoryFragme
     @Override
     public void onBindViewHolder(@NonNull CatrgoryFragmentViewHolder holder, final int position) {
 
-        Picasso.with(mContext).load(categoryFragmentItemList.get(position).image_url)
+        Glide.with(mContext).load(categoryFragmentItemList.get(position).image_url)
                 .into(holder.categoryImage);
 
 

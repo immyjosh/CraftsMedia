@@ -10,12 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.ijp.app.craftmedia.Interface.IitemClickListner;
 import com.ijp.app.craftmedia.Model.WallpaperDetailItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.ijp.app.craftmedia.WallpaperDetailActivity;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class AllPicsDetailAdapter extends RecyclerView.Adapter<AllPicsDetailAdap
 
     @Override
     public void onBindViewHolder(@NonNull AllPicsDetailViewHolder holder, final int position) {
-        Picasso.with(mContext).load(wallpaperDetailItemList.get(position).image_link)
+        Glide.with(mContext).load(wallpaperDetailItemList.get(position).getImage_link())
                 .into(holder.imgPics);
 
         holder.setItemClickListner(new IitemClickListner() {

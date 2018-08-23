@@ -57,6 +57,7 @@ public class HomeActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        checkConnection();
 
         homeFragment = new HomeFragment();
         picstaFragment = new PicstaFragment();
@@ -152,12 +153,12 @@ public class HomeActivity extends AppCompatActivity
     private void showAlertDialog() {
         fancyAlertDialogbuilder = new FancyAlertDialog.Builder(this)
                 .setTitle("Exit Application ?")
-                .setBackgroundColor(Color.parseColor("#f5f5c6"))  //Don't pass R.color.colorvalue
+                .setBackgroundColor(Color.parseColor("#326765"))  //Don't pass R.color.colorvalue
                 .setMessage("Do you really want to Exit ?")
                 .setNegativeBtnText("Cancel")
-                .setPositiveBtnBackground(Color.parseColor("#FF4081"))  //Don't pass R.color.colorvalue
+                .setPositiveBtnBackground(Color.parseColor("#326765"))  //Don't pass R.color.colorvalue
                 .setPositiveBtnText("Yes")
-                .setNegativeBtnBackground(Color.parseColor("#326765"))  //Don't pass R.color.colorvalue
+                .setNegativeBtnBackground(Color.parseColor("#7da87b"))  //Don't pass R.color.colorvalue
                 .setAnimation(Animation.POP)
                 .isCancellable(true)
                 .setIcon(R.drawable.ic_error_outline_green_24dp, Icon.Visible)

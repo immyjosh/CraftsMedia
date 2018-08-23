@@ -24,5 +24,8 @@ public class Favorites {
     @ColumnInfo(name = "videoLink")
     public String video_link;
 
+    @ColumnInfo(name = "hdVideoLink")
+    public String hd_video_link;
+
 
 }

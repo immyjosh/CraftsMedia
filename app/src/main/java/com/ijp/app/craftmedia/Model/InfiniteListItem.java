@@ -2,17 +2,35 @@ package com.ijp.app.craftmedia.Model;
 
 
 public class InfiniteListItem {
-    public String ID,Name,image_link,video_link,category;
+    private String ID,Name,image_link,video_link,hd_video_link,category,image_icon;
 
     public InfiniteListItem() {
     }
 
-    public InfiniteListItem(String ID, String name, String image_link, String video_link, String category) {
+    public InfiniteListItem(String ID, String name, String image_link, String video_link, String hd_video_link, String category, String image_icon) {
         this.ID = ID;
         Name = name;
         this.image_link = image_link;
         this.video_link = video_link;
+        this.hd_video_link = hd_video_link;
         this.category = category;
+        this.image_icon = image_icon;
+    }
+
+    public String getImage_icon() {
+        return image_icon;
+    }
+
+    public void setImage_icon(String image_icon) {
+        this.image_icon = image_icon;
+    }
+
+    public String getHd_video_link() {
+        return hd_video_link;
+    }
+
+    public void setHd_video_link(String hd_video_link) {
+        this.hd_video_link = hd_video_link;
     }
 
     public String getVideo_link() {

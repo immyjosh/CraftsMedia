@@ -35,6 +35,7 @@ import com.ijp.app.craftmedia.Internet.MyApplication;
 import com.ijp.app.craftmedia.Model.VideoDetailItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
+import com.shashank.sony.fancytoastlib.FancyToast;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.List;
@@ -174,7 +175,7 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
                 long refId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
 
                 if (refId == queueId) {
-                    Toast.makeText(context, "Download Completed", Toast.LENGTH_SHORT).show();
+                    FancyToast.makeText(VideoDetailsPage.this,"Download Complete",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,R.drawable.ic_cloud_download_grey_24dp).show();
                     videoDownload.setVisibility(View.VISIBLE);
                     avLoadingIndicatorView.smoothToHide();
                     videoDetailTextDownloading.setVisibility(View.INVISIBLE);
@@ -292,11 +293,18 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
 
                     if (Common.currentVideosItem != null) {
 
-                        uri = Uri.parse(Common.currentVideosItem.getVideo_link());
+                        uri = Uri.parse(Common.currentVideosItem.getHd_video_link());
+                        uriSD = Uri.parse(Common.currentVideosItem.getVideo_link());
 
                         description = UUID.randomUUID().toString();
 
-                    } else if (Common.currentVideoBannerItem != null) {
+                    }else if (Common.currentNewVideosItem != null) {
+
+                        uri = Uri.parse(Common.currentNewVideosItem.getHd_video_link());
+                        uriSD=Uri.parse(Common.currentNewVideosItem.getVideo_link());
+
+                        description = UUID.randomUUID().toString();
+                    }  else if (Common.currentVideoBannerItem != null) {
 
                         uri = Uri.parse(Common.currentVideoBannerItem.getHd_video_link());
                         uriSD=Uri.parse(Common.currentVideoBannerItem.getSd_video_link());
@@ -304,21 +312,25 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
                         description = UUID.randomUUID().toString();
                     } else if (Common.currentVideoRandomItem != null) {
 
-                        uri = Uri.parse(Common.currentVideoRandomItem.getVideo_link());
+                        uri = Uri.parse(Common.currentVideoRandomItem.getHd_video_link());
+                        uriSD = Uri.parse(Common.currentVideoRandomItem.getVideo_link());
 
                         description = UUID.randomUUID().toString();
 
                     } else if (Common.currentFavoritesItem != null) {
 
-                        uri = Uri.parse(Common.currentFavoritesItem.video_link);
+                        uri = Uri.parse(Common.currentFavoritesItem.hd_video_link);
+                        uriSD = Uri.parse(Common.currentFavoritesItem.video_link);
 
                         description = UUID.randomUUID().toString();
-                    } else if (Common.currentWallpaperDetailItem != null) {
-                        uri = Uri.parse(Common.currentVideoDetailItem.video_link);
+                    } else if (Common.currentVideoDetailItem != null) {
+                        uri = Uri.parse(Common.currentVideoDetailItem.getHd_video_link());
+                        uriSD = Uri.parse(Common.currentVideoDetailItem.getVideo_link());
 
                         description = UUID.randomUUID().toString();
                     }else if (Common.infiniteListItems!=null){
-                        uri = Uri.parse(Common.infiniteListItems.getVideo_link());
+                        uri = Uri.parse(Common.infiniteListItems.getHd_video_link());
+                        uriSD = Uri.parse(Common.infiniteListItems.getVideo_link());
 
                         description = UUID.randomUUID().toString();
                     }else if (Common.currentVideoCategoriesDataItem!=null){
@@ -449,7 +461,11 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
     private void loadingVideos() {
         if (Common.currentVideosItem != null) {
 
-            loadVideo(Common.currentVideosItem.ID);
+            loadVideo(Common.currentVideosItem.getID());
+
+        }else if (Common.currentNewVideosItem != null) {
+
+            loadNewVideo(Common.currentNewVideosItem.getID());
 
         } else if (Common.currentVideoBannerItem != null) {
 
@@ -469,13 +485,37 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
 
         }else if (Common.infiniteListItems!=null){
 
-            loadInfiniteListItems(Common.infiniteListItems.ID);
+            loadInfiniteListItems(Common.infiniteListItems.getID());
 
         }else if (Common.currentVideoCategoriesDataItem!=null){
 
             loadVideoCategoriesData(Common.currentVideoCategoriesDataItem.getID());
 
         }
+    }
+
+    private void loadNewVideo(String newVideoId) {
+        compositeDisposable.add(mService.getNewVideoLink(newVideoId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<VideoDetailItem>>() {
+                    @Override
+                    public void accept(List<VideoDetailItem> videoDetailItems)  {
+                        avLoadingVideoDetail.smoothToHide();
+                        videoDetailLayout.setVisibility(View.VISIBLE);
+                        displayNewVideos(videoDetailItems);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable)  {
+
+                    }
+                }));
+    }
+
+    private void displayNewVideos(List<VideoDetailItem> videoDetailItems) {
+        VideoDetailAdapter adapter = new VideoDetailAdapter(this, videoDetailItems);
+        videoDetailRV.setAdapter(adapter);
     }
 
     private void loadVideoCategoriesData(String videoCategoryDataId) {

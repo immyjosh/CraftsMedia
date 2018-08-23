@@ -10,13 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.ijp.app.craftmedia.Interface.IitemClickListner;
 import com.ijp.app.craftmedia.Model.TopPicsItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
-import com.ijp.app.craftmedia.VideoDetailsPage;
 import com.ijp.app.craftmedia.WallpaperDetailActivity;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -45,7 +44,7 @@ public class TopPicsAdapter extends RecyclerView.Adapter<TopPicsAdapter.TopPicsV
 
     @Override
     public void onBindViewHolder(@NonNull TopPicsViewHolder holder, final int position) {
-        Picasso.with(mContext).load(topPicsItemList.get(position).Link)
+        Glide.with(mContext).load(topPicsItemList.get(position).getLink())
                 .into(holder.imgPics);
 
         holder.setItemClickListner(new IitemClickListner() {

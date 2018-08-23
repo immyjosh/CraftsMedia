@@ -31,7 +31,10 @@ dependencies {
     implementation 'com.android.support:cardview-v7:27.1.1'
 
 
-    implementation 'com.squareup.picasso:picasso:2.5.2'
+
+    //Glide
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
 
     // Rx JAVA
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
@@ -82,6 +85,9 @@ dependencies {
 
     //SnackBar
     implementation 'com.github.matecode:Snacky:1.0.3'
+
+    //Fancy Toast
+    implementation 'com.github.Shashank02051997:FancyToast-Android:0.1.3'
 
 
 }

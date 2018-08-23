@@ -4,22 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ijp.app.craftmedia.Database.ModelDB.Favorites;
 import com.ijp.app.craftmedia.Interface.IitemClickListner;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.ijp.app.craftmedia.VideoDetailsPage;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -45,7 +41,7 @@ public class FavoritesPageAdapter extends RecyclerView.Adapter<FavoritesPageAdap
 
     @Override
     public void onBindViewHolder(@NonNull FavoritesViewHolder holder, final int position) {
-        Picasso.with(mContext).load(favoritesList.get(position).link)
+        Glide.with(mContext).load(favoritesList.get(position).link)
                 .into(holder.imgPics);
 
 

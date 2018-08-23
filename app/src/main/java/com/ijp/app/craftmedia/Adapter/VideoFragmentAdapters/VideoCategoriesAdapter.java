@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia.Adapter.VideoFragmentAdapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,12 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ijp.app.craftmedia.Interface.IitemClickListner;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoCategoriesItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.ijp.app.craftmedia.VideoCategoryList;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -42,8 +43,8 @@ public class VideoCategoriesAdapter extends RecyclerView.Adapter<VideoCategories
     }
 
     @Override
-    public void onBindViewHolder(@NonNull VideoCategoriesViewHolder holder, final int position) {
-        Picasso.with(mContext).load(videoCategoriesItemList.get(position).image_url).fit().centerInside()
+    public void onBindViewHolder(@NonNull VideoCategoriesViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+        Glide.with(mContext).load(videoCategoriesItemList.get(position).image_url)
                 .into(holder.categoryImage);
 
         holder.categoryText.setText(videoCategoriesItemList.get(position).category);
@@ -74,7 +75,7 @@ public class VideoCategoriesAdapter extends RecyclerView.Adapter<VideoCategories
             this.iitemClickListner = itemClickListner;
         }
 
-        public VideoCategoriesViewHolder(View itemView) {
+        private VideoCategoriesViewHolder(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);

@@ -42,16 +42,16 @@ import io.reactivex.schedulers.Schedulers;
 public class HomeFragment extends Fragment {
 
 
-    DiscreteScrollView scrollView;
+    private DiscreteScrollView scrollView;
 
 
-    ICraftsMediaApi mService;
-    RecyclerView topPicsRV, topVideosRV, newPicsRV, newVideosRV;
+    private ICraftsMediaApi mService;
+    private RecyclerView topPicsRV, topVideosRV, newPicsRV, newVideosRV;
 
-    AVLoadingIndicatorView avLoadingIndicatorView;
-    RelativeLayout relativeLayout;
+    private AVLoadingIndicatorView avLoadingIndicatorView;
+    private RelativeLayout relativeLayout;
 
-    CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public HomeFragment() {
         // Required empty public constructor
@@ -74,10 +74,13 @@ public class HomeFragment extends Fragment {
         mService = Common.getAPI();
 
 
+
         scrollView = view.findViewById(R.id.discrete_picker);
         scrollView.setItemTransformer(new ScaleTransformer.Builder()
                 .setMinScale(0.8f)
                 .build());
+
+
 
 
         relativeLayout = view.findViewById(R.id.after_prog_layout);
@@ -110,6 +113,12 @@ public class HomeFragment extends Fragment {
 
 
     }
+
+
+
+
+
+
 
     private void getNewVideosItem() {
         compositeDisposable.add(mService.getNewVideoImageItem()
@@ -225,9 +234,9 @@ public class HomeFragment extends Fragment {
     }
 
     private void displayInfiniteItems(List<InfiniteListItem> infiniteListItems) {
-        DiscreteScrollAdapter adapter = new DiscreteScrollAdapter(getContext(), infiniteListItems);
-        InfiniteScrollAdapter  wrapper = InfiniteScrollAdapter.wrap(adapter);
+        InfiniteScrollAdapter wrapper = InfiniteScrollAdapter.wrap(new DiscreteScrollAdapter(getContext(), infiniteListItems));
         scrollView.setAdapter(wrapper);
     }
+
 
 }

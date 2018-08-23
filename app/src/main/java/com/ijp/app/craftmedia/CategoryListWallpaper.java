@@ -17,6 +17,7 @@ import com.ijp.app.craftmedia.Utils.Common;
 import com.yalantis.phoenix.PullToRefreshView;
 
 import java.util.List;
+import java.util.Objects;
 
 
 import de.mateware.snacky.Snacky;
@@ -50,7 +51,7 @@ public class CategoryListWallpaper extends AppCompatActivity implements Connecti
         Toolbar toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -93,12 +94,12 @@ public class CategoryListWallpaper extends AppCompatActivity implements Connecti
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<CategoryListItem>>() {
                     @Override
-                    public void accept(List<CategoryListItem> categoryListItems) throws Exception {
+                    public void accept(List<CategoryListItem> categoryListItems)  {
                         displayCategoryItemPics(categoryListItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable)  {
 
                     }
                 }));

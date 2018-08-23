@@ -6,10 +6,13 @@
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     android:backgroundTint="@color/cardViewBackground"
-    android:layout_margin="5dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginLeft="8dp"
     app:cardElevation="8dp"
     android:layout_width="160dp"
     android:layout_height="160dp">
+
+
 
     <LinearLayout
         android:orientation="vertical"
@@ -20,6 +23,7 @@
             android:scaleType="fitXY"
             android:layout_width="match_parent"
             android:layout_height="120dp" />
+
         <TextView
             android:id="@+id/new_videos_text_cv"
             android:textSize="15sp"
@@ -30,7 +34,12 @@
 
     </LinearLayout>
 
-
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/ic_play_arrow_green_24dp" />
 
 
 

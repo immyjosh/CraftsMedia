@@ -10,12 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.ijp.app.craftmedia.Interface.IitemClickListner;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoCategoryDataItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.ijp.app.craftmedia.VideoDetailsPage;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class VideoCategoryDataAdapter extends RecyclerView.Adapter<VideoCategory
 
     @Override
     public void onBindViewHolder(@NonNull VideoCategorydataViewHolder holder, final int position) {
-        Picasso.with(mContext).load(videoCategoryDataItemList.get(position).getVideo_thumbnail())
+        Glide.with(mContext).load(videoCategoryDataItemList.get(position).getVideo_thumbnail())
                 .into(holder.imgPics);
 
         holder.setItemClickListner(new IitemClickListner() {

@@ -123,7 +123,7 @@ public class PicstaSearchActivity extends AppCompatActivity implements Connectiv
         List<WallpaperDetailItem> result=new ArrayList<>();
         for(WallpaperDetailItem pics:localDataSource)
         {
-            if(pics.Category.contains(text)){
+            if(pics.getCategory().contains(text)){
                 result.add(pics);
             }
 
@@ -157,7 +157,7 @@ public class PicstaSearchActivity extends AppCompatActivity implements Connectiv
 
     private void buildSuggestList(List<WallpaperDetailItem> wallpaperDetailItems) {
         for(WallpaperDetailItem pics: wallpaperDetailItems)
-            suggestList.add(pics.Category);
+            suggestList.add(pics.getCategory());
         searchBar.setLastSuggestions(suggestList);
     }
 

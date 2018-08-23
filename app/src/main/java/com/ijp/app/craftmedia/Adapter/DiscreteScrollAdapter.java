@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -8,14 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ijp.app.craftmedia.Interface.IitemClickListner;
 import com.ijp.app.craftmedia.Model.InfiniteListItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.ijp.app.craftmedia.VideoDetailsPage;
 import com.ijp.app.craftmedia.WallpaperDetailActivity;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -39,9 +41,13 @@ public class DiscreteScrollAdapter extends RecyclerView.Adapter<DiscreteScrollAd
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DiscreteScrollViewHolder holder, final int position) {
-        Picasso.with(mContext).load(infiniteListItemList.get(position).getImage_link())
+    public void onBindViewHolder(@NonNull DiscreteScrollViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+        Glide.with(mContext).load(infiniteListItemList.get(position).getImage_link())
                 .into(holder.imgPics);
+
+        Glide.with(mContext).load(infiniteListItemList.get(position).getImage_icon())
+                .into(holder.discretePickerText);
+
 
         holder.setItemClickListner(new IitemClickListner() {
             @Override
@@ -83,17 +89,19 @@ public class DiscreteScrollAdapter extends RecyclerView.Adapter<DiscreteScrollAd
     public class DiscreteScrollViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView imgPics;
+        private ImageView discretePickerText;
         IitemClickListner iitemClickListner;
 
         public void setItemClickListner(IitemClickListner itemClickListner) {
             this.iitemClickListner = itemClickListner;
         }
 
-        public DiscreteScrollViewHolder(View itemView) {
+        private DiscreteScrollViewHolder(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);
             imgPics=itemView.findViewById(R.id.discrete_image_pics_cv);
+            discretePickerText=itemView.findViewById(R.id.discrete_text_cv);
         }
 
         @Override

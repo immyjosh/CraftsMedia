@@ -9,12 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.ijp.app.craftmedia.Interface.IitemClickListner;
 import com.ijp.app.craftmedia.Model.PicstaModel.CategoryListItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.ijp.app.craftmedia.WallpaperDetailActivity;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class CategoryListItemAdapter extends RecyclerView.Adapter<CategoryListIt
 
     @Override
     public void onBindViewHolder(@NonNull CategoryListViewHolder holder, final int position) {
-        Picasso.with(mContext).load(categoryListItems.get(position).image_url)
+        Glide.with(mContext).load(categoryListItems.get(position).getImage_url())
                 .into(holder.imgPics);
 
 

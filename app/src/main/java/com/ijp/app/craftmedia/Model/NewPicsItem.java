@@ -1,18 +1,30 @@
 package com.ijp.app.craftmedia.Model;
 
 public class NewPicsItem {
-    public String ID;
-    public String Name;
-    public String Link;
-    public String Category ;
+    private String ID;
+    private String Name;
+    private String Link;
+    private String orig_image_link;
+    private String Category ;
+
     public NewPicsItem() {
     }
 
-    public NewPicsItem(String ID, String name, String link, String category) {
+    public NewPicsItem(String ID, String name, String link, String orig_image_link, String category) {
         this.ID = ID;
         Name = name;
         Link = link;
+        this.orig_image_link = orig_image_link;
         Category = category;
+    }
+
+
+    public String getOrig_image_link() {
+        return orig_image_link;
+    }
+
+    public void setOrig_image_link(String orig_image_link) {
+        this.orig_image_link = orig_image_link;
     }
 
     public String getID() {

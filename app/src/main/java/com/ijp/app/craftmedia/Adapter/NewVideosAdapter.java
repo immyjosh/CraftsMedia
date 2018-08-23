@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,13 +12,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ijp.app.craftmedia.Interface.IitemClickListner;
 import com.ijp.app.craftmedia.Model.NewVideosItem;
-import com.ijp.app.craftmedia.Model.TopVideosItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.ijp.app.craftmedia.VideoDetailsPage;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -41,12 +41,13 @@ public class NewVideosAdapter extends RecyclerView.Adapter<NewVideosAdapter.NewV
         return new NewVideosAdapter.NewVideosAdapterViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull NewVideosAdapterViewHolder holder, final int position) {
-        Picasso.with(mContext).load(newVideosItemList.get(position).Link)
+    public void onBindViewHolder(@NonNull NewVideosAdapterViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+        Glide.with(mContext).load(newVideosItemList.get(position).getLink())
                 .into(holder.imgPics);
 
-        holder.textView.setText("Category:"+newVideosItemList.get(position).Category);
+        holder.textView.setText("Category:"+newVideosItemList.get(position).getCategory());
 
         holder.setItemClickListner(new IitemClickListner() {
             @Override
@@ -74,7 +75,7 @@ public class NewVideosAdapter extends RecyclerView.Adapter<NewVideosAdapter.NewV
             this.iitemClickListner = itemClickListner;
         }
 
-        public NewVideosAdapterViewHolder(View itemView) {
+        private NewVideosAdapterViewHolder(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);

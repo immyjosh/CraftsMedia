@@ -47,13 +47,21 @@ public interface ICraftsMediaApi {
 
     @FormUrlEncoded
     @POST("toppicsdetail.php")
-    Observable<List<WallpaperDetailItem>> getWallpaperLink(@Field("top_pics_id") String topPicsId);
+    Observable<List<WallpaperDetailItem>> getTopPicsLink(@Field("top_pics_id") String topPicsId);
 
-    @GET("gettoppics.php")
+    @FormUrlEncoded
+    @POST("newpicsdetail.php")
+    Observable<List<WallpaperDetailItem>> getNewPicsLink(@Field("new_pics_id") String newPicsId);
+
+    @GET("getnewpics.php")
     Observable<List<NewPicsItem>> getNewPicsItem();
 
-    @GET("gettopvideos.php")
+    @GET("getnewvideos.php")
     Observable<List<NewVideosItem>> getNewVideoImageItem();
+
+    @FormUrlEncoded
+    @POST("newvideosdetail.php")
+    Observable<List<VideoDetailItem>> getNewVideoLink(@Field("new_videos_id") String newVideosId);
 
     @GET("getcategories.php")
     Observable<List<CategoryFragmentItem>> getCategoryItem();

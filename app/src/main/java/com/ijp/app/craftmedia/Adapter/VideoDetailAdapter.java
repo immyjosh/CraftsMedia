@@ -11,11 +11,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ijp.app.craftmedia.Database.ModelDB.Favorites;
 import com.ijp.app.craftmedia.Model.VideoDetailItem;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -53,7 +53,8 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
                 JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL,
                 videoDetailItems.get(position).Name);
 
-        Picasso.with(mContext).load(videoDetailItems.get(position).thumb_image_link)
+
+        Glide.with(mContext).load(videoDetailItems.get(position).thumb_image_link)
                 .into(holder.videoPlayer.thumbImageView);
 
 
@@ -104,6 +105,7 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
         favorites.link = videoDetailItem.thumb_image_link;
         favorites.name = videoDetailItem.Name;
         favorites.video_link = videoDetailItem.video_link;
+        favorites.hd_video_link=videoDetailItem.hd_video_link;
 
         if (isAdd)
             Common.favoriteRepository.insertFav(favorites);

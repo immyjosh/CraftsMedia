@@ -45,6 +45,7 @@
                         app:dsv_orientation="horizontal" />
 
 
+
                 </RelativeLayout>
 
 
@@ -66,7 +67,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/txt1"
-                    android:layout_marginLeft="8dp"
                     android:scrollbars="none" />
 
                 <TextView
@@ -85,7 +85,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/txt2"
-                    android:layout_marginLeft="8dp"
                     android:scrollbars="none" />
 
                 <TextView
@@ -104,7 +103,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/txt3"
-                    android:layout_marginLeft="8dp"
                     android:scrollbars="none" />
 
                 <TextView
@@ -123,7 +121,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/txt4"
-                    android:layout_marginLeft="8dp"
                     android:scrollbars="none" />
 
 

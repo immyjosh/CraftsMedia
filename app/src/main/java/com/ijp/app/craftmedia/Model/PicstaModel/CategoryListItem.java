@@ -1,10 +1,10 @@
 package com.ijp.app.craftmedia.Model.PicstaModel;
 
 public class CategoryListItem {
-    public String ID;
-    public String image_url;
-    public String orig_image_url;
-    public String category_item_id;
+    private String ID;
+    private String image_url;
+    private String orig_image_url;
+    private String category_item_id;
 
     public CategoryListItem() {
     }

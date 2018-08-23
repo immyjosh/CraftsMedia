@@ -10,5 +10,11 @@ android:layout_gravity="center">
     android:scaleType="centerCrop"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
+    <ImageView
+        android:id="@+id/discrete_text_cv"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center"
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
 
 </android.support.v7.widget.CardView>

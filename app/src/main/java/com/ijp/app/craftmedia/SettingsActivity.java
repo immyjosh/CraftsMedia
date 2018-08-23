@@ -12,9 +12,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ijp.app.craftmedia.Internet.MyApplication;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.Objects;
 
@@ -62,7 +62,7 @@ public class SettingsActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         MyApplication.getInstance().clearApplicationData();
-                                        Toast.makeText(SettingsActivity.this, "Cleared", Toast.LENGTH_SHORT).show();
+                                        FancyToast.makeText(SettingsActivity.this,"Cleared Cache",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,false).show();
                                     }
                                 }).setNegativeButton("cancel",null);
                         builder.show();

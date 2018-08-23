@@ -83,7 +83,6 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/video_categories_rv"
-                android:layout_marginLeft="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/video_txt1"></android.support.v7.widget.RecyclerView>
@@ -105,7 +104,6 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/video_random_rv"
-                android:layout_marginLeft="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/video_txt2"></android.support.v7.widget.RecyclerView>

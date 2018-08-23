@@ -11,12 +11,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ijp.app.craftmedia.Interface.IitemClickListner;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoRandomModel;
 import com.ijp.app.craftmedia.R;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.ijp.app.craftmedia.VideoDetailsPage;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class VideoRandomAdapter extends RecyclerView.Adapter<VideoRandomAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull VideoRandomViewHolder holder, final int position) {
-        Picasso.with(mContext).load(videoRandomModelList.get(position).Image_link)
+        Glide.with(mContext).load(videoRandomModelList.get(position).Image_link)
                 .into(holder.imgPics);
 
         holder.randomText.setText(videoRandomModelList.get(position).Category);

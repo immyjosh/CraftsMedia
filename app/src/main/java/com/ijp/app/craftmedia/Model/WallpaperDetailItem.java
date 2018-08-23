@@ -1,10 +1,10 @@
 package com.ijp.app.craftmedia.Model;
 
 public class WallpaperDetailItem {
-    public String ID;
-    public String Category;
-    public String image_link ;
-    public String orig_image_link ;
+    private String ID;
+    private String Category;
+    private String image_link ;
+    private String orig_image_link ;
     private String top_pics_id;
     private String new_pics_id;
     private String picsta_category_list_id;

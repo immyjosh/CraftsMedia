@@ -1,7 +1,6 @@
 package com.ijp.app.craftmedia;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.WallpaperManager;
 import android.content.BroadcastReceiver;
@@ -13,11 +12,10 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,29 +23,33 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.ijp.app.craftmedia.Adapter.WallpaperDetailAdapter;
 
 import com.ijp.app.craftmedia.Database.DataSource.PicstaFavoriteRepository;
 import com.ijp.app.craftmedia.Database.Local.CraftsMediaRoomDatabase;
 import com.ijp.app.craftmedia.Database.Local.PicstaFavoriteDataSource;
-import com.ijp.app.craftmedia.Helper.SaveImageHelper;
 import com.ijp.app.craftmedia.Internet.ConnectivityReceiver;
 import com.ijp.app.craftmedia.Internet.MyApplication;
 import com.ijp.app.craftmedia.Model.WallpaperDetailItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
 import com.lid.lib.LabelButtonView;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
+import com.shashank.sony.fancydialoglib.Animation;
+import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
+import com.shashank.sony.fancydialoglib.Icon;
+import com.shashank.sony.fancytoastlib.FancyToast;
 import com.wang.avi.AVLoadingIndicatorView;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
 import de.mateware.snacky.Snacky;
-import dmax.dialog.SpotsDialog;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
@@ -58,6 +60,8 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
     ICraftsMediaApi mService;
 
     RelativeLayout rootLayout,wallpaperDetailLayout;
+
+    FancyAlertDialog fancyAlertDialogbuilder;
 
     LabelButtonView wallpaperDownload,wallpaperSet;
     RecyclerView wallpaperDetailRV;
@@ -84,6 +88,7 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
     private DownloadManager dm;
     private long queueId;
 
+
     Uri uri;
     String fileName;
 
@@ -96,47 +101,37 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
             {
                 if(grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_GRANTED)
                 {
-                    AlertDialog dialog=new SpotsDialog(WallpaperDetailActivity.this);
-                    dialog.show();
-                    dialog.setMessage("Please Wait...");
 
-                    String fileName= UUID.randomUUID().toString()+".png";
-                    Picasso.with(getBaseContext())
-                            .load(Common.currentPicsItem.getLink())
-                            .into(new SaveImageHelper(getBaseContext(),dialog,getApplicationContext().getContentResolver(),fileName,"Picsta LiveWalpaper Image"));
+                    loadVideosToDownload();
+                    downloadManager();
+
+
                 }
-                else
-                    Toast.makeText(this, "You Need To Accept Permission To Download Image", Toast.LENGTH_SHORT).show();
+                else if (grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_DENIED){
+                    showAlertDialog();
+                }
+
             }
             break;
         }
     }
 
-    private Target target= new Target() {
-        @Override
-        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
 
-            WallpaperManager wallpaperManager=WallpaperManager.getInstance(getApplicationContext());
-            try{
-                wallpaperManager.setBitmap(bitmap);
-                Snackbar.make(rootLayout,"Wallpaper was set",Snackbar.LENGTH_SHORT).show();
-            }catch (Exception e)
-            {
+    // Setting Wallpaper Using Glide in setWallpaperImage() function
+    private SimpleTarget simpleTarget= new SimpleTarget<Bitmap>() {
+        @Override
+        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+            try {
+
+                WallpaperManager.getInstance(getApplicationContext()).setBitmap(resource);
+                FancyToast.makeText(getApplicationContext(),"Wallpaper Set",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,false).show();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-
-        }
-
-        @Override
-        public void onBitmapFailed(Drawable errorDrawable) {
-
-        }
-
-        @Override
-        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
         }
     };
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -287,56 +282,8 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
 
                 }
                 else {
-                    dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-
-                    wallpaperDownload.setEnabled(false);
-
-                    if (Common.currentPicsItem != null) {
-
-                        uri = Uri.parse(Common.currentPicsItem.getLink());
-
-                        fileName = UUID.randomUUID().toString();
-
-                    } else if (Common.currentCategoryListItem != null) {
-
-                        uri = Uri.parse(Common.currentCategoryListItem.getOrig_image_url());
-
-                        fileName = UUID.randomUUID().toString();
-                    } else if (Common.currentRandomListItem != null) {
-
-                        uri = Uri.parse(Common.currentRandomListItem.getImage_url());
-
-                        fileName = UUID.randomUUID().toString();
-
-                    } else if (Common.currentWallpaperDetailItem != null) {
-
-                        uri = Uri.parse(Common.currentWallpaperDetailItem.getOrig_image_link());
-
-                        fileName = UUID.randomUUID().toString();
-                    } else if (Common.currentPicstaFavorites != null) {
-                        uri = Uri.parse(Common.currentPicstaFavorites.getLink());
-
-                        fileName = UUID.randomUUID().toString();
-                    }else if (Common.infiniteListItems!=null){
-                        uri = Uri.parse(Common.infiniteListItems.getImage_link());
-
-                        fileName = UUID.randomUUID().toString();
-                    }
-
-                    DownloadManager.Request request = new DownloadManager.Request(uri);
-                    request.setTitle("CraftsMedia-" + fileName);
-                    request.setDescription("Downloading File, please wait...");
-                    request.setAllowedNetworkTypes(
-                            DownloadManager.Request.NETWORK_WIFI
-                                    | DownloadManager.Request.NETWORK_MOBILE)
-                            .allowScanningByMediaScanner();
-                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                    request.setDestinationInExternalPublicDir("CraftsMedia_Picsta", fileName + ".png");
-
-                    queueId = dm.enqueue(request);
-
-                    handler = new Handler();
-                    handler.post(runnable);
+                    loadVideosToDownload();
+                    downloadManager();
                 }
 
             }
@@ -344,14 +291,71 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
 
     }
 
+    private void loadVideosToDownload() {
+        dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
 
+        wallpaperDownload.setEnabled(false);
+
+        if (Common.currentPicsItem != null) {
+
+            uri = Uri.parse(Common.currentPicsItem.getLink());
+
+            fileName = UUID.randomUUID().toString();
+
+        }else if (Common.currentNewPicsItem != null) {
+
+            uri = Uri.parse(Common.currentNewPicsItem.getOrig_image_link());
+
+            fileName = UUID.randomUUID().toString();
+        } else if (Common.currentCategoryListItem != null) {
+
+            uri = Uri.parse(Common.currentCategoryListItem.getOrig_image_url());
+
+            fileName = UUID.randomUUID().toString();
+        } else if (Common.currentRandomListItem != null) {
+
+            uri = Uri.parse(Common.currentRandomListItem.getOrig_image_link());
+
+            fileName = UUID.randomUUID().toString();
+
+        } else if (Common.currentWallpaperDetailItem != null) {
+
+            uri = Uri.parse(Common.currentWallpaperDetailItem.getOrig_image_link());
+
+            fileName = UUID.randomUUID().toString();
+        } else if (Common.currentPicstaFavorites != null) {
+            uri = Uri.parse(Common.currentPicstaFavorites.origLink);
+
+            fileName = UUID.randomUUID().toString();
+        }else if (Common.infiniteListItems!=null){
+            uri = Uri.parse(Common.infiniteListItems.getImage_link());
+
+            fileName = UUID.randomUUID().toString();
+        }
+
+    }
+
+    private void downloadManager(){
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+        request.setTitle("CraftsMedia-" + fileName);
+        request.setDescription("Downloading File, please wait...");
+        request.setAllowedNetworkTypes(
+                DownloadManager.Request.NETWORK_WIFI
+                        | DownloadManager.Request.NETWORK_MOBILE)
+                .allowScanningByMediaScanner();
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir("CraftsMedia_Picsta", fileName + ".png");
+
+        queueId = dm.enqueue(request);
+
+        handler = new Handler();
+        handler.post(runnable);
+    }
 
     private void setWallpaperImage() {
         wallpaperSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
 
                 android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(WallpaperDetailActivity.this);
                 builder.setTitle("Set This Wallpaper?");
@@ -364,30 +368,35 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
                 }).setPositiveButton("SET", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
                         if (Common.currentPicsItem!=null){
-                            Picasso.with(getBaseContext())
+                            Glide.with(getBaseContext()).asBitmap()
                                     .load(Common.currentPicsItem.getLink())
-                                    .into(target);
+                                    .into(simpleTarget);
+                        }else if (Common.currentNewPicsItem!=null) {
+                            Glide.with(getBaseContext()).asBitmap()
+                                    .load(Common.currentNewPicsItem.getOrig_image_link())
+                                    .into(simpleTarget);
                         }else if (Common.currentCategoryListItem!=null) {
-                            Picasso.with(getBaseContext())
+                            Glide.with(getBaseContext()).asBitmap()
                                     .load(Common.currentCategoryListItem.getOrig_image_url())
-                                    .into(target);
+                                    .into(simpleTarget);
                         }else if (Common.currentRandomListItem!=null){
-                            Picasso.with(getBaseContext())
-                                    .load(Common.currentRandomListItem.getImage_url())
-                                    .into(target);
+                            Glide.with(getBaseContext()).asBitmap()
+                                    .load(Common.currentRandomListItem.getOrig_image_link())
+                                    .into(simpleTarget);
                         }else if (Common.currentWallpaperDetailItem!=null){
-                            Picasso.with(getBaseContext())
-                                    .load(Common.currentWallpaperDetailItem.getImage_link())
-                                    .into(target);
+                            Glide.with(getBaseContext()).asBitmap()
+                                    .load(Common.currentWallpaperDetailItem.getOrig_image_link())
+                                    .into(simpleTarget);
                         }else if (Common.currentPicstaFavorites!=null){
-                            Picasso.with(getBaseContext())
-                                    .load(Common.currentPicstaFavorites.getLink())
-                                    .into(target);
+                            Glide.with(getBaseContext()).asBitmap()
+                                    .load(Common.currentPicstaFavorites.origLink)
+                                    .into(simpleTarget);
                         }else if (Common.infiniteListItems!=null){
-                            Picasso.with(getBaseContext())
+                            Glide.with(getBaseContext()).asBitmap()
                                     .load(Common.infiniteListItems.getImage_link())
-                                    .into(target);
+                                    .into(simpleTarget);
                         }
 
                     }
@@ -405,7 +414,7 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
                 long refId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
 
                 if (refId == queueId)
-                    Toast.makeText(context, "Download Completed", Toast.LENGTH_SHORT).show();
+                    FancyToast.makeText(getApplicationContext(),"Download Completed",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,false).show();
                 wallpaperDownload.setEnabled(true);
             }
         };
@@ -413,37 +422,69 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
         registerReceiver(receiver, intentFilter);
     }
 
+    private void showAlertDialog() {
+        fancyAlertDialogbuilder = new FancyAlertDialog.Builder(this)
+                .setTitle("Important Permission Required!")
+                .setBackgroundColor(Color.parseColor("#326765"))  //Don't pass R.color.colorvalue
+                .setMessage("You need to accept permission to download this image")
+                .setNegativeBtnText("Cancel")
+                .setPositiveBtnBackground(Color.parseColor("#326765"))  //Don't pass R.color.colorvalue
+                .setPositiveBtnText("Accept")
+                .setNegativeBtnBackground(Color.parseColor("#7da87b"))  //Don't pass R.color.colorvalue
+                .setAnimation(Animation.POP)
+                .isCancellable(true)
+                .setIcon(R.drawable.ic_error_outline_green_24dp, Icon.Visible)
+                .OnPositiveClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1000);
+
+                    }
+                })
+                .OnNegativeClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        FancyToast.makeText(getApplicationContext(),"Sorry! You Need To Allow Permission to Download ",FancyToast.LENGTH_LONG,FancyToast.ERROR,false).show();
+
+                    }
+                })
+                .build();
+
+    }
+
     private void loadingPictures() {
         if (Common.currentPicsItem!=null ){
 
-            loadPics(Common.currentPicsItem.ID);
+            loadPics(Common.currentPicsItem.getID());
 
         }
         else if (Common.currentNewPicsItem!=null){
 
-            loadNewPics(Common.currentNewPicsItem.ID);
+            loadNewPics(Common.currentNewPicsItem.getID());
 
         }else if (Common.currentCategoryListItem!=null){
 
-            loadCategoryItemsPage(Common.currentCategoryListItem.ID);
+            loadCategoryItemsPage(Common.currentCategoryListItem.getID());
 
         }else if (Common.currentRandomListItem!=null){
 
-            loadRandomItemsPage(Common.currentRandomListItem.ID);
+            loadRandomItemsPage(Common.currentRandomListItem.getID());
 
         }else if (Common.currentWallpaperDetailItem!=null){
 
-            loadFavPicsItems(Common.currentWallpaperDetailItem.ID);
+            loadFavPicsItems(Common.currentWallpaperDetailItem.getID());
 
         }else if (Common.currentPicstaFavorites!=null){
 
             loadPicstaFav(Common.currentPicstaFavorites.id);
 
         }else if (Common.infiniteListItems!=null){
-            loadInfiniteListItems(Common.infiniteListItems.ID);
+            loadInfiniteListItems(Common.infiniteListItems.getID());
         }
 
     }
+
+
 
     private void loadInfiniteListItems(String infiniteId) {
         compositeDisposable.add(mService.getInfinitePicsDetail(infiniteId)
@@ -451,14 +492,14 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<WallpaperDetailItem>>() {
                     @Override
-                    public void accept(List<WallpaperDetailItem> wallpaperDetailItems) throws Exception {
+                    public void accept(List<WallpaperDetailItem> wallpaperDetailItems)  {
                         avLoadingIndicatorView.smoothToHide();
                         wallpaperDetailLayout.setVisibility(View.VISIBLE);
                         displayInfiniteItems(wallpaperDetailItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable)  {
                     }
                 }));
     }
@@ -563,8 +604,8 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
         wallpaperDetailRV.setAdapter(adapter);
     }
 
-    private void loadNewPics(String topPicsId) {
-        compositeDisposable.add(mService.getWallpaperLink(topPicsId)
+    private void loadNewPics(String newPicsId) {
+        compositeDisposable.add(mService.getNewPicsLink(newPicsId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe( new Consumer<List<WallpaperDetailItem>>() {
@@ -589,7 +630,7 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
 
     private void loadPics(String topPicsId) {
 
-        compositeDisposable.add(mService.getWallpaperLink(topPicsId)
+        compositeDisposable.add(mService.getTopPicsLink(topPicsId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe( new Consumer<List<WallpaperDetailItem>>() {
@@ -657,7 +698,6 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
 
     @Override
     protected void onDestroy() {
-        Picasso.with(this).cancelRequest(target);
         compositeDisposable.clear();
         super.onDestroy();
     }
