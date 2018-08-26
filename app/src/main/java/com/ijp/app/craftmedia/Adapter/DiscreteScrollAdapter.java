@@ -1,6 +1,7 @@
 package com.ijp.app.craftmedia.Adapter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -56,22 +57,26 @@ public class DiscreteScrollAdapter extends RecyclerView.Adapter<DiscreteScrollAd
                     case 0:
                         Common.infiniteListItems=infiniteListItemList.get(position);
                         mContext.startActivity(new Intent(mContext, WallpaperDetailActivity.class));
+                        ((Activity) mContext).overridePendingTransition(R.anim.fadein,R.anim.fade_out);
                         break;
 
                     case 1:
                         Common.infiniteListItems=infiniteListItemList.get(position);
                         mContext.startActivity(new Intent(mContext, WallpaperDetailActivity.class));
+                        ((Activity) mContext).overridePendingTransition(R.anim.fadein,R.anim.fade_out);
                         break;
 
                     case 2:
 
                         Common.infiniteListItems=infiniteListItemList.get(position);
                         mContext.startActivity(new Intent(mContext, VideoDetailsPage.class));
+                        ((Activity) mContext).overridePendingTransition(R.anim.fadein,R.anim.fade_out);
                         break;
 
                     case 3:
                         Common.infiniteListItems=infiniteListItemList.get(position);
                         mContext.startActivity(new Intent(mContext, VideoDetailsPage.class));
+                        ((Activity) mContext).overridePendingTransition(R.anim.fadein,R.anim.fade_out);
                         break;
 
                     default:

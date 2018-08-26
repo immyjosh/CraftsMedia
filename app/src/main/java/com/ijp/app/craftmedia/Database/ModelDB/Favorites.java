@@ -27,5 +27,11 @@ public class Favorites {
     @ColumnInfo(name = "hdVideoLink")
     public String hd_video_link;
 
+    @ColumnInfo(name = "hdSize")
+    public String hd_size;
+
+    @ColumnInfo(name = "sdSize")
+    public String sd_size;
+
 
 }

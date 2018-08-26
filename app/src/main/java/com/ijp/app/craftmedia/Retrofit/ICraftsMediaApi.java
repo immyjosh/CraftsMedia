@@ -119,4 +119,11 @@ public interface ICraftsMediaApi {
     @FormUrlEncoded
     @POST("favoritespicsdetail.php")
     Observable<List<WallpaperDetailItem>> getPicsFavLink(@Field("ID") String favId);
+
+
+
+    @FormUrlEncoded
+    @POST("update_no_of_downloads.php")
+    Observable<String> updateProduct(@Field("video_category_item_id") String id,
+                                     @Field("no_of_downloads") int noOfDownloads);
 }

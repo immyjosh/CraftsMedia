@@ -22,13 +22,14 @@
         android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/progress_bar_video_download"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="205dp"
+            android:layout_marginBottom="108dp"
             android:visibility="invisible"
             app:indicatorColor="@color/text_color"
             app:indicatorName="LineSpinFadeLoaderIndicator" />
@@ -42,22 +43,36 @@
             android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
 
         <TextView
+            android:id="@+id/text_download_cancel_video"
             android:textSize="20sp"
-            android:textColor="@android:color/black"
+            android:textColor="@color/text_color"
             android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/video_download"
-            android:text="Download This Video" />
+            android:text="Download This Video Here" />
 
         <Button
             android:id="@+id/video_download"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="216dp"
             android:background="@drawable/ic_cloud_download_grey_24dp"
+            android:gravity="bottom"
+            android:paddingBottom="12dp"
+            android:textAlignment="center"
+            />
+        <Button
+            android:id="@+id/video_cancel"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible"
+            android:layout_marginBottom="216dp"
+            android:background="@drawable/ic_cancel_black_24dp"
             android:gravity="bottom"
             android:paddingBottom="12dp"
             android:textAlignment="center"

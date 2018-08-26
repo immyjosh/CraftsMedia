@@ -66,7 +66,7 @@ public class PicstaSearchActivity extends AppCompatActivity implements Connectiv
 
         loadAllPics();
 
-        searchBar.setHint("Enter Picture Name");
+        searchBar.setHint("Enter Picture Category");
         searchBar.setCardViewElevation(10);
         searchBar.addTextChangeListener(new TextWatcher() {
             @Override

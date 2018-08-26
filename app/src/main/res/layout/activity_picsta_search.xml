@@ -30,6 +30,7 @@
         <com.mancj.materialsearchbar.MaterialSearchBar
             android:id="@+id/picture_searchBar"
             android:layout_width="match_parent"
+
             android:layout_height="wrap_content"
             app:mt_maxSuggestionsCount="10"
             app:mt_placeholder="Search for pictures"

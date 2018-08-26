@@ -7,17 +7,37 @@ public class VideoRandomModel {
     public String hd_video_link;
     public String video_link;
     public String Category;
+    private String size_SD;
+    private String size_HD;
 
     public VideoRandomModel() {
     }
 
-    public VideoRandomModel(String ID, String description, String image_link, String hd_video_link, String video_link, String category) {
+    public VideoRandomModel(String ID, String description, String image_link, String hd_video_link, String video_link, String category, String size_SD, String size_HD) {
         this.ID = ID;
         Description = description;
         Image_link = image_link;
         this.hd_video_link = hd_video_link;
         this.video_link = video_link;
         Category = category;
+        this.size_SD = size_SD;
+        this.size_HD = size_HD;
+    }
+
+    public String getSize_SD() {
+        return size_SD;
+    }
+
+    public void setSize_SD(String size_SD) {
+        this.size_SD = size_SD;
+    }
+
+    public String getSize_HD() {
+        return size_HD;
+    }
+
+    public void setSize_HD(String size_HD) {
+        this.size_HD = size_HD;
     }
 
     public String getCategory() {

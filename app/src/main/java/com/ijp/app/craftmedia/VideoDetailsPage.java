@@ -23,7 +23,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.ijp.app.craftmedia.Adapter.VideoDetailAdapter;
@@ -35,6 +34,10 @@ import com.ijp.app.craftmedia.Internet.MyApplication;
 import com.ijp.app.craftmedia.Model.VideoDetailItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
+import com.shashank.sony.fancydialoglib.Animation;
+import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
+import com.shashank.sony.fancydialoglib.Icon;
 import com.shashank.sony.fancytoastlib.FancyToast;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -43,7 +46,6 @@ import java.util.UUID;
 
 import cn.jzvd.JZVideoPlayer;
 import de.mateware.snacky.Snacky;
-import dmax.dialog.SpotsDialog;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
@@ -54,10 +56,12 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
 
 
     RecyclerView videoDetailRV;
-    Button videoDownload;
-    TextView videoDetailTextDownloading;
+    Button videoDownload,videoCancel;
+    TextView videoDetailTextDownloading,textCancelDownloadVideos;
     AVLoadingIndicatorView avLoadingIndicatorView,avLoadingVideoDetail;
     RelativeLayout videoDetailLayout;
+
+    FancyAlertDialog fancyAlertDialogbuilder;
 
     ICraftsMediaApi mService;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -85,37 +89,23 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
     String description;
     String[] quality;
 
+    private int noOfDownloads=0;
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case 1000: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    AlertDialog dialog = new SpotsDialog(VideoDetailsPage.this);
-                    dialog.show();
-                    dialog.setMessage("Please Wait...");
+                if(grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_GRANTED)
+                {
+
+                    loadVideosToDownload();
+                    selectHDorSD();
 
 
-                } else {
-//                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(WallpaperDetailActivity.this);
-//                    builder.setTitle("Permission Required");
-//                    builder.setMessage("You need to accept the permission to download images");
-//
-//                    builder.setNegativeButton("Sure", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            if(ActivityCompat.checkSelfPermission(VideoDetailsPage.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
-//                            {
-//                                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1000);
-//
-//                            }
-//                            else {
-//
-//                            }
-//                        }
-//                    });
-
-                    Toast.makeText(this, "You need to accept permission", Toast.LENGTH_SHORT).show();
+                }
+                else if (grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_DENIED){
+                    showAlertDialog();
                 }
             }
             break;
@@ -137,7 +127,9 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
         done = false;
 
         videoDownload = findViewById(R.id.video_download);
+        videoCancel=findViewById(R.id.video_cancel);
         videoDetailTextDownloading=findViewById(R.id.video_detail_text_downloading);
+        textCancelDownloadVideos=findViewById(R.id.text_download_cancel_video);
 
         videoDetailLayout=findViewById(R.id.video_detail_layout);
 
@@ -156,10 +148,38 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
 
         //Video Download
         downloadClick();
+
+        cancelDownload();
     }
 
 
-    // Initialize Room Database
+
+
+    private void cancelDownload() {
+        videoCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dm.remove(queueId);
+
+                FancyToast.makeText(VideoDetailsPage.this,"Download Cancelled",FancyToast.LENGTH_LONG,FancyToast.ERROR,false).show();
+
+                videoCancel.setVisibility(View.INVISIBLE);
+                textCancelDownloadVideos.setText("Download This Video Here");
+                videoDownload.setVisibility(View.VISIBLE);
+                avLoadingIndicatorView.smoothToHide();
+
+                unregisterReceiver(receiver);
+            }
+        });
+    }
+
+
+
+
+    /**
+     * Initialize Room Database
+     * Getting Favorite Repository Instance to store Video Favorites
+     */
     private void initDB() {
         Common.craftsMediaRoomDatabase = CraftsMediaRoomDatabase.getInstance(this);
         Common.favoriteRepository =
@@ -175,10 +195,13 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
                 long refId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
 
                 if (refId == queueId) {
-                    FancyToast.makeText(VideoDetailsPage.this,"Download Complete",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,R.drawable.ic_cloud_download_grey_24dp).show();
+                    FancyToast.makeText(VideoDetailsPage.this,"Download Complete-Check you Gallery",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,R.drawable.ic_cloud_download_grey_24dp).show();
                     videoDownload.setVisibility(View.VISIBLE);
                     avLoadingIndicatorView.smoothToHide();
                     videoDetailTextDownloading.setVisibility(View.INVISIBLE);
+                    videoCancel.setVisibility(View.INVISIBLE);
+                    textCancelDownloadVideos.setText("Download This Video Here");
+                    //updateNoOfDownloads();
                 }
 
             }
@@ -186,6 +209,28 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
         IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
         registerReceiver(receiver, intentFilter);
     }
+
+//    private void updateNoOfDownloads() {
+//        noOfDownloads++;
+//
+//
+//        compositeDisposable.add(mService.updateProduct(Common.currentVideoCategoriesDataItem.getID(),
+//                noOfDownloads
+//        )
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.io())
+//                .subscribe(new Consumer<String>() {
+//                    @Override
+//                    public void accept(String s)  {
+//
+//                    }
+//                }, new Consumer<Throwable>() {
+//                    @Override
+//                    public void accept(Throwable throwable) {
+//
+//                    }
+//                }));
+//    }
 
     private void updateStatus() {
         DownloadManager.Query reqQuery = new DownloadManager.Query();
@@ -287,59 +332,8 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
 
                 } else {
 
-                    dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
 
-
-
-                    if (Common.currentVideosItem != null) {
-
-                        uri = Uri.parse(Common.currentVideosItem.getHd_video_link());
-                        uriSD = Uri.parse(Common.currentVideosItem.getVideo_link());
-
-                        description = UUID.randomUUID().toString();
-
-                    }else if (Common.currentNewVideosItem != null) {
-
-                        uri = Uri.parse(Common.currentNewVideosItem.getHd_video_link());
-                        uriSD=Uri.parse(Common.currentNewVideosItem.getVideo_link());
-
-                        description = UUID.randomUUID().toString();
-                    }  else if (Common.currentVideoBannerItem != null) {
-
-                        uri = Uri.parse(Common.currentVideoBannerItem.getHd_video_link());
-                        uriSD=Uri.parse(Common.currentVideoBannerItem.getSd_video_link());
-
-                        description = UUID.randomUUID().toString();
-                    } else if (Common.currentVideoRandomItem != null) {
-
-                        uri = Uri.parse(Common.currentVideoRandomItem.getHd_video_link());
-                        uriSD = Uri.parse(Common.currentVideoRandomItem.getVideo_link());
-
-                        description = UUID.randomUUID().toString();
-
-                    } else if (Common.currentFavoritesItem != null) {
-
-                        uri = Uri.parse(Common.currentFavoritesItem.hd_video_link);
-                        uriSD = Uri.parse(Common.currentFavoritesItem.video_link);
-
-                        description = UUID.randomUUID().toString();
-                    } else if (Common.currentVideoDetailItem != null) {
-                        uri = Uri.parse(Common.currentVideoDetailItem.getHd_video_link());
-                        uriSD = Uri.parse(Common.currentVideoDetailItem.getVideo_link());
-
-                        description = UUID.randomUUID().toString();
-                    }else if (Common.infiniteListItems!=null){
-                        uri = Uri.parse(Common.infiniteListItems.getHd_video_link());
-                        uriSD = Uri.parse(Common.infiniteListItems.getVideo_link());
-
-                        description = UUID.randomUUID().toString();
-                    }else if (Common.currentVideoCategoriesDataItem!=null){
-
-                        uri = Uri.parse(Common.currentVideoCategoriesDataItem.getHd_video_link());
-                        uriSD=Uri.parse(Common.currentVideoCategoriesDataItem.getSd_video_link());
-                        description = UUID.randomUUID().toString();
-                    }
-
+                    loadVideosToDownload();
                     selectHDorSD();
 
                 }
@@ -349,9 +343,95 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
 
     }
 
+    private void loadVideosToDownload(){
+        dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+
+
+
+        if (Common.currentVideosItem != null) {
+
+            uri = Uri.parse(Common.currentVideosItem.getHd_video_link());
+            uriSD = Uri.parse(Common.currentVideosItem.getVideo_link());
+
+            description = UUID.randomUUID().toString();
+
+        }else if (Common.currentNewVideosItem != null) {
+
+            uri = Uri.parse(Common.currentNewVideosItem.getHd_video_link());
+            uriSD=Uri.parse(Common.currentNewVideosItem.getVideo_link());
+
+            description = UUID.randomUUID().toString();
+        }  else if (Common.currentVideoBannerItem != null) {
+
+            uri = Uri.parse(Common.currentVideoBannerItem.getHd_video_link());
+            uriSD=Uri.parse(Common.currentVideoBannerItem.getSd_video_link());
+
+            description = UUID.randomUUID().toString();
+        } else if (Common.currentVideoRandomItem != null) {
+
+            uri = Uri.parse(Common.currentVideoRandomItem.getHd_video_link());
+            uriSD = Uri.parse(Common.currentVideoRandomItem.getVideo_link());
+
+            description = UUID.randomUUID().toString();
+
+        } else if (Common.currentFavoritesItem != null) {
+
+            uri = Uri.parse(Common.currentFavoritesItem.hd_video_link);
+            uriSD = Uri.parse(Common.currentFavoritesItem.video_link);
+
+            description = UUID.randomUUID().toString();
+        } else if (Common.currentVideoDetailItem != null) {
+            uri = Uri.parse(Common.currentVideoDetailItem.getHd_video_link());
+            uriSD = Uri.parse(Common.currentVideoDetailItem.getVideo_link());
+
+            description = UUID.randomUUID().toString();
+        }else if (Common.infiniteListItems!=null){
+            uri = Uri.parse(Common.infiniteListItems.getHd_video_link());
+            uriSD = Uri.parse(Common.infiniteListItems.getVideo_link());
+
+            description = UUID.randomUUID().toString();
+        }else if (Common.currentVideoCategoriesDataItem!=null){
+
+            uri = Uri.parse(Common.currentVideoCategoriesDataItem.getHd_video_link());
+            uriSD=Uri.parse(Common.currentVideoCategoriesDataItem.getSd_video_link());
+            description = UUID.randomUUID().toString();
+        }
+    }
+
     private void selectHDorSD() {
 
-        quality=new String[]{"SD","HD"};
+        if (Common.currentVideosItem!=null){
+            quality=new String[]{"SD     "+Common.currentVideosItem.getSize_SD(),"HD     "+Common.currentVideosItem.getSize_HD()};
+
+        }else if (Common.currentNewVideosItem != null) {
+
+            quality=new String[]{"SD     "+Common.currentNewVideosItem.getSize_SD(),"HD     "+Common.currentNewVideosItem.getSize_HD()};
+
+        } else if (Common.currentVideoBannerItem != null) {
+
+            quality=new String[]{"SD     "+Common.currentVideoBannerItem.getSize_SD(),"HD     "+Common.currentVideoBannerItem.getSize_HD()};
+
+        } else if (Common.currentVideoRandomItem != null) {
+
+            quality=new String[]{"SD     "+Common.currentVideoRandomItem.getSize_SD(),"HD     "+Common.currentVideoRandomItem.getSize_HD()};
+
+        } else if (Common.currentFavoritesItem != null) {
+
+            quality=new String[]{"SD     "+Common.currentFavoritesItem.sd_size,"HD     "+Common.currentFavoritesItem.hd_size};
+
+        } else if (Common.currentVideoDetailItem != null) {
+
+            quality=new String[]{"SD     "+Common.currentVideoDetailItem.getSize_SD(),"HD     "+Common.currentVideoDetailItem.getSize_HD()};
+
+        }else if (Common.infiniteListItems!=null){
+
+            quality=new String[]{"SD     "+Common.infiniteListItems.getSize_SD(),"HD     "+Common.infiniteListItems.getSize_HD()};
+
+        }else if (Common.currentVideoCategoriesDataItem!=null){
+
+            quality=new String[]{"SD     "+Common.currentVideoCategoriesDataItem.getSize_SD(),"HD     "+Common.currentVideoCategoriesDataItem.getSize_HD()};
+
+        }
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(this)
                 .setTitle("Choose the Video Quality")
@@ -359,13 +439,14 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
                 .setSingleChoiceItems(quality, -1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (quality[which].equals("HD"))
+                        if (quality[which].equals(quality[0]))
                         {
                             showMaterialDialog();
-                            downloadManagerHD();
-                        }else if (quality[which].equals("SD")){
-                            showMaterialDialog();
                             downloadManagerSD();
+                        }else if (quality[which].equals(quality[1])){
+
+                            showMaterialDialog();
+                            downloadManagerHD();
                         }
                         dialog.dismiss();
                     }
@@ -424,6 +505,8 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
         avLoadingIndicatorView.setVisibility(View.VISIBLE);
         avLoadingIndicatorView.smoothToShow();
         videoDetailTextDownloading.setVisibility(View.VISIBLE);
+        videoCancel.setVisibility(View.VISIBLE);
+        textCancelDownloadVideos.setText("Cancel Download");
 
         videoDownload.setVisibility(View.INVISIBLE);
 
@@ -448,8 +531,38 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
             }
         });
 
-        handler.postDelayed(runnable, 3000);
+        handler.postDelayed(runnable, 2000);
 
+
+    }
+
+    private void showAlertDialog() {
+        fancyAlertDialogbuilder = new FancyAlertDialog.Builder(this)
+                .setTitle("Important Permission Required!")
+                .setBackgroundColor(Color.parseColor("#326765"))  //Don't pass R.color.colorvalue
+                .setMessage("You need to accept permission to download this image")
+                .setNegativeBtnText("Cancel")
+                .setPositiveBtnBackground(Color.parseColor("#326765"))  //Don't pass R.color.colorvalue
+                .setPositiveBtnText("Accept")
+                .setNegativeBtnBackground(Color.parseColor("#7da87b"))  //Don't pass R.color.colorvalue
+                .setAnimation(Animation.POP)
+                .isCancellable(true)
+                .setIcon(R.drawable.ic_error_outline_green_24dp, Icon.Visible)
+                .OnPositiveClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1000);
+
+                    }
+                })
+                .OnNegativeClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        FancyToast.makeText(getApplicationContext(),"Sorry! You Need To Allow Permission to Download ",FancyToast.LENGTH_LONG,FancyToast.ERROR,false).show();
+
+                    }
+                })
+                .build();
 
     }
 
@@ -585,7 +698,12 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
                 }));
     }
 
-    //Load Favorite Videos-Videos Fragment
+
+    /**
+     * Load Favorite Videos
+     * Coming from Videos Fragment
+     * @param favId-Gets the favorite List Items
+     */
     private void loadFavoriteVideo(String favId) {
         compositeDisposable.add(mService.getVideoFavLink(favId)
                 .subscribeOn(Schedulers.io())
@@ -604,13 +722,24 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
                 }));
     }
 
-    //Display Favorite Videos-Home Activity MasterDetail
+
+    /**
+     * Display Favorite Videos
+     * Coming from Video Favorites Activity
+     * @param videoDetailItems-Displays all the Video detail list from 'video_detail' table
+     *                        in Php MySQL Database
+     */
     private void displayVideoFav(List<VideoDetailItem> videoDetailItems) {
         VideoDetailAdapter adapter = new VideoDetailAdapter(this, videoDetailItems);
         videoDetailRV.setAdapter(adapter);
     }
 
-    //Load Random Videos-Home Fragment
+
+    /**
+     * Load Random Videos
+     * Coming from Videos Fragment
+     * @param videoRandomId-Gets the random videos List Items
+     */
     private void loadVideoRandom(String videoRandomId) {
         compositeDisposable.add(mService.getVideoRandomLink(videoRandomId)
                 .subscribeOn(Schedulers.io())
@@ -742,7 +871,7 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
 
         super.onBackPressed();
 
-
+        //Providing Layout Transition
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 
         // Set Loaded Videos to null
@@ -752,6 +881,7 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
         Common.currentFavoritesItem = null;
         Common.currentVideoDetailItem = null;
 
+        //Unregister Receiver To Prevent Memory Leak
         unregisterReceiver(receiver);
 
     }

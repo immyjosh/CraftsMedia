@@ -7,6 +7,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="drawerArrowStyle">@style/DrawerIcon</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
     <style name="TextTheme" parent="AppTheme.NoActionBar">
@@ -38,7 +39,7 @@
     </style>
     <style name="App_no_action_bar" parent="Theme.AppCompat.Light.NoActionBar" >
         <item name="android:colorPrimaryDark">@color/colorPrimary</item>
-        <item name="android:titleTextStyle"></item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

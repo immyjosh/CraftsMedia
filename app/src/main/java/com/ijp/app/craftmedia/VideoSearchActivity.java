@@ -65,7 +65,7 @@ public class VideoSearchActivity extends AppCompatActivity implements Connectivi
 
         searchBar=findViewById(R.id.video_searchBar);
 
-        searchBar.setHint("Enter Video Name");
+        searchBar.setHint("Enter Video Category");
         searchBar.setCardViewElevation(10);
         searchBar.addTextChangeListener(new TextWatcher() {
             @Override

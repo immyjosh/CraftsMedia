@@ -32,6 +32,7 @@ public class Common {
     //10.0.2.2 - Emulator localhost
 
     public static String packageName= BuildConfig.APPLICATION_ID;
+    public static String appversion=BuildConfig.VERSION_NAME;
     public static final String BASE_URL = "http://www.thingspeakapi.tk/CraftsMedia/";
 
     public static InfiniteListItem infiniteListItems= null;

@@ -3,11 +3,12 @@ package com.ijp.app.craftmedia.Model;
 
 public class InfiniteListItem {
     private String ID,Name,image_link,video_link,hd_video_link,category,image_icon;
-
+    private String size_SD;
+    private String size_HD;
     public InfiniteListItem() {
     }
 
-    public InfiniteListItem(String ID, String name, String image_link, String video_link, String hd_video_link, String category, String image_icon) {
+    public InfiniteListItem(String ID, String name, String image_link, String video_link, String hd_video_link, String category, String image_icon, String size_SD, String size_HD) {
         this.ID = ID;
         Name = name;
         this.image_link = image_link;
@@ -15,6 +16,8 @@ public class InfiniteListItem {
         this.hd_video_link = hd_video_link;
         this.category = category;
         this.image_icon = image_icon;
+        this.size_SD = size_SD;
+        this.size_HD = size_HD;
     }
 
     public String getImage_icon() {
@@ -73,5 +76,21 @@ public class InfiniteListItem {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getSize_SD() {
+        return size_SD;
+    }
+
+    public void setSize_SD(String size_SD) {
+        this.size_SD = size_SD;
+    }
+
+    public String getSize_HD() {
+        return size_HD;
+    }
+
+    public void setSize_HD(String size_HD) {
+        this.size_HD = size_HD;
     }
 }

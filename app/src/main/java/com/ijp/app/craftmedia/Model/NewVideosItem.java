@@ -7,17 +7,21 @@ public class NewVideosItem {
     private String video_link ;
     private String hd_video_link ;
     private String Category ;
+    private String size_SD;
+    private String size_HD;
 
     public NewVideosItem() {
     }
 
-    public NewVideosItem(String ID, String name, String link, String video_link, String hd_video_link, String category) {
+    public NewVideosItem(String ID, String name, String link, String video_link, String hd_video_link, String category, String size_SD, String size_HD) {
         this.ID = ID;
         Name = name;
         Link = link;
         this.video_link = video_link;
         this.hd_video_link = hd_video_link;
         Category = category;
+        this.size_SD = size_SD;
+        this.size_HD = size_HD;
     }
 
     public String getID() {
@@ -68,5 +72,21 @@ public class NewVideosItem {
 
     public void setCategory(String category) {
         Category = category;
+    }
+
+    public String getSize_SD() {
+        return size_SD;
+    }
+
+    public void setSize_SD(String size_SD) {
+        this.size_SD = size_SD;
+    }
+
+    public String getSize_HD() {
+        return size_HD;
+    }
+
+    public void setSize_HD(String size_HD) {
+        this.size_HD = size_HD;
     }
 }

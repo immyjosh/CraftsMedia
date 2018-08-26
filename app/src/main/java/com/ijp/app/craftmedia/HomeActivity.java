@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ijp.app.craftmedia.Fragments.HomeFragment;
@@ -44,6 +45,7 @@ public class HomeActivity extends AppCompatActivity
 
 
     ImageView picstaSearchIcon, videoSearchIcon;
+    TextView appVersionNumber;
 
     FancyAlertDialog fancyAlertDialogbuilder;
 
@@ -64,6 +66,9 @@ public class HomeActivity extends AppCompatActivity
         videosFragment = new VideosFragment();
 
         setFragment(homeFragment);
+
+        appVersionNumber=findViewById(R.id.app_version);
+        appVersionNumber.setText("v"+Common.appversion);
 
 
         BottomNavigationView mBottomNav= findViewById(R.id.bottom_navigation);

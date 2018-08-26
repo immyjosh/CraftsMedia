@@ -60,6 +60,10 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
 
         holder.videoDetailTitle.setText(videoDetailItems.get(position).Name);
 
+        holder.videoDetailCategory.setText("Tags: "+videoDetailItems.get(position).Category);
+
+        //holder.noOfDownloadsText.setText(videoDetailItems.get(position).no_of_downloads);
+
 
 
         //favorite list
@@ -106,6 +110,8 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
         favorites.name = videoDetailItem.Name;
         favorites.video_link = videoDetailItem.video_link;
         favorites.hd_video_link=videoDetailItem.hd_video_link;
+        favorites.sd_size=videoDetailItem.size_SD;
+        favorites.hd_size=videoDetailItem.size_HD;
 
         if (isAdd)
             Common.favoriteRepository.insertFav(favorites);
@@ -124,7 +130,7 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
 
         JZVideoPlayerStandard videoPlayer;
 
-        TextView videoDetailTitle,hdText,mp4Text;
+        TextView videoDetailTitle,videoDetailCategory,hdText,mp4Text,noOfDownloadsText;
 
         ImageView video_favorite;
 
@@ -136,11 +142,14 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
 
             videoPlayer = itemView.findViewById(R.id.video_player);
             videoDetailTitle = itemView.findViewById(R.id.video_details_title);
+            videoDetailCategory=itemView.findViewById(R.id.video_details_category);
             video_favorite = itemView.findViewById(R.id.video_favorite);
 
             rootView=itemView.findViewById(R.id.video_detail_cv);
 
             mp4Text=itemView.findViewById(R.id.mp4_text);
+
+          //  noOfDownloadsText=itemView.findViewById(R.id.no_of_downloads_text);
         }
 
 
