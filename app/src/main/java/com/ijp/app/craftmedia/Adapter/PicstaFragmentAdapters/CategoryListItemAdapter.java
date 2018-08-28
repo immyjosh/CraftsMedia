@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia.Adapter.PicstaFragmentAdapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -39,7 +40,7 @@ public class CategoryListItemAdapter extends RecyclerView.Adapter<CategoryListIt
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CategoryListViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull CategoryListViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         Glide.with(mContext).load(categoryListItems.get(position).getImage_url())
                 .into(holder.imgPics);
 
@@ -72,7 +73,7 @@ public class CategoryListItemAdapter extends RecyclerView.Adapter<CategoryListIt
         }
 
 
-        public CategoryListViewHolder(View itemView) {
+        private CategoryListViewHolder(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);

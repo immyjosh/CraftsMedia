@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -40,7 +41,7 @@ public class AllPicsDetailAdapter extends RecyclerView.Adapter<AllPicsDetailAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AllPicsDetailViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull AllPicsDetailViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         Glide.with(mContext).load(wallpaperDetailItemList.get(position).getImage_link())
                 .into(holder.imgPics);
 
@@ -70,7 +71,7 @@ public class AllPicsDetailAdapter extends RecyclerView.Adapter<AllPicsDetailAdap
             this.iitemClickListner = itemClickListner;
         }
 
-        public AllPicsDetailViewHolder(View itemView) {
+        private AllPicsDetailViewHolder(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);

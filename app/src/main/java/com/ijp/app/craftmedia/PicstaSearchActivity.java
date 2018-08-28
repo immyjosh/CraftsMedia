@@ -129,8 +129,15 @@ public class PicstaSearchActivity extends AppCompatActivity implements Connectiv
 
         }
 
+        displaySearchResult(result);
+
+    }
+
+    private void displaySearchResult(List<WallpaperDetailItem> result) {
+
         searchAdapter=new AllPicsDetailAdapter(this,result);
         recyclerSearch.setAdapter(searchAdapter);
+
         avLoadingIndicatorView.smoothToHide();
         picstaSearchLayout.setVisibility(View.VISIBLE);
     }
@@ -167,7 +174,10 @@ public class PicstaSearchActivity extends AppCompatActivity implements Connectiv
         recyclerSearch.setAdapter(adapter);
     }
 
-    // Showing the status in Snackbar- Internet Handling
+    /**
+     * Shows Snack bar- Internet Handling
+     * @param isConnected-receives true(when connected) or false(when not connected)
+     */
     private void showSnack(boolean isConnected) {
         Snacky.Builder snacky;
         snacky=Snacky.builder().setActivity(PicstaSearchActivity.this);
@@ -176,6 +186,9 @@ public class PicstaSearchActivity extends AppCompatActivity implements Connectiv
         int color;
 
         if (isConnected) {
+
+            loadAllPics();
+
             message = "Good! Connected to Internet";
             color = Color.WHITE;
             snacky.setText(message).setTextColor(color).success().show();

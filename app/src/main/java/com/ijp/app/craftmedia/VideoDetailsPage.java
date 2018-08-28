@@ -84,7 +84,7 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
     private DownloadManager dm;
     private long queueId;
 
-    Uri uri;
+    Uri uriHD;
     Uri uriSD;
     String description;
     String[] quality;
@@ -164,7 +164,7 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
                 FancyToast.makeText(VideoDetailsPage.this,"Download Cancelled",FancyToast.LENGTH_LONG,FancyToast.ERROR,false).show();
 
                 videoCancel.setVisibility(View.INVISIBLE);
-                textCancelDownloadVideos.setText("Download This Video Here");
+                textCancelDownloadVideos.setText(R.string.download_video);
                 videoDownload.setVisibility(View.VISIBLE);
                 avLoadingIndicatorView.smoothToHide();
 
@@ -200,7 +200,7 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
                     avLoadingIndicatorView.smoothToHide();
                     videoDetailTextDownloading.setVisibility(View.INVISIBLE);
                     videoCancel.setVisibility(View.INVISIBLE);
-                    textCancelDownloadVideos.setText("Download This Video Here");
+                    textCancelDownloadVideos.setText(R.string.download_video);
                     //updateNoOfDownloads();
                 }
 
@@ -350,49 +350,49 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
 
         if (Common.currentVideosItem != null) {
 
-            uri = Uri.parse(Common.currentVideosItem.getHd_video_link());
+            uriHD = Uri.parse(Common.currentVideosItem.getHd_video_link());
             uriSD = Uri.parse(Common.currentVideosItem.getVideo_link());
 
             description = UUID.randomUUID().toString();
 
         }else if (Common.currentNewVideosItem != null) {
 
-            uri = Uri.parse(Common.currentNewVideosItem.getHd_video_link());
+            uriHD = Uri.parse(Common.currentNewVideosItem.getHd_video_link());
             uriSD=Uri.parse(Common.currentNewVideosItem.getVideo_link());
 
             description = UUID.randomUUID().toString();
         }  else if (Common.currentVideoBannerItem != null) {
 
-            uri = Uri.parse(Common.currentVideoBannerItem.getHd_video_link());
+            uriHD = Uri.parse(Common.currentVideoBannerItem.getHd_video_link());
             uriSD=Uri.parse(Common.currentVideoBannerItem.getSd_video_link());
 
             description = UUID.randomUUID().toString();
         } else if (Common.currentVideoRandomItem != null) {
 
-            uri = Uri.parse(Common.currentVideoRandomItem.getHd_video_link());
+            uriHD = Uri.parse(Common.currentVideoRandomItem.getHd_video_link());
             uriSD = Uri.parse(Common.currentVideoRandomItem.getVideo_link());
 
             description = UUID.randomUUID().toString();
 
         } else if (Common.currentFavoritesItem != null) {
 
-            uri = Uri.parse(Common.currentFavoritesItem.hd_video_link);
+            uriHD = Uri.parse(Common.currentFavoritesItem.hd_video_link);
             uriSD = Uri.parse(Common.currentFavoritesItem.video_link);
 
             description = UUID.randomUUID().toString();
         } else if (Common.currentVideoDetailItem != null) {
-            uri = Uri.parse(Common.currentVideoDetailItem.getHd_video_link());
+            uriHD = Uri.parse(Common.currentVideoDetailItem.getHd_video_link());
             uriSD = Uri.parse(Common.currentVideoDetailItem.getVideo_link());
 
             description = UUID.randomUUID().toString();
         }else if (Common.infiniteListItems!=null){
-            uri = Uri.parse(Common.infiniteListItems.getHd_video_link());
+            uriHD = Uri.parse(Common.infiniteListItems.getHd_video_link());
             uriSD = Uri.parse(Common.infiniteListItems.getVideo_link());
 
             description = UUID.randomUUID().toString();
         }else if (Common.currentVideoCategoriesDataItem!=null){
 
-            uri = Uri.parse(Common.currentVideoCategoriesDataItem.getHd_video_link());
+            uriHD = Uri.parse(Common.currentVideoCategoriesDataItem.getHd_video_link());
             uriSD=Uri.parse(Common.currentVideoCategoriesDataItem.getSd_video_link());
             description = UUID.randomUUID().toString();
         }
@@ -456,7 +456,7 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
     }
 
     private void downloadManagerHD() {
-        DownloadManager.Request request = new DownloadManager.Request(uri);
+        DownloadManager.Request request = new DownloadManager.Request(uriHD);
         request.setTitle("CraftsMedia-" + description);
         request.setDescription("Downloading File, please wait...");
         request.setAllowedNetworkTypes(
@@ -506,7 +506,7 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
         avLoadingIndicatorView.smoothToShow();
         videoDetailTextDownloading.setVisibility(View.VISIBLE);
         videoCancel.setVisibility(View.VISIBLE);
-        textCancelDownloadVideos.setText("Cancel Download");
+        textCancelDownloadVideos.setText(R.string.cancel_download);
 
         videoDownload.setVisibility(View.INVISIBLE);
 
@@ -820,7 +820,10 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
         videoDetailRV.setAdapter(adapter);
     }
 
-    // Showing the status in Snackbar- Internet Handling
+    /**
+     * Shows Snack bar- Internet Handling
+     * @param isConnected-receives true(when connected) or false(when not connected)
+     */
     private void showSnack(boolean isConnected) {
         Snacky.Builder snacky;
         snacky=Snacky.builder().setActivity(VideoDetailsPage.this);
@@ -829,6 +832,9 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
         int color;
 
         if (isConnected) {
+
+            loadingVideos();
+
             message = "Good! Connected to Internet";
             color = Color.WHITE;
             snacky.setText(message).setTextColor(color).success().show();
@@ -839,7 +845,7 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
 
             message = "Sorry! Not connected to internet";
             color = Color.WHITE;
-            snacky.setText(message).setTextColor(color).error().show();
+            snacky.setText(message).setTextColor(color).setDuration(Snacky.LENGTH_INDEFINITE).error().show();
 
         }
 

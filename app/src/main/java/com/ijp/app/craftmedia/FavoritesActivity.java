@@ -67,6 +67,39 @@ public class FavoritesActivity extends AppCompatActivity implements Connectivity
 
     }
 
+    private void loadFavoritesItem() {
+        compositeDisposable.add(Common.favoriteRepository.getFavItem()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<List<Favorites>>() {
+                    @Override
+                    public void accept(List<Favorites> favorites)  {
+                        avLoadingIndicatorView.smoothToHide();
+                        videoFavoritesRV.setVisibility(View.VISIBLE);
+                        displayFavoriteItem(favorites);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable)  {
+
+                    }
+                }));
+
+    }
+
+    private void displayFavoriteItem(List<Favorites> favorites) {
+        FavoritesPageAdapter favoritesPageAdapter=new FavoritesPageAdapter(this,favorites);
+        videoFavoritesRV.setAdapter(favoritesPageAdapter);
+    }
+
+    private void initDB() {
+        Common.craftsMediaRoomDatabase= CraftsMediaRoomDatabase.getInstance(this);
+        Common.favoriteRepository =
+                FavoriteRepository.
+                        getInstance(FavoriteDataSource.
+                                getInstance(Common.craftsMediaRoomDatabase.favoriteDAO()));
+    }
+
     // Showing the status in Snackbar- Internet Handling
     private void showSnack(boolean isConnected) {
         Snacky.Builder snacky;
@@ -86,7 +119,7 @@ public class FavoritesActivity extends AppCompatActivity implements Connectivity
 
             message = "Sorry! Not connected to internet";
             color = Color.WHITE;
-            snacky.setText(message).setTextColor(color).error().show();
+            snacky.setText(message).setTextColor(color).setDuration(Snacky.LENGTH_INDEFINITE).error().show();
 
         }
 
@@ -124,38 +157,7 @@ public class FavoritesActivity extends AppCompatActivity implements Connectivity
        
     }
 
-    private void loadFavoritesItem() {
-            compositeDisposable.add(Common.favoriteRepository.getFavItem()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new Consumer<List<Favorites>>() {
-                        @Override
-                        public void accept(List<Favorites> favorites) throws Exception {
-                            avLoadingIndicatorView.smoothToHide();
-                            videoFavoritesRV.setVisibility(View.VISIBLE);
-                            displayFavoriteItem(favorites);
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception {
 
-                        }
-                    }));
-
-    }
-
-    private void displayFavoriteItem(List<Favorites> favorites) {
-        FavoritesPageAdapter favoritesPageAdapter=new FavoritesPageAdapter(this,favorites);
-        videoFavoritesRV.setAdapter(favoritesPageAdapter);
-    }
-
-    private void initDB() {
-        Common.craftsMediaRoomDatabase= CraftsMediaRoomDatabase.getInstance(this);
-        Common.favoriteRepository =
-                FavoriteRepository.
-                        getInstance(FavoriteDataSource.
-                                getInstance(Common.craftsMediaRoomDatabase.favoriteDAO()));
-    }
 
 
 

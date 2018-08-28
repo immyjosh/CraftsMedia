@@ -71,7 +71,7 @@ public class NewPicsAdapter extends RecyclerView.Adapter<NewPicsAdapter.NewPicsA
         }
 
 
-        public NewPicsAdapterViewHolder(View itemView) {
+        private NewPicsAdapterViewHolder(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);

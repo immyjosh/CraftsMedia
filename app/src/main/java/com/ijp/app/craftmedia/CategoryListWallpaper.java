@@ -14,6 +14,7 @@ import com.ijp.app.craftmedia.Internet.MyApplication;
 import com.ijp.app.craftmedia.Model.PicstaModel.CategoryListItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
+import com.wang.avi.AVLoadingIndicatorView;
 import com.yalantis.phoenix.PullToRefreshView;
 
 import java.util.List;
@@ -37,6 +38,8 @@ public class CategoryListWallpaper extends AppCompatActivity implements Connecti
     RecyclerView categoryListWallpaperRV;
 
     PullToRefreshView mPullToRefreshView;
+
+    AVLoadingIndicatorView avLoadingIndicatorView;
 
 
     @Override
@@ -78,14 +81,26 @@ public class CategoryListWallpaper extends AppCompatActivity implements Connecti
             }
         });
 
+        avLoadingIndicatorView=findViewById(R.id.progress_bar_wallpaper_category);
+        avLoadingIndicatorView.smoothToShow();
+
+
 
 
         categoryListWallpaperRV =findViewById(R.id.Category_list_wallpaper_rv);
         categoryListWallpaperRV.setLayoutManager(new GridLayoutManager(this,3));
         categoryListWallpaperRV.setHasFixedSize(true);
 
+
+
+        loadingPictureCategories();
+    }
+
+    private void loadingPictureCategories() {
+
         loadCategoryItemsPage(Common.currentCategoryFragmentsItem.ID);
     }
+
 
     private void loadCategoryItemsPage(String categoryId) {
 
@@ -95,6 +110,8 @@ public class CategoryListWallpaper extends AppCompatActivity implements Connecti
                 .subscribe(new Consumer<List<CategoryListItem>>() {
                     @Override
                     public void accept(List<CategoryListItem> categoryListItems)  {
+                        avLoadingIndicatorView.smoothToHide();
+                        mPullToRefreshView.setVisibility(View.VISIBLE);
                         displayCategoryItemPics(categoryListItems);
                     }
                 }, new Consumer<Throwable>() {
@@ -113,7 +130,10 @@ public class CategoryListWallpaper extends AppCompatActivity implements Connecti
 
 
 
-    // Showing the status in Snackbar- Internet Handling
+    /**
+     * Shows Snack bar- Internet Handling
+     * @param isConnected-receives true(when connected) or false(when not connected)
+     */
     private void showSnack(boolean isConnected) {
         Snacky.Builder snacky;
         snacky=Snacky.builder().setActivity(CategoryListWallpaper.this);
@@ -122,6 +142,9 @@ public class CategoryListWallpaper extends AppCompatActivity implements Connecti
         int color;
 
         if (isConnected) {
+
+            loadingPictureCategories();
+
             message = "Good! Connected to Internet";
             color = Color.WHITE;
             snacky.setText(message).setTextColor(color).success().show();
@@ -132,7 +155,7 @@ public class CategoryListWallpaper extends AppCompatActivity implements Connecti
 
             message = "Sorry! Not connected to internet";
             color = Color.WHITE;
-            snacky.setText(message).setTextColor(color).error().show();
+            snacky.setText(message).setTextColor(color).setDuration(Snacky.LENGTH_INDEFINITE).error().show();
 
         }
 

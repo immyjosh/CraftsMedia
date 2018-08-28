@@ -162,7 +162,10 @@ public class VideoSearchActivity extends AppCompatActivity implements Connectivi
         recyclerSearch.setAdapter(adapter);
     }
 
-    // Showing the status in Snackbar- Internet Handling
+    /**
+     * Shows Snack bar- Internet Handling
+     * @param isConnected-receives true(when connected) or false(when not connected)
+     */
     private void showSnack(boolean isConnected) {
         Snacky.Builder snacky;
         snacky=Snacky.builder().setActivity(VideoSearchActivity.this);
@@ -171,9 +174,12 @@ public class VideoSearchActivity extends AppCompatActivity implements Connectivi
         int color;
 
         if (isConnected) {
+
+            loadAllVideos();
+
             message = "Good! Connected to Internet";
             color = Color.WHITE;
-            snacky.setText(message).setTextColor(color).success().show();
+            snacky.setText(message).setTextColor(color).setDuration(Snacky.LENGTH_INDEFINITE).success().show();
 
 
 

@@ -18,8 +18,11 @@ public class PicstaFavorites {
     @ColumnInfo(name = "link")
     public String link;
 
-    @ColumnInfo(name = "orig_link")
-    public String origLink;
+    @ColumnInfo(name = "portrait_link")
+    public String portraitLink;
+
+    @ColumnInfo(name = "landscape_link")
+    public String landscapeLink;
 
     @ColumnInfo(name = "category")
     public String Category;

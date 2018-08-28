@@ -96,7 +96,10 @@ public class PicstaFavoritesActivity extends AppCompatActivity implements Connec
                                 getInstance(Common.craftsMediaRoomDatabase.picstaFavoriteDAO()));
     }
 
-    // Showing the status in Snackbar- Internet Handling
+    /**
+     * Shows Snack bar- Internet Handling
+     * @param isConnected-receives true(when connected) or false(when not connected)
+     */
     private void showSnack(boolean isConnected) {
         Snacky.Builder snacky;
         snacky=Snacky.builder().setActivity(PicstaFavoritesActivity.this);
@@ -115,7 +118,7 @@ public class PicstaFavoritesActivity extends AppCompatActivity implements Connec
 
             message = "Sorry! Not connected to internet";
             color = Color.WHITE;
-            snacky.setText(message).setTextColor(color).error().show();
+            snacky.setText(message).setTextColor(color).setDuration(Snacky.LENGTH_INDEFINITE).error().show();
 
         }
 

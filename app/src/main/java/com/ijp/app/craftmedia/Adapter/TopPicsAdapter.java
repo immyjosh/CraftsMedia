@@ -76,7 +76,7 @@ public class TopPicsAdapter extends RecyclerView.Adapter<TopPicsAdapter.TopPicsV
             this.iitemClickListner = itemClickListner;
         }
 
-        public TopPicsViewHolder(View itemView) {
+        private TopPicsViewHolder(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);

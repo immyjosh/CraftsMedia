@@ -5,10 +5,12 @@ public class InfiniteListItem {
     private String ID,Name,image_link,video_link,hd_video_link,category,image_icon;
     private String size_SD;
     private String size_HD;
+    private String portrait_img_url;
+    private String landscape_img_url;
     public InfiniteListItem() {
     }
 
-    public InfiniteListItem(String ID, String name, String image_link, String video_link, String hd_video_link, String category, String image_icon, String size_SD, String size_HD) {
+    public InfiniteListItem(String ID, String name, String image_link, String video_link, String hd_video_link, String category, String image_icon, String size_SD, String size_HD, String portrait_img_url, String landscape_img_url) {
         this.ID = ID;
         Name = name;
         this.image_link = image_link;
@@ -18,6 +20,8 @@ public class InfiniteListItem {
         this.image_icon = image_icon;
         this.size_SD = size_SD;
         this.size_HD = size_HD;
+        this.portrait_img_url = portrait_img_url;
+        this.landscape_img_url = landscape_img_url;
     }
 
     public String getImage_icon() {
@@ -92,5 +96,21 @@ public class InfiniteListItem {
 
     public void setSize_HD(String size_HD) {
         this.size_HD = size_HD;
+    }
+
+    public String getPortrait_img_url() {
+        return portrait_img_url;
+    }
+
+    public void setPortrait_img_url(String portrait_img_url) {
+        this.portrait_img_url = portrait_img_url;
+    }
+
+    public String getLandscape_img_url() {
+        return landscape_img_url;
+    }
+
+    public void setLandscape_img_url(String landscape_img_url) {
+        this.landscape_img_url = landscape_img_url;
     }
 }

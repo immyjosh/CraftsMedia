@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -38,7 +39,7 @@ public class AllVideoDetailAdapter extends RecyclerView.Adapter<AllVideoDetailAd
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AllVideoDetailViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull AllVideoDetailViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         Glide.with(mContext).load(videoDetailItemList.get(position).thumb_image_link)
                 .into(holder.imgPics);
 
@@ -68,7 +69,7 @@ public class AllVideoDetailAdapter extends RecyclerView.Adapter<AllVideoDetailAd
             this.iitemClickListner = itemClickListner;
         }
 
-        public AllVideoDetailViewHolder(View itemView) {
+        private AllVideoDetailViewHolder(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);

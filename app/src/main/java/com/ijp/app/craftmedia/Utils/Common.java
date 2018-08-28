@@ -24,8 +24,6 @@ import com.ijp.app.craftmedia.Model.WallpaperDetailItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Retrofit.RetrofitClient;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class Common {
 
@@ -33,7 +31,7 @@ public class Common {
 
     public static String packageName= BuildConfig.APPLICATION_ID;
     public static String appversion=BuildConfig.VERSION_NAME;
-    public static final String BASE_URL = "http://www.thingspeakapi.tk/CraftsMedia/";
+    private static final String BASE_URL = "http://www.thingspeakapi.tk/CraftsMedia/";
 
     public static InfiniteListItem infiniteListItems= null;
 

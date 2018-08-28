@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia.Adapter.PicstaFragmentAdapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 
@@ -22,7 +23,7 @@ import com.ijp.app.craftmedia.Utils.Common;
 import java.util.List;
 
 
-public class CategoryFragmentAdapter extends RecyclerView.Adapter<CategoryFragmentAdapter.CatrgoryFragmentViewHolder> {
+public class CategoryFragmentAdapter extends RecyclerView.Adapter<CategoryFragmentAdapter.CategoryFragmentViewHolder> {
     private Context mContext;
     private List<CategoryFragmentItem> categoryFragmentItemList;
 
@@ -37,16 +38,16 @@ public class CategoryFragmentAdapter extends RecyclerView.Adapter<CategoryFragme
 
     @NonNull
     @Override
-    public CatrgoryFragmentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CategoryFragmentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         LayoutInflater inflater=LayoutInflater.from(mContext);
         view=inflater.inflate(R.layout.category_fragment_item,parent,false);
 
-        return new CatrgoryFragmentViewHolder(view);
+        return new CategoryFragmentViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CatrgoryFragmentViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull CategoryFragmentViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
         Glide.with(mContext).load(categoryFragmentItemList.get(position).image_url)
                 .into(holder.categoryImage);
@@ -71,7 +72,7 @@ public class CategoryFragmentAdapter extends RecyclerView.Adapter<CategoryFragme
         return categoryFragmentItemList.size();
     }
 
-    public class CatrgoryFragmentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class CategoryFragmentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView categoryImage;
         TextView  categoryText;
@@ -81,7 +82,7 @@ public class CategoryFragmentAdapter extends RecyclerView.Adapter<CategoryFragme
             this.iitemClickListner = itemClickListner;
         }
 
-        public CatrgoryFragmentViewHolder(View itemView) {
+        private CategoryFragmentViewHolder(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);

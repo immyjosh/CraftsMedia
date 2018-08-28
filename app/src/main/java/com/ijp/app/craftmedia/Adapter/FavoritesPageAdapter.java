@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -40,7 +41,7 @@ public class FavoritesPageAdapter extends RecyclerView.Adapter<FavoritesPageAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FavoritesViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull FavoritesViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         Glide.with(mContext).load(favoritesList.get(position).link)
                 .into(holder.imgPics);
 
@@ -73,7 +74,7 @@ public class FavoritesPageAdapter extends RecyclerView.Adapter<FavoritesPageAdap
             this.iitemClickListner = itemClickListner;
         }
 
-        public FavoritesViewHolder(View itemView) {
+        private FavoritesViewHolder(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);

@@ -70,7 +70,7 @@ public class PicstaFavoritesAdapter extends RecyclerView.Adapter<PicstaFavorites
             this.iitemClickListner = itemClickListner;
         }
 
-        public PicstaFavoritesViewHolder(View itemView) {
+        private PicstaFavoritesViewHolder(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);

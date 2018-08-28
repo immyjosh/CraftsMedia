@@ -22,7 +22,7 @@ import java.util.List;
 import cn.jzvd.JZVideoPlayerStandard;
 import de.mateware.snacky.Snacky;
 
-public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.VideoDetailViewholder> {
+public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.VideoDetailViewHolder> {
 
     private Context mContext;
     private List<VideoDetailItem> videoDetailItems;
@@ -38,16 +38,16 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
 
     @NonNull
     @Override
-    public VideoDetailViewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public VideoDetailViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         LayoutInflater inflater = LayoutInflater.from(mContext);
         view = inflater.inflate(R.layout.video_detail_cv, parent, false);
 
-        return new VideoDetailAdapter.VideoDetailViewholder(view);
+        return new VideoDetailViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final VideoDetailViewholder holder, final int position) {
+    public void onBindViewHolder(@NonNull final VideoDetailViewHolder holder, final int position) {
 
         holder.videoPlayer.setUp(videoDetailItems.get(position).video_link,
                 JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL,
@@ -126,7 +126,7 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
         return videoDetailItems.size();
     }
 
-    public class VideoDetailViewholder extends RecyclerView.ViewHolder {
+    public class VideoDetailViewHolder extends RecyclerView.ViewHolder {
 
         JZVideoPlayerStandard videoPlayer;
 
@@ -137,7 +137,7 @@ public class VideoDetailAdapter extends RecyclerView.Adapter<VideoDetailAdapter.
         RelativeLayout rootView;
 
 
-        public VideoDetailViewholder(View itemView) {
+        private VideoDetailViewHolder(View itemView) {
             super(itemView);
 
             videoPlayer = itemView.findViewById(R.id.video_player);

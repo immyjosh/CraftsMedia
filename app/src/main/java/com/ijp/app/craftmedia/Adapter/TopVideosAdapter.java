@@ -74,7 +74,7 @@ public class TopVideosAdapter extends RecyclerView.Adapter<TopVideosAdapter.TopV
             this.iitemClickListner = itemClickListner;
         }
 
-        public TopVideosViewHolder(View itemView) {
+        private TopVideosViewHolder(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);

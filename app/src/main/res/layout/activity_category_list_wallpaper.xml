@@ -22,9 +22,20 @@
             android:layout_height="?android:attr/actionBarSize"></android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/progress_bar_wallpaper_category"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="223dp"
+        app:indicatorColor="@color/text_color"
+        app:indicatorName="BallClipRotatePulseIndicator" />
+
 <com.yalantis.phoenix.PullToRefreshView
     android:id="@+id/pul_to_refresh"
     android:layout_below="@+id/appbar"
+    android:visibility="invisible"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <android.support.v7.widget.RecyclerView

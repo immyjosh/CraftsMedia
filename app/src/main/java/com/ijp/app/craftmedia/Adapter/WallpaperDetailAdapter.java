@@ -95,7 +95,8 @@ public class WallpaperDetailAdapter extends RecyclerView.Adapter<WallpaperDetail
         picstaFavorites.id = wallpaperDetailItem.getID();
         picstaFavorites.link = wallpaperDetailItem.getImage_link();
         picstaFavorites.name = wallpaperDetailItem.getCategory();
-        picstaFavorites.origLink=wallpaperDetailItem.getOrig_image_link();
+        picstaFavorites.portraitLink=wallpaperDetailItem.getPortrait_img_url();
+        picstaFavorites.landscapeLink=wallpaperDetailItem.getLandscape_img_url();
 
         if (isAdd)
             Common.picstaFavoriteRepository.insertFav(picstaFavorites);
@@ -123,7 +124,7 @@ public class WallpaperDetailAdapter extends RecyclerView.Adapter<WallpaperDetail
             this.iitemClickListner = itemClickListner;
         }
 
-        public WallpaperDetailViewHolder(View itemView) {
+        private WallpaperDetailViewHolder(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);

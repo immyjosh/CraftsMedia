@@ -1,6 +1,7 @@
 package com.ijp.app.craftmedia;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.WallpaperManager;
 import android.content.BroadcastReceiver;
@@ -61,7 +62,7 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
 
     RelativeLayout rootLayout,wallpaperDetailLayout;
 
-    FancyAlertDialog fancyAlertDialogbuilder;
+    FancyAlertDialog fancyAlertDialogBuilder;
 
     LabelButtonView wallpaperDownload,wallpaperSet;
     RecyclerView wallpaperDetailRV;
@@ -89,8 +90,9 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
     private long queueId;
 
 
-    Uri uri;
+    Uri uriPortrait,uriLandscape;
     String fileName;
+    String[] orientation;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -103,7 +105,7 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
                 {
 
                     loadVideosToDownload();
-                    downloadManager();
+                    singleChoiceAlertDialogToDownload();
 
 
                 }
@@ -125,6 +127,8 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
 
                 WallpaperManager.getInstance(getApplicationContext()).setBitmap(resource);
                 FancyToast.makeText(getApplicationContext(),"Wallpaper Set",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,false).show();
+                wallpaperSet.setEnabled(true);
+                wallpaperSet.setTextColor(Color.parseColor("#ffffff"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -283,7 +287,7 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
                 }
                 else {
                     loadVideosToDownload();
-                    downloadManager();
+                    singleChoiceAlertDialogToDownload();
                 }
 
             }
@@ -294,49 +298,101 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
     private void loadVideosToDownload() {
         dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
 
-        wallpaperDownload.setEnabled(false);
-
         if (Common.currentPicsItem != null) {
 
-            uri = Uri.parse(Common.currentPicsItem.getLink());
+            uriPortrait = Uri.parse(Common.currentPicsItem.getPortrait_img_url());
+            uriLandscape=Uri.parse(Common.currentPicsItem.getLandscape_img_url());
 
             fileName = UUID.randomUUID().toString();
 
         }else if (Common.currentNewPicsItem != null) {
 
-            uri = Uri.parse(Common.currentNewPicsItem.getOrig_image_link());
+            uriPortrait = Uri.parse(Common.currentNewPicsItem.getPortrait_img_url());
+            uriLandscape=Uri.parse(Common.currentNewPicsItem.getLandscape_img_url());
 
             fileName = UUID.randomUUID().toString();
         } else if (Common.currentCategoryListItem != null) {
 
-            uri = Uri.parse(Common.currentCategoryListItem.getOrig_image_url());
+            uriPortrait = Uri.parse(Common.currentCategoryListItem.getPortrait_img_url());
+            uriLandscape=Uri.parse(Common.currentCategoryListItem.getLandscape_img_url());
 
             fileName = UUID.randomUUID().toString();
         } else if (Common.currentRandomListItem != null) {
 
-            uri = Uri.parse(Common.currentRandomListItem.getOrig_image_link());
+            uriPortrait = Uri.parse(Common.currentRandomListItem.getPortrait_img_url());
+            uriLandscape=Uri.parse(Common.currentRandomListItem.getLandscape_img_url());
 
             fileName = UUID.randomUUID().toString();
 
         } else if (Common.currentWallpaperDetailItem != null) {
 
-            uri = Uri.parse(Common.currentWallpaperDetailItem.getOrig_image_link());
+            uriPortrait = Uri.parse(Common.currentWallpaperDetailItem.getPortrait_img_url());
+            uriLandscape=Uri.parse(Common.currentWallpaperDetailItem.getLandscape_img_url());
 
             fileName = UUID.randomUUID().toString();
         } else if (Common.currentPicstaFavorites != null) {
-            uri = Uri.parse(Common.currentPicstaFavorites.origLink);
+            uriPortrait = Uri.parse(Common.currentPicstaFavorites.portraitLink);
+            uriLandscape=Uri.parse(Common.currentPicstaFavorites.landscapeLink);
 
             fileName = UUID.randomUUID().toString();
         }else if (Common.infiniteListItems!=null){
-            uri = Uri.parse(Common.infiniteListItems.getImage_link());
+            uriPortrait = Uri.parse(Common.infiniteListItems.getPortrait_img_url());
+            uriLandscape=Uri.parse(Common.infiniteListItems.getLandscape_img_url());
 
             fileName = UUID.randomUUID().toString();
         }
 
     }
 
-    private void downloadManager(){
-        DownloadManager.Request request = new DownloadManager.Request(uri);
+
+    private void singleChoiceAlertDialogToDownload() {
+
+        orientation=new String[]{"Portrait, 1080x1920px","Landscape, 1920x1920px"};
+
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(this)
+                .setTitle("Choose Wallpaper Orientation to Download")
+                .setIcon(R.drawable.ic_cloud_download_grey_24dp)
+                .setSingleChoiceItems(orientation, -1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (orientation[which].equals(orientation[0]))
+                        {
+                            wallpaperDownload.setEnabled(false);
+                            wallpaperDownload.setTextColor(Color.parseColor("#7da87b"));
+                            downloadManagerPortrait();
+                        }else if (orientation[which].equals(orientation[1])){
+
+                            wallpaperDownload.setEnabled(false);
+                            wallpaperDownload.setTextColor(Color.parseColor("#7da87b"));
+                            downloadManagerLandscape();
+                        }
+
+                        dialog.dismiss();
+                    }
+                });
+        final AlertDialog alert = dialog.create();
+        alert.show();
+    }
+
+    private void downloadManagerPortrait(){
+        DownloadManager.Request request = new DownloadManager.Request(uriPortrait);
+        request.setTitle("CraftsMedia-" + fileName);
+        request.setDescription("Downloading File, please wait...");
+        request.setAllowedNetworkTypes(
+                DownloadManager.Request.NETWORK_WIFI
+                        | DownloadManager.Request.NETWORK_MOBILE)
+                .allowScanningByMediaScanner();
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir("CraftsMedia_Picsta", fileName + ".png");
+
+        queueId = dm.enqueue(request);
+
+        handler = new Handler();
+        handler.post(runnable);
+    }
+
+    private void downloadManagerLandscape(){
+        DownloadManager.Request request = new DownloadManager.Request(uriLandscape);
         request.setTitle("CraftsMedia-" + fileName);
         request.setDescription("Downloading File, please wait...");
         request.setAllowedNetworkTypes(
@@ -357,55 +413,106 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
             @Override
             public void onClick(View v) {
 
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(WallpaperDetailActivity.this);
-                builder.setTitle("Set This Wallpaper?");
-
-                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).setPositiveButton("SET", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        if (Common.currentPicsItem!=null){
-                            Glide.with(getBaseContext()).asBitmap()
-                                    .load(Common.currentPicsItem.getLink())
-                                    .into(simpleTarget);
-                        }else if (Common.currentNewPicsItem!=null) {
-                            Glide.with(getBaseContext()).asBitmap()
-                                    .load(Common.currentNewPicsItem.getOrig_image_link())
-                                    .into(simpleTarget);
-                        }else if (Common.currentCategoryListItem!=null) {
-                            Glide.with(getBaseContext()).asBitmap()
-                                    .load(Common.currentCategoryListItem.getOrig_image_url())
-                                    .into(simpleTarget);
-                        }else if (Common.currentRandomListItem!=null){
-                            Glide.with(getBaseContext()).asBitmap()
-                                    .load(Common.currentRandomListItem.getOrig_image_link())
-                                    .into(simpleTarget);
-                        }else if (Common.currentWallpaperDetailItem!=null){
-                            Glide.with(getBaseContext()).asBitmap()
-                                    .load(Common.currentWallpaperDetailItem.getOrig_image_link())
-                                    .into(simpleTarget);
-                        }else if (Common.currentPicstaFavorites!=null){
-                            Glide.with(getBaseContext()).asBitmap()
-                                    .load(Common.currentPicstaFavorites.origLink)
-                                    .into(simpleTarget);
-                        }else if (Common.infiniteListItems!=null){
-                            Glide.with(getBaseContext()).asBitmap()
-                                    .load(Common.infiniteListItems.getImage_link())
-                                    .into(simpleTarget);
-                        }
-
-                    }
-                });
-                builder.show();
+                singleChoiceAlertDialogToSet();
 
             }
         });
     }
+
+    private void singleChoiceAlertDialogToSet() {
+
+        orientation=new String[]{"Portrait, 1080x1920px","Landscape, 1920x1920px"};
+
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(this)
+                .setTitle("Choose Wallpaper Orientation")
+                .setIcon(R.drawable.ic_cloud_download_grey_24dp)
+                .setSingleChoiceItems(orientation, -1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (orientation[which].equals(orientation[0]))
+                        {
+                            wallpaperSet.setEnabled(false);
+                            wallpaperSet.setTextColor(Color.parseColor("#7da87b"));
+                            setPortrait();
+                        }else if (orientation[which].equals(orientation[1])){
+
+                            wallpaperSet.setEnabled(false);
+                            wallpaperSet.setTextColor(Color.parseColor("#7da87b"));
+                            setLandscape();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+        final AlertDialog alert = dialog.create();
+        alert.show();
+    }
+
+    private void setPortrait() {
+        if (Common.currentPicsItem!=null){
+            Glide.with(getBaseContext()).asBitmap()
+                    .load(Common.currentPicsItem.getPortrait_img_url())
+                    .into(simpleTarget);
+        }else if (Common.currentNewPicsItem!=null) {
+            Glide.with(getBaseContext()).asBitmap()
+                    .load(Common.currentNewPicsItem.getPortrait_img_url())
+                    .into(simpleTarget);
+        }else if (Common.currentCategoryListItem!=null) {
+            Glide.with(getBaseContext()).asBitmap()
+                    .load(Common.currentCategoryListItem.getPortrait_img_url())
+                    .into(simpleTarget);
+        }else if (Common.currentRandomListItem!=null){
+            Glide.with(getBaseContext()).asBitmap()
+                    .load(Common.currentRandomListItem.getPortrait_img_url())
+                    .into(simpleTarget);
+        }else if (Common.currentWallpaperDetailItem!=null){
+            Glide.with(getBaseContext()).asBitmap()
+                    .load(Common.currentWallpaperDetailItem.getPortrait_img_url())
+                    .into(simpleTarget);
+        }else if (Common.currentPicstaFavorites!=null){
+            Glide.with(getBaseContext()).asBitmap()
+                    .load(Common.currentPicstaFavorites.portraitLink)
+                    .into(simpleTarget);
+        }else if (Common.infiniteListItems!=null){
+            Glide.with(getBaseContext()).asBitmap()
+                    .load(Common.infiniteListItems.getPortrait_img_url())
+                    .into(simpleTarget);
+        }
+    }
+
+    private void setLandscape() {
+        if (Common.currentPicsItem!=null){
+            Glide.with(getBaseContext()).asBitmap()
+                    .load(Common.currentPicsItem.getLandscape_img_url())
+                    .into(simpleTarget);
+        }else if (Common.currentNewPicsItem!=null) {
+            Glide.with(getBaseContext()).asBitmap()
+                    .load(Common.currentNewPicsItem.getLandscape_img_url())
+                    .into(simpleTarget);
+        }else if (Common.currentCategoryListItem!=null) {
+            Glide.with(getBaseContext()).asBitmap()
+                    .load(Common.currentCategoryListItem.getLandscape_img_url())
+                    .into(simpleTarget);
+        }else if (Common.currentRandomListItem!=null){
+            Glide.with(getBaseContext()).asBitmap()
+                    .load(Common.currentRandomListItem.getLandscape_img_url())
+                    .into(simpleTarget);
+        }else if (Common.currentWallpaperDetailItem!=null){
+            Glide.with(getBaseContext()).asBitmap()
+                    .load(Common.currentWallpaperDetailItem.getLandscape_img_url())
+                    .into(simpleTarget);
+        }else if (Common.currentPicstaFavorites!=null){
+            Glide.with(getBaseContext()).asBitmap()
+                    .load(Common.currentPicstaFavorites.landscapeLink)
+                    .into(simpleTarget);
+        }else if (Common.infiniteListItems!=null){
+            Glide.with(getBaseContext()).asBitmap()
+                    .load(Common.infiniteListItems.getLandscape_img_url())
+                    .into(simpleTarget);
+        }
+    }
+
+
+
 
     private void initBroadcastReceiver() {
         receiver = new BroadcastReceiver() {
@@ -416,6 +523,7 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
                 if (refId == queueId)
                     FancyToast.makeText(getApplicationContext(),"Download Completed",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,false).show();
                 wallpaperDownload.setEnabled(true);
+                wallpaperDownload.setTextColor(Color.parseColor("#FFFFFFFF"));
             }
         };
         IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
@@ -423,7 +531,7 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
     }
 
     private void showAlertDialog() {
-        fancyAlertDialogbuilder = new FancyAlertDialog.Builder(this)
+        fancyAlertDialogBuilder = new FancyAlertDialog.Builder(this)
                 .setTitle("Important Permission Required!")
                 .setBackgroundColor(Color.parseColor("#326765"))  //Don't pass R.color.colorvalue
                 .setMessage("You need to accept permission to download this image")
@@ -654,7 +762,10 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
         wallpaperDetailRV.setAdapter(adapter);
     }
 
-    // Showing the status in Snackbar- Internet Handling
+    /**
+     * Shows Snack bar- Internet Handling
+     * @param isConnected-receives true(when connected) or false(when not connected)
+     */
     private void showSnack(boolean isConnected) {
         Snacky.Builder snacky;
         snacky=Snacky.builder().setActivity(WallpaperDetailActivity.this);
@@ -663,6 +774,9 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
         int color;
 
         if (isConnected) {
+
+            loadingPictures();
+
             message = "Good! Connected to Internet";
             color = Color.WHITE;
             snacky.setText(message).setTextColor(color).success().show();
@@ -673,7 +787,7 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
 
             message = "Sorry! Not connected to internet";
             color = Color.WHITE;
-            snacky.setText(message).setTextColor(color).error().show();
+            snacky.setText(message).setTextColor(color).setDuration(Snacky.LENGTH_INDEFINITE).error().show();
 
         }
 

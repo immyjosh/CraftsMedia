@@ -1,5 +1,6 @@
 package com.ijp.app.craftmedia.Adapter.VideoFragmentAdapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +20,7 @@ import com.ijp.app.craftmedia.VideoDetailsPage;
 
 import java.util.List;
 
-public class VideoCategoryDataAdapter extends RecyclerView.Adapter<VideoCategoryDataAdapter.VideoCategorydataViewHolder> {
+public class VideoCategoryDataAdapter extends RecyclerView.Adapter<VideoCategoryDataAdapter.VideoCategoryDataViewHolder> {
 
     private Context mContext;
     private List<VideoCategoryDataItem> videoCategoryDataItemList;
@@ -31,16 +32,16 @@ public class VideoCategoryDataAdapter extends RecyclerView.Adapter<VideoCategory
 
     @NonNull
     @Override
-    public VideoCategorydataViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public VideoCategoryDataViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view;
         LayoutInflater inflater=LayoutInflater.from(mContext);
         view=inflater.inflate(R.layout.video_categories_data_item,parent,false);
-        return new VideoCategorydataViewHolder(view);
+        return new VideoCategoryDataViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull VideoCategorydataViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull VideoCategoryDataViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         Glide.with(mContext).load(videoCategoryDataItemList.get(position).getVideo_thumbnail())
                 .into(holder.imgPics);
 
@@ -61,7 +62,7 @@ public class VideoCategoryDataAdapter extends RecyclerView.Adapter<VideoCategory
         return videoCategoryDataItemList.size();
     }
 
-    public class VideoCategorydataViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class VideoCategoryDataViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         ImageView imgPics;
         IitemClickListner iitemClickListner;
 
@@ -69,7 +70,7 @@ public class VideoCategoryDataAdapter extends RecyclerView.Adapter<VideoCategory
             this.iitemClickListner = itemClickListner;
         }
 
-        public VideoCategorydataViewHolder(View itemView) {
+        private VideoCategoryDataViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             imgPics=itemView.findViewById(R.id.video_category_data_image);

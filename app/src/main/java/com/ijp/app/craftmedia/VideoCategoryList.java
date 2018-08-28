@@ -14,6 +14,7 @@ import com.ijp.app.craftmedia.Internet.MyApplication;
 import com.ijp.app.craftmedia.Model.VideoModel.VideoCategoryDataItem;
 import com.ijp.app.craftmedia.Retrofit.ICraftsMediaApi;
 import com.ijp.app.craftmedia.Utils.Common;
+import com.wang.avi.AVLoadingIndicatorView;
 import com.yalantis.phoenix.PullToRefreshView;
 
 import java.util.List;
@@ -33,6 +34,8 @@ public class VideoCategoryList extends AppCompatActivity implements Connectivity
     CompositeDisposable compositeDisposable=new CompositeDisposable();
 
     PullToRefreshView mPullToRefreshView;
+
+    AVLoadingIndicatorView avLoadingIndicatorView;
 
     RecyclerView CategoryListVideoRV;
     @Override
@@ -71,11 +74,20 @@ public class VideoCategoryList extends AppCompatActivity implements Connectivity
             }
         });
 
+        avLoadingIndicatorView=findViewById(R.id.progress_bar_video_category);
+        avLoadingIndicatorView.smoothToShow();
+
         CategoryListVideoRV=findViewById(R.id.Category_list_video_rv);
         CategoryListVideoRV.setLayoutManager(new GridLayoutManager(this, 2));
         CategoryListVideoRV.setHasFixedSize(true);
 
+        loadingVideoCategories();
+    }
+
+    private void loadingVideoCategories() {
+
         loadVideoCategoriesDataItem(Common.currentVideoCategoriesItem.ID);
+
     }
 
     private void loadVideoCategoriesDataItem(String videoCategoryId) {
@@ -84,12 +96,14 @@ public class VideoCategoryList extends AppCompatActivity implements Connectivity
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<VideoCategoryDataItem>>() {
                     @Override
-                    public void accept(List<VideoCategoryDataItem> videoCategoryDataItems) throws Exception {
+                    public void accept(List<VideoCategoryDataItem> videoCategoryDataItems)  {
+                        avLoadingIndicatorView.smoothToHide();
+                        mPullToRefreshView.setVisibility(View.VISIBLE);
                         displayVideoCategoryData(videoCategoryDataItems);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable)  {
 
                     }
                 }));
@@ -100,7 +114,11 @@ public class VideoCategoryList extends AppCompatActivity implements Connectivity
         CategoryListVideoRV.setAdapter(adapter);
     }
 
-    // Showing the status in Snackbar- Internet Handling
+
+    /**
+     * Shows Snack bar- Internet Handling
+     * @param isConnected-receives true(when connected) or false(when not connected)
+     */
     private void showSnack(boolean isConnected) {
         Snacky.Builder snacky;
         snacky=Snacky.builder().setActivity(VideoCategoryList.this);
@@ -109,6 +127,9 @@ public class VideoCategoryList extends AppCompatActivity implements Connectivity
         int color;
 
         if (isConnected) {
+
+            loadingVideoCategories();
+
             message = "Good! Connected to Internet";
             color = Color.WHITE;
             snacky.setText(message).setTextColor(color).success().show();
@@ -119,7 +140,7 @@ public class VideoCategoryList extends AppCompatActivity implements Connectivity
 
             message = "Sorry! Not connected to internet";
             color = Color.WHITE;
-            snacky.setText(message).setTextColor(color).error().show();
+            snacky.setText(message).setTextColor(color).setDuration(Snacky.LENGTH_INDEFINITE).error().show();
 
         }
 
