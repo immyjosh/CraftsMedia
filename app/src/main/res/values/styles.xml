@@ -8,6 +8,18 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="drawerArrowStyle">@style/DrawerIcon</item>
         <item name="android:windowDisablePreview">true</item>
+        <item name="toolbarStyle">@style/toolbar</item>
+
+    </style>
+
+
+
+    <style name="toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="ActivityTheme" parent="AppTheme">
+        <item name="android:background">@color/colorBackground</item>
     </style>
 
     <style name="TextTheme" parent="AppTheme.NoActionBar">

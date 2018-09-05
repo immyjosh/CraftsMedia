@@ -43,6 +43,8 @@ public class VideoCategoryList extends AppCompatActivity implements Connectivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_category_list);
 
+        getWindow().setBackgroundDrawable(null);
+
         mService= Common.getAPI();
 
         Toolbar toolbar=findViewById(R.id.video_category_toolbar);

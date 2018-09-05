@@ -27,9 +27,8 @@
             android:id="@+id/progress_bar_video_download"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="108dp"
+            android:layout_below="@+id/video_cancel"
             android:visibility="invisible"
             app:indicatorColor="@color/text_color"
             app:indicatorName="LineSpinFadeLoaderIndicator" />
@@ -49,33 +48,27 @@
             android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/video_download"
+            android:layout_below="@+id/video_detail_rv"
             android:text="Download This Video Here" />
 
         <Button
             android:id="@+id/video_download"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="216dp"
+            android:layout_below="@+id/text_download_cancel_video"
             android:background="@drawable/ic_cloud_download_grey_24dp"
             android:gravity="bottom"
-            android:paddingBottom="12dp"
-            android:textAlignment="center"
             />
         <Button
             android:id="@+id/video_cancel"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:layout_below="@+id/text_download_cancel_video"
             android:visibility="invisible"
-            android:layout_marginBottom="216dp"
             android:background="@drawable/ic_cancel_black_24dp"
             android:gravity="bottom"
-            android:paddingBottom="12dp"
-            android:textAlignment="center"
             />
 
         <TextView
@@ -85,7 +78,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/progress_bar_video_download"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="-206dp"
             android:text="Downloading..."
             android:textColor="@color/text_color"
             android:textSize="20sp" />

@@ -52,6 +52,8 @@ public class PicstaSearchActivity extends AppCompatActivity implements Connectiv
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picsta_search);
 
+        getWindow().setBackgroundDrawable(null);
+
         mService= Common.getAPI();
 
         recyclerSearch=findViewById(R.id.picture_search_rv);

@@ -39,6 +39,8 @@ public class FavoritesActivity extends AppCompatActivity implements Connectivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
 
+        getWindow().setBackgroundDrawable(null);
+
         Toolbar toolbar=findViewById(R.id.video_favorites_toolbar);
         setSupportActionBar(toolbar);
 
@@ -58,8 +60,7 @@ public class FavoritesActivity extends AppCompatActivity implements Connectivity
         avLoadingIndicatorView.smoothToShow();
 
         videoFavoritesRV=findViewById(R.id.video_favorites_rv);
-        videoFavoritesRV.setLayoutManager(new GridLayoutManager(this, 2));
-        videoFavoritesRV.setHasFixedSize(true);
+
 
         initDB();
 
@@ -89,6 +90,7 @@ public class FavoritesActivity extends AppCompatActivity implements Connectivity
 
     private void displayFavoriteItem(List<Favorites> favorites) {
         FavoritesPageAdapter favoritesPageAdapter=new FavoritesPageAdapter(this,favorites);
+        videoFavoritesRV.setLayoutManager(new GridLayoutManager(this, 2));
         videoFavoritesRV.setAdapter(favoritesPageAdapter);
     }
 

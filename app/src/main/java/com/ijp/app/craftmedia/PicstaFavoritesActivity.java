@@ -38,6 +38,8 @@ public class PicstaFavoritesActivity extends AppCompatActivity implements Connec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picsta_favorites);
 
+        getWindow().setBackgroundDrawable(null);
+
         Toolbar toolbar=findViewById(R.id.picsta_favorites_toolbar);
         setSupportActionBar(toolbar);
 

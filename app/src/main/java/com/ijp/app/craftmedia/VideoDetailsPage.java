@@ -118,6 +118,8 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_details_page);
 
+        getWindow().setBackgroundDrawable(null);
+
         mService = Common.getAPI();
 
         videoDetailRV = findViewById(R.id.video_detail_rv);
@@ -242,7 +244,7 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
 
             int columnStatusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
             int columnReasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
-            int columnFileIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+            int columnFileIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
 
             int status = cursor.getInt(columnStatusIndex);
             int reason = cursor.getInt(columnReasonIndex);
@@ -882,6 +884,7 @@ public class VideoDetailsPage extends AppCompatActivity implements ConnectivityR
 
         // Set Loaded Videos to null
         Common.currentVideosItem = null;
+        Common.currentNewVideosItem=null;
         Common.currentVideoBannerItem = null;
         Common.currentVideoRandomItem = null;
         Common.currentFavoritesItem = null;

@@ -64,10 +64,11 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
 
     FancyAlertDialog fancyAlertDialogBuilder;
 
+
     LabelButtonView wallpaperDownload,wallpaperSet;
     RecyclerView wallpaperDetailRV;
 
-    AVLoadingIndicatorView avLoadingIndicatorView;
+    AVLoadingIndicatorView avLoadingIndicatorView,wallpaperSetLoading;
 
     CompositeDisposable compositeDisposable=new CompositeDisposable();
 
@@ -129,6 +130,8 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
                 FancyToast.makeText(getApplicationContext(),"Wallpaper Set",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,false).show();
                 wallpaperSet.setEnabled(true);
                 wallpaperSet.setTextColor(Color.parseColor("#ffffff"));
+                wallpaperSetLoading.setVisibility(View.INVISIBLE);
+                wallpaperSetLoading.smoothToHide();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -144,6 +147,8 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
 
         mService= Common.getAPI();
 
+        getWindow().setBackgroundDrawable(null);
+
 
         rootLayout=findViewById(R.id.root_layout);
 
@@ -157,6 +162,8 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
         avLoadingIndicatorView=findViewById(R.id.progress_bar_wallpaper_detail);
         avLoadingIndicatorView.smoothToShow();
         wallpaperDetailLayout=findViewById(R.id.wallpaper_detail_layout);
+
+        wallpaperSetLoading=findViewById(R.id.progress_bar_wallpaper_set);
 
         // For Download in the background
         initBroadcastReceiver();
@@ -196,7 +203,7 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
 
             int columnStatusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
             int columnReasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
-            int columnFileIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+            int columnFileIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
 
             int status = cursor.getInt(columnStatusIndex);
             int reason = cursor.getInt(columnReasonIndex);
@@ -431,13 +438,21 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
                     public void onClick(DialogInterface dialog, int which) {
                         if (orientation[which].equals(orientation[0]))
                         {
-                            wallpaperSet.setEnabled(false);
-                            wallpaperSet.setTextColor(Color.parseColor("#7da87b"));
-                            setPortrait();
-                        }else if (orientation[which].equals(orientation[1])){
+                            wallpaperSetLoading.setVisibility(View.VISIBLE);
+                            wallpaperSetLoading.smoothToShow();
 
                             wallpaperSet.setEnabled(false);
                             wallpaperSet.setTextColor(Color.parseColor("#7da87b"));
+
+                            setPortrait();
+                        }else if (orientation[which].equals(orientation[1])){
+
+                            wallpaperSetLoading.setVisibility(View.VISIBLE);
+                            wallpaperSetLoading.smoothToShow();
+
+                            wallpaperSet.setEnabled(false);
+                            wallpaperSet.setTextColor(Color.parseColor("#7da87b"));
+
                             setLandscape();
                         }
                         dialog.dismiss();

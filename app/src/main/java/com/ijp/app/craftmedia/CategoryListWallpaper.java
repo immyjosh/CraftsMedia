@@ -47,6 +47,7 @@ public class CategoryListWallpaper extends AppCompatActivity implements Connecti
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_list_wallpaper);
 
+        getWindow().setBackgroundDrawable(null);
 
 
         mService= Common.getAPI();

@@ -52,6 +52,8 @@ public class VideoSearchActivity extends AppCompatActivity implements Connectivi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_search);
 
+        getWindow().setBackgroundDrawable(null);
+
         mService= Common.getAPI();
 
         videoSearchLayout=findViewById(R.id.video_search_layout);
