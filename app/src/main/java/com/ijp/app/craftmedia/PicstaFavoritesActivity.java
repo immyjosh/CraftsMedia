@@ -56,6 +56,7 @@ public class PicstaFavoritesActivity extends AppCompatActivity implements Connec
 
         initDB();
 
+
         avLoadingIndicatorView=findViewById(R.id.progress_bar_piscta_fav);
         avLoadingIndicatorView.smoothToShow();
 

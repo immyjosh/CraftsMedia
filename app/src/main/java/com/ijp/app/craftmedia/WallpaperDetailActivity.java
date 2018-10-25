@@ -183,8 +183,63 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
     }
 
 
+    /**
+     *
+      */
+    private void loadVideosToDownload() {
+        dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
 
-    // Initialize Room Database
+        if (Common.currentPicsItem != null) {
+
+            uriPortrait = Uri.parse(Common.currentPicsItem.getPortrait_img_url());
+            uriLandscape=Uri.parse(Common.currentPicsItem.getLandscape_img_url());
+
+            fileName = UUID.randomUUID().toString();
+
+        }else if (Common.currentNewPicsItem != null) {
+
+            uriPortrait = Uri.parse(Common.currentNewPicsItem.getPortrait_img_url());
+            uriLandscape=Uri.parse(Common.currentNewPicsItem.getLandscape_img_url());
+
+            fileName = UUID.randomUUID().toString();
+        } else if (Common.currentCategoryListItem != null) {
+
+            uriPortrait = Uri.parse(Common.currentCategoryListItem.getPortrait_img_url());
+            uriLandscape=Uri.parse(Common.currentCategoryListItem.getLandscape_img_url());
+
+            fileName = UUID.randomUUID().toString();
+        } else if (Common.currentRandomListItem != null) {
+
+            uriPortrait = Uri.parse(Common.currentRandomListItem.getPortrait_img_url());
+            uriLandscape=Uri.parse(Common.currentRandomListItem.getLandscape_img_url());
+
+            fileName = UUID.randomUUID().toString();
+
+        } else if (Common.currentWallpaperDetailItem != null) {
+
+            uriPortrait = Uri.parse(Common.currentWallpaperDetailItem.getPortrait_img_url());
+            uriLandscape=Uri.parse(Common.currentWallpaperDetailItem.getLandscape_img_url());
+
+            fileName = UUID.randomUUID().toString();
+        } else if (Common.currentPicstaFavorites != null) {
+            uriPortrait = Uri.parse(Common.currentPicstaFavorites.portraitLink);
+            uriLandscape=Uri.parse(Common.currentPicstaFavorites.landscapeLink);
+
+            fileName = UUID.randomUUID().toString();
+        }else if (Common.infiniteListItems!=null){
+            uriPortrait = Uri.parse(Common.infiniteListItems.getPortrait_img_url());
+            uriLandscape=Uri.parse(Common.infiniteListItems.getLandscape_img_url());
+
+            fileName = UUID.randomUUID().toString();
+        }
+
+    }
+
+    /**
+     * Initialize Room Database
+     * Setting instance from CraftsMediaRoomDatabase
+     * Setting instance from PicstaFavoriteRepository
+     */
     private void initDB() {
         Common.craftsMediaRoomDatabase = CraftsMediaRoomDatabase.getInstance(this);
         Common.picstaFavoriteRepository =
@@ -302,55 +357,6 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
 
     }
 
-    private void loadVideosToDownload() {
-        dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-
-        if (Common.currentPicsItem != null) {
-
-            uriPortrait = Uri.parse(Common.currentPicsItem.getPortrait_img_url());
-            uriLandscape=Uri.parse(Common.currentPicsItem.getLandscape_img_url());
-
-            fileName = UUID.randomUUID().toString();
-
-        }else if (Common.currentNewPicsItem != null) {
-
-            uriPortrait = Uri.parse(Common.currentNewPicsItem.getPortrait_img_url());
-            uriLandscape=Uri.parse(Common.currentNewPicsItem.getLandscape_img_url());
-
-            fileName = UUID.randomUUID().toString();
-        } else if (Common.currentCategoryListItem != null) {
-
-            uriPortrait = Uri.parse(Common.currentCategoryListItem.getPortrait_img_url());
-            uriLandscape=Uri.parse(Common.currentCategoryListItem.getLandscape_img_url());
-
-            fileName = UUID.randomUUID().toString();
-        } else if (Common.currentRandomListItem != null) {
-
-            uriPortrait = Uri.parse(Common.currentRandomListItem.getPortrait_img_url());
-            uriLandscape=Uri.parse(Common.currentRandomListItem.getLandscape_img_url());
-
-            fileName = UUID.randomUUID().toString();
-
-        } else if (Common.currentWallpaperDetailItem != null) {
-
-            uriPortrait = Uri.parse(Common.currentWallpaperDetailItem.getPortrait_img_url());
-            uriLandscape=Uri.parse(Common.currentWallpaperDetailItem.getLandscape_img_url());
-
-            fileName = UUID.randomUUID().toString();
-        } else if (Common.currentPicstaFavorites != null) {
-            uriPortrait = Uri.parse(Common.currentPicstaFavorites.portraitLink);
-            uriLandscape=Uri.parse(Common.currentPicstaFavorites.landscapeLink);
-
-            fileName = UUID.randomUUID().toString();
-        }else if (Common.infiniteListItems!=null){
-            uriPortrait = Uri.parse(Common.infiniteListItems.getPortrait_img_url());
-            uriLandscape=Uri.parse(Common.infiniteListItems.getLandscape_img_url());
-
-            fileName = UUID.randomUUID().toString();
-        }
-
-    }
-
 
     private void singleChoiceAlertDialogToDownload() {
 
@@ -431,7 +437,7 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
         orientation=new String[]{"Portrait, 1080x1920px","Landscape, 1920x1920px"};
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(this)
-                .setTitle("Choose Wallpaper Orientation")
+                .setTitle("Choose Wallpaper Orientation to Set")
                 .setIcon(R.drawable.ic_cloud_download_grey_24dp)
                 .setSingleChoiceItems(orientation, -1, new DialogInterface.OnClickListener() {
                     @Override
@@ -607,8 +613,6 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
 
     }
 
-
-
     private void loadInfiniteListItems(String infiniteId) {
         compositeDisposable.add(mService.getInfinitePicsDetail(infiniteId)
                 .subscribeOn(Schedulers.io())
@@ -631,7 +635,6 @@ public class WallpaperDetailActivity extends AppCompatActivity implements Connec
         WallpaperDetailAdapter adapter=new WallpaperDetailAdapter(this, wallpaperDetailItems);
         wallpaperDetailRV.setAdapter(adapter);
     }
-
 
     private void loadPicstaFav(String favId) {
         compositeDisposable.add(mService.getPicsFavLink(favId)

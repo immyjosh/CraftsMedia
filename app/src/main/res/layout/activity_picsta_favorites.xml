@@ -29,11 +29,13 @@
         app:indicatorColor="@color/text_color"
         app:indicatorName="BallClipRotatePulseIndicator" />
 
+
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/picsta_favorites_rv"
-        android:visibility="invisible"
         android:layout_below="@+id/appbar"
         android:background="@color/colorBackground"
+        android:visibility="invisible"
         android:paddingStart="5dp"
         android:paddingEnd="5dp"
         android:clipToPadding="false"
