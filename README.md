@@ -5,7 +5,7 @@ CraftsMedia-Enjoy Beautiful, free images and photos that you can download and us
 
 ### More information:
 
-- Author: [Immanuel Joshua Paul](https://www.immanueljoshuapaul.tk)
+- Author: [Immanuel Joshua Paul](https://www.immanueljoshuapaul.com)
 
 Home tab.
 
